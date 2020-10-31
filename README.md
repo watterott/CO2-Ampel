@@ -1,0 +1,16 @@
+# CO2-Ampel
+The CO2-Ampel is a traffic light to show the CO2 concentration in a room.
+
+![CO2-Ampel](https://github.com/watterott/CO2-Ampel/raw/master/hardware/CO2-Ampel_v10.jpg)
+
+* [Microchip ATSAMD21](https://www.microchip.com/wwwproducts/en/ATSAMD21G18) ARM Cortex-M0+ Microcontroller
+* [Sensirion SCD30](https://www.sensirion.com/en/environmental-sensors/carbon-dioxide-sensors/carbon-dioxide-sensors-co2/) CO2 Sensor
+* Intelligent WS2812 RGB-LEDs
+* Acoustic Buzzer
+* Plus Version:
+  * [Microchip ATWINC1500B](http://www.microchip.com/wwwproducts/en/ATWINC1500) WiFi/WLAN Network Controller
+  * [Microchip ATECC608A](http://www.microchip.com/wwwproducts/en/ATECC608A) Cryptographic Co-Processor
+* USB-C connector for power and data/programming
+* USB CDC+MSC Bootloader (Arduino compatible)
+* Open-Source and released under the [Creative Commons Attribution Share-Alike License](https://creativecommons.org/licenses/by-sa/4.0/).
+* **[Documentation on learn.watterott.com](https://learn.watterott.com)**
