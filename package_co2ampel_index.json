@@ -1,0 +1,30 @@
+{
+  "packages": [
+    {
+      "name": "co2ampel",
+      "maintainer": "Watterott electronic",
+      "websiteURL": "https://www.watterott.com",
+      "email": "",
+      "help": {"online": "https://learn.watterott.com/breakouts/co2-ampel/"},
+
+      "platforms": [
+        {
+          "name": "CO2-Ampel Board (dependency: Arduino SAMD Boards)",
+          "architecture": "samd",
+          "version": "1.0.0",
+          "category": "contributed",
+          "help": {"online": "https://learn.watterott.com/breakouts/co2-ampel/"},
+          "url": "https://github.com/watterott/CO2-Ampel/raw/master/arduino/samd.zip",
+          "archiveFileName": "co2ampel-samd-1.0.0.zip",
+          "size": "1208829",
+          "boards": [
+            {"name": "CO2-Ampel (SAMD21)"}
+          ]
+        }
+      ],
+
+      "tools": [
+      ]
+    }
+  ]
+}
