@@ -1,5 +1,5 @@
 # CO2-Ampel
-The CO2-Ampel is a traffic light to show the CO2 concentration in a room.
+The CO2-Ampel is a traffic light to show the carbon dioxide concentration in a room.
 
 ![CO2-Ampel](https://github.com/watterott/CO2-Ampel/raw/master/hardware/CO2-Ampel_v10.jpg)
 ![CO2-Ampel](https://github.com/watterott/CO2-Ampel/raw/master/hardware/CO2-Ampel-Diffusor.png)
