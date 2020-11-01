@@ -121,6 +121,8 @@ void setup()
       Serial.println("Fehler: CO2 Sensor nicht gefunden.");
     #endif
   }
+  //sensor.setAltitudeCompensation(800); //Meter ueber dem Meeresspiegel
+  //sensor.setAmbientPressure(1000); //700-1200, Luftdruck in hPa
 
   #if DISPLAY_AUSGABE > 0
     display.clearDisplay();
