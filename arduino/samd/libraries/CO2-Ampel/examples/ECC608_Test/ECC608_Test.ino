@@ -1,11 +1,14 @@
 /*
   ECC608 Test
 
-  Test progam for Microchip ATECC608A, connected to Wire1 (I2C).
+  Test progam for Microchip ATECC608, connected to Wire1 (I2C).
 */
 
 #include <Wire.h>
 #include <ArduinoECCX08.h>
+
+// I2C address
+#define I2C_ADR   (0x60) //0x60
 
 // I2C commands/registers
 #define CMD_RESET (0x00)
@@ -32,13 +35,13 @@ void read(byte *data, byte max_len)
 {
   byte len;
 
-  Wire1.requestFrom(I2C_ATECC, 1);      // request length
+  Wire1.requestFrom(I2C_ADR, 1);      // request length
   while(Wire1.available() == 0);        // wait for data bytes
   len = Wire1.read();
   *data++ = len;
   if(len)
   {
-    Wire1.requestFrom(I2C_ATECC, len);  // request x bytes
+    Wire1.requestFrom(I2C_ADR, len);  // request x bytes
     while(Wire1.available() == 0);      // wait for data bytes
     delay(10); // wait 10ms
     for(byte i = 0; (i < len) && (i < max_len); i++)
@@ -50,7 +53,7 @@ void read(byte *data, byte max_len)
 
 void write(byte reg, byte *data, byte len)
 {
-  Wire1.beginTransmission(I2C_ATECC); // start transmission
+  Wire1.beginTransmission(I2C_ADR); // start transmission
   Wire1.write(reg);                   // write register byte
   for(; len != 0; len--)
   {
@@ -61,7 +64,7 @@ void write(byte reg, byte *data, byte len)
 
 void write(byte reg, byte data)
 {
-  Wire1.beginTransmission(I2C_ATECC); // start transmission
+  Wire1.beginTransmission(I2C_ADR); // start transmission
   Wire1.write(reg);                   // write register byte
   Wire1.write(data);                  // write data byte
   Wire1.endTransmission();            // stop transmission
