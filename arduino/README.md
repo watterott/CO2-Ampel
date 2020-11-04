@@ -1,5 +1,5 @@
 # Board Support Package
-Board Support Package for [Arduino IDE v1.8+](https://www.arduino.cc/en/Main/Software).
+Board Support Package for [Arduino IDE](https://www.arduino.cc/en/Main/Software).
 
 
 ## Installation
@@ -22,20 +22,3 @@ For the mass storage device just copy a new binary file (.bin) to the drive.
 On Linux/Mac the dd command can be used to write the firmware: ```dd if=APP.BIN of=/media/CO2AMPEL/APP.BIN conv=notrunc```
 
 A binary file can be generated and exported in the Arduino IDE with *Sketch->Export compiled Binary* command.
-
-
-## Known Issues
-
-### Windows
-Sometimes the driver for the USB Bootloader is not loaded correctly.
-Check the driver state in the Device Manager, when the Bootloader is active (double press reset button).
-If the driver is not loaded correctly then uninstall it via the Device Manager and dis-/reconnect the board and select the driver INF file, if Windows asks for it.
-* [CO2-Ampel Driver](https://github.com/watterott/CO2-Ampel/raw/master/arduino/driver.zip) (not needed for Win10)
-
-### Linux
-The Modem Manager can cause problems, because it detects Serial Ports (e.g. of the USB Bootloader) as a modem.
-So we recommend to uninstall/remove the Modem Manager:
-```
-sudo apt-get uninstall modemmanager
-```
-As alternative it is also possible to add a backlist rule for the USB device to the file ```77-mm-usb-device-blacklist.rules```.
