@@ -2,8 +2,9 @@
   CO2-Ampel
 
   Zum Testmodus starten den Switch-Taster beim Einschalten gedrueckt halten.
-  1. LED-Test: rot, gruen, blau
-  2. Sensortest: LED 1 = Licht, LED 2 = CO2, LED 3 = Temperatur, LED 4 = Luftfeuchtigkeit
+  1. Buzzer-Test
+  2. LED-Test: rot, gruen, blau
+  3. Sensortest: LED 1 = Licht, LED 2 = CO2, LED 3 = Temperatur, LED 4 = Luftfeuchtigkeit
 */
 
 //--- Messintervall ---
@@ -144,6 +145,12 @@ void setup()
   {
     sensor.setMeasurementInterval(2); //2s (kleinster Intervall)
 
+    //Buzzer-Test
+    analogWrite(PIN_BUZZER, 255/2); //Buzzer an
+    delay(1000);
+    analogWrite(PIN_BUZZER, 0); //Buzzer aus
+
+    //LED-Test
     ws2812.setBrightness(10); //0...255
     ws2812.fill(ws2812.Color(255,0,0), 0, 4); //rot
     ws2812.show();
