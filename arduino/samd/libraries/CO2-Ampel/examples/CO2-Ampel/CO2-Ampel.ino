@@ -1,10 +1,19 @@
 /*
-  CO2-Ampel
+  CO2-Ampel (v2)
 
-  Zum Testmodus starten den Switch-Taster beim Einschalten gedrueckt halten.
-  1. Buzzer-Test
-  2. LED-Test: rot, gruen, blau
-  3. Sensortest: LED 1 = Licht, LED 2 = CO2, LED 3 = Temperatur, LED 4 = Luftfeuchtigkeit
+  Testmodus:
+  1. Den Switch-Taster beim Einschalten gedrueckt halten.
+  2. Buzzer-Test
+  3. LED-Test: rot, gruen, blau
+  4. Sensor-Test: LED 1 = Licht, LED 2 = CO2, LED 3 = Temperatur, LED 4 = Luftfeuchtigkeit
+
+  Kalibrierung:
+  1. Die Ampel bei Frischluft mind. 1 Minuten betreiben (im Freien oder am offenen Fenster, aber windgeschützt).
+  2. Den Testmodus starten.
+  3. Nach dem LED-Test (blaue LEDs) den Switch-Taster waehrend des Sensor-Tests kurz drücken (Buzzer ertoent).
+  4. Die Kalibrierung wird nach dem Sensor-Test ausgeführt und dauert mindestens 2 Minuten.
+     Die LEDs zeigen dabei den aktuellen CO2-Wert an: gruen bis 499ppm CO2, gelb bis 599ppm CO2, rot ab 600ppm CO2
+  5. Nach erfolgreicher Kalibrierung leuchten die LEDs kurz blau und der Buzzer ertoent.
 */
 
 //--- Messintervall ---
@@ -67,9 +76,211 @@ unsigned int light=1024;
 float temp=0, humi=0;
 
 
+unsigned int light_sensor(void) //Auslesen des Lichtsensors
+{
+  unsigned int i;
+  uint32_t color = ws2812.getPixelColor(0); //aktuelle Farbe speichern
+
+  //ws2812.setPixelColor(2, ws2812.Color(0,0,0)); //LED 3 aus
+  ws2812.fill(ws2812.Color(0,0,0), 0, 4); //alle LEDs aus
+  ws2812.show();
+
+  digitalWrite(PIN_LSENSOR_PWR, HIGH); //Lichtsensor an
+  delay(40); //40ms warten
+  i = analogRead(PIN_LSENSOR); //0...1024
+  delay(10); //10ms warten
+  i += analogRead(PIN_LSENSOR); //0...1024
+  i /= 2;
+  digitalWrite(PIN_LSENSOR_PWR, LOW); //Lichtsensor aus
+
+  //ws2812.setPixelColor(2, color); //LED 3 an
+  ws2812.fill(color, 0, 4); //alle LEDs an
+  ws2812.show();
+
+  return i;
+}
+
+
+unsigned int self_test(void) //Testprogramm
+{
+  unsigned int calibration=0, okay=0, co2_last=0;
+
+  sensor.setMeasurementInterval(2); //2s (kleinster Intervall)
+
+  //Buzzer-Test
+  analogWrite(PIN_BUZZER, 255/2); //Buzzer an
+  delay(1000);
+  analogWrite(PIN_BUZZER, 0); //Buzzer aus
+
+  //LED-Test
+  ws2812.setBrightness(10); //0...255
+  ws2812.fill(ws2812.Color(255,0,0), 0, 4); //rot
+  ws2812.show();
+  delay(1000);
+  ws2812.fill(ws2812.Color(0,255,0), 0, 4); //gruen
+  ws2812.show();
+  delay(1000);
+  ws2812.fill(ws2812.Color(0,0,255), 0, 4); //blau
+  ws2812.show();
+  delay(1000);
+  ws2812.fill(ws2812.Color(0,0,0), 0, 4); //aus
+
+  //Sensor-Test
+  for(okay=0; okay < 15;)
+  {
+    if(digitalRead(PIN_SWITCH) == 0)
+    {
+      calibration = 1; //Kalibrierung starten
+      analogWrite(PIN_BUZZER, 255/2); //Buzzer an
+      delay(20);
+      analogWrite(PIN_BUZZER, 0); //Buzzer aus
+    }
+
+    digitalWrite(PIN_LED, HIGH);
+    delay(100);
+    digitalWrite(PIN_LED, LOW);
+    delay(100);
+
+    digitalWrite(PIN_LSENSOR_PWR, HIGH); //Lichtsensor an
+    delay(50);
+    light = analogRead(PIN_LSENSOR); //0...1024
+    digitalWrite(PIN_LSENSOR_PWR, LOW); //Lichtsensor aus
+    if((light > 50) && (light < 1000))
+    {
+      okay |= (1<<0);
+      ws2812.setPixelColor(0, ws2812.Color(0,255,0));
+    }
+    else
+    {
+      okay &= ~(1<<0);
+      ws2812.setPixelColor(0, ws2812.Color(0,0,0));
+    }
+
+    if(sensor.dataAvailable())
+    {
+      co2  = sensor.getCO2();
+      temp = sensor.getTemperature();
+      humi = sensor.getHumidity();
+
+      if((co2 > 300) && (co2 < 1500)) //300-1500ppm
+      {
+        okay |= (1<<1);
+        ws2812.setPixelColor(1, ws2812.Color(0,255,0));
+      }
+      else
+      {
+        okay &= ~(1<<1);
+        ws2812.setPixelColor(1, ws2812.Color(0,0,0));
+      }
+
+      if((temp > 15) && (temp < 35)) //15-35°C
+      {
+        okay |= (1<<2);
+        ws2812.setPixelColor(2, ws2812.Color(0,255,0));
+      }
+      else
+      {
+        okay &= ~(1<<2);
+        ws2812.setPixelColor(2, ws2812.Color(0,0,0));
+      }
+
+      if((humi > 20) && (humi < 80)) //20-80%
+      {
+        okay |= (1<<3);
+        ws2812.setPixelColor(3, ws2812.Color(0,255,0));
+      }
+      else
+      {
+        okay &= ~(1<<3);
+        ws2812.setPixelColor(3, ws2812.Color(0,0,0));
+      }
+    }
+    ws2812.show();
+  }
+  delay(2000);
+
+  //Kalibrierung
+  if(calibration)
+  {
+    co2_last = co2;
+    for(okay=0; okay < 60;) //mindestens 60 Messungen (ca. 2 Minuten)
+    {
+      if(digitalRead(PIN_SWITCH) == 0)
+      {
+        calibration = 0;
+        break;
+      }
+
+      digitalWrite(PIN_LED, HIGH);
+      delay(100);
+      digitalWrite(PIN_LED, LOW);
+      delay(100);
+
+      if(sensor.dataAvailable()) //alle 2s
+      {
+        co2  = sensor.getCO2();
+        temp = sensor.getTemperature();
+        humi = sensor.getHumidity();
+
+        if((co2 > 200) && (co2 < 600) && 
+           (co2 > (co2_last-30)) &&
+           (co2 < (co2_last+30))) //+/-30ppm Toleranz zum vorherigen Wert
+        {
+          okay++;
+        }
+        else
+        {
+          okay = 0;
+        }
+        co2_last = co2;
+
+        if(co2 < 500)
+        {
+          ws2812.fill(ws2812.Color(0,255,0), 0, 4);   //gruen
+        }
+        else if(co2 < 600)
+        {
+          ws2812.fill(ws2812.Color(255,255,0), 0, 4); //gelb
+        }
+        else //>=600
+        {
+          ws2812.fill(ws2812.Color(255,0,0), 0, 4);   //rot
+        }
+        ws2812.show();
+
+        #if SERIELLE_AUSGABE > 0
+          Serial.print("ok: ");
+          Serial.println(okay);
+          Serial.print("co2: ");
+          Serial.println(co2); //ppm
+          Serial.print("temp: ");
+          Serial.println(temp, 1); //°C
+          Serial.print("humidity: ");
+          Serial.println(humi, 1); //%
+          Serial.println();
+        #endif
+      }
+    }
+    if(calibration && (okay >= 60))
+    {
+      sensor.setForcedRecalibrationFactor(400); //400ppm = Frischluft
+      ws2812.fill(ws2812.Color(0,0,255), 0, 4); //blau
+      ws2812.show();
+      analogWrite(PIN_BUZZER, 255/2); //Buzzer an
+      delay(500);
+      analogWrite(PIN_BUZZER, 0); //Buzzer aus
+    }
+  }
+
+  ws2812.setBrightness(255); //0...255
+
+  return calibration;
+}
+
+
 void setup()
 {
-  int testmode=0;
+  int run_test=0;
 
   //setze Pins
   pinMode(PIN_LED, OUTPUT);
@@ -85,7 +296,7 @@ void setup()
 
   if(digitalRead(PIN_SWITCH) == 0)
   {
-    testmode = 1;
+    run_test = 1;
   }
 
   //WS2812
@@ -141,95 +352,9 @@ void setup()
     display.display();
   #endif
 
-  if(testmode)
+  if(run_test)
   {
-    sensor.setMeasurementInterval(2); //2s (kleinster Intervall)
-
-    //Buzzer-Test
-    analogWrite(PIN_BUZZER, 255/2); //Buzzer an
-    delay(1000);
-    analogWrite(PIN_BUZZER, 0); //Buzzer aus
-
-    //LED-Test
-    ws2812.setBrightness(10); //0...255
-    ws2812.fill(ws2812.Color(255,0,0), 0, 4); //rot
-    ws2812.show();
-    delay(1000);
-    ws2812.fill(ws2812.Color(0,255,0), 0, 4); //gruen
-    ws2812.show();
-    delay(1000);
-    ws2812.fill(ws2812.Color(0,0,255), 0, 4); //blau
-    ws2812.show();
-    delay(1000);
-    ws2812.fill(ws2812.Color(0,0,0), 0, 4); //aus
-
-    testmode = 0;
-    while(testmode < 15)
-    {
-      digitalWrite(PIN_LED, HIGH);
-      delay(100);
-      digitalWrite(PIN_LED, LOW);
-      delay(100);
-
-      digitalWrite(PIN_LSENSOR_PWR, HIGH); //Lichtsensor an
-      delay(50);
-      light = analogRead(PIN_LSENSOR); //0...1024
-      digitalWrite(PIN_LSENSOR_PWR, LOW); //Lichtsensor aus
-      if((light > 50) && (light < 1000))
-      {
-        testmode |= (1<<0);
-        ws2812.setPixelColor(0, ws2812.Color(0,255,0));
-      }
-      else
-      {
-        testmode &= ~(1<<0);
-        ws2812.setPixelColor(0, ws2812.Color(0,0,0));
-      }
-    
-      if(sensor.dataAvailable())
-      {
-        co2  = sensor.getCO2();
-        temp = sensor.getTemperature();
-        humi = sensor.getHumidity();
-
-        if((co2 > 300) && (co2 < 1500)) //300-1500ppm
-        {
-          testmode |= (1<<1);
-          ws2812.setPixelColor(1, ws2812.Color(0,255,0));
-        }
-        else
-        {
-          testmode &= ~(1<<1);
-          ws2812.setPixelColor(1, ws2812.Color(0,0,0));
-        }
-
-        if((temp > 15) && (temp < 35)) //15-35°C
-        {
-          testmode |= (1<<2);
-          ws2812.setPixelColor(2, ws2812.Color(0,255,0));
-        }
-        else
-        {
-          testmode &= ~(1<<2);
-          ws2812.setPixelColor(2, ws2812.Color(0,0,0));
-        }
-
-        if((humi > 20) && (humi < 80)) //20-80%
-        {
-          testmode |= (1<<3);
-          ws2812.setPixelColor(3, ws2812.Color(0,255,0));
-        }
-        else
-        {
-          testmode &= ~(1<<3);
-          ws2812.setPixelColor(3, ws2812.Color(0,0,0));
-        }
-      }
-
-      ws2812.show();
-    }
-    delay(3000);
-    ws2812.setBrightness(255); //0...255
+    self_test(); //starte Testmodus
   }
 
   sensor.setMeasurementInterval(INTERVALL); //setze Interval 
@@ -306,12 +431,12 @@ void loop()
     humi = sensor.getHumidity();
 
     #if SERIELLE_AUSGABE > 0
-      Serial.print("co2(ppm): ");
-      Serial.println(co2);
-      Serial.print("temp(C): ");
-      Serial.println(temp, 1);
-      Serial.print("humidity(%): ");
-      Serial.println(humi, 1);
+      Serial.print("co2: ");
+      Serial.println(co2); //ppm
+      Serial.print("temp: ");
+      Serial.println(temp, 1); //°C
+      Serial.print("humidity: ");
+      Serial.println(humi, 1); //%
       Serial.print("light: ");
       Serial.println(light);
       Serial.println();
@@ -358,29 +483,4 @@ void loop()
   delay(1000); //1s warten
 
   return;
-}
-
-
-unsigned int light_sensor(void)
-{
-  unsigned int i;
-  uint32_t color = ws2812.getPixelColor(0); //aktuelle Farbe speichern
-
-  //ws2812.setPixelColor(2, ws2812.Color(0,0,0)); //LED 3 aus
-  ws2812.fill(ws2812.Color(0,0,0), 0, 4); //alle LEDs aus
-  ws2812.show();
-
-  digitalWrite(PIN_LSENSOR_PWR, HIGH); //Lichtsensor an
-  delay(40); //40ms warten
-  i = analogRead(PIN_LSENSOR); //0...1024
-  delay(10); //10ms warten
-  i += analogRead(PIN_LSENSOR); //0...1024
-  i /= 2;
-  digitalWrite(PIN_LSENSOR_PWR, LOW); //Lichtsensor aus
-
-  //ws2812.setPixelColor(2, color); //LED 3 an
-  ws2812.fill(color, 0, 4); //alle LEDs an
-  ws2812.show();
-
-  return i;
 }
