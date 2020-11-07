@@ -8,11 +8,11 @@
   4. Sensor-Test: LED 1 = Licht, LED 2 = CO2, LED 3 = Temperatur, LED 4 = Luftfeuchtigkeit
 
   Kalibrierung:
-  1. Die Ampel bei Frischluft mind. 1 Minuten betreiben (im Freien oder am offenen Fenster, aber windgeschützt).
+  1. Die Ampel bei Frischluft mind. 1 Minute betreiben (im Freien oder am offenen Fenster, aber windgeschützt).
   2. Den Testmodus starten.
   3. Nach dem LED-Test (blaue LEDs) den Switch-Taster waehrend des Sensor-Tests kurz drücken (Buzzer ertoent).
   4. Die Kalibrierung wird nach dem Sensor-Test ausgeführt und dauert mindestens 2 Minuten.
-     Die LEDs zeigen dabei den aktuellen CO2-Wert an: gruen bis 499ppm CO2, gelb bis 599ppm CO2, rot ab 600ppm CO2
+     Die LEDs zeigen dabei den aktuellen CO2-Wert an: gruen bis 499ppm, gelb bis 599ppm, rot ab 600ppm
   5. Nach erfolgreicher Kalibrierung leuchten die LEDs kurz blau und der Buzzer ertoent.
 */
 
@@ -46,7 +46,7 @@
 //--- Allgemein ---
 #define AMPEL_DURCHSCHNITT 1 //1 = CO2 Durchschnitt fuer Ampel verwenden
 #define AUTO_KALIBRIERUNG  0 //1 = automatische Kalibrierung an (erfordert 7 Tage Dauerbetrieb mit 1h Frischluft pro Tag)
-#define SERIELLE_AUSGABE   0 //1 = serielle Ausgabe aktivieren
+#define SERIELLE_AUSGABE   0 //1 = serielle Ausgabe aktivieren (9600 Baud)
 #define DISPLAY_AUSGABE    0 //1 = Ausgabe auf Display aktivieren
 
 #define FARBE_GRUEN        0,HELLIGKEIT,0
@@ -101,6 +101,35 @@ unsigned int light_sensor(void) //Auslesen des Lichtsensors
 }
 
 
+void show_data(void) //Daten anzeigen
+{
+  #if SERIELLE_AUSGABE > 0
+    Serial.print("co2: ");
+    Serial.println(co2); //ppm
+    Serial.print("temp: ");
+    Serial.println(temp, 1); //°C
+    Serial.print("humidity: ");
+    Serial.println(humi, 1); //%
+    Serial.print("light: ");
+    Serial.println(light);
+    Serial.println();
+  #endif
+
+  #if DISPLAY_AUSGABE > 0
+    display.clearDisplay();
+    display.setTextSize(5);
+    display.setCursor(5,5);
+    display.println(co2);
+    display.setTextSize(1);
+    display.setCursor(5,56);
+    display.println("CO2 Level in ppm");
+    display.display();
+  #endif
+
+  return;
+}
+
+
 unsigned int self_test(void) //Testprogramm
 {
   unsigned int calibration=0, okay=0, co2_last=0;
@@ -109,43 +138,43 @@ unsigned int self_test(void) //Testprogramm
 
   //Buzzer-Test
   analogWrite(PIN_BUZZER, 255/2); //Buzzer an
-  delay(1000);
+  delay(1000); //1s warten
   analogWrite(PIN_BUZZER, 0); //Buzzer aus
 
   //LED-Test
   ws2812.setBrightness(10); //0...255
-  ws2812.fill(ws2812.Color(255,0,0), 0, 4); //rot
+  ws2812.fill(ws2812.Color(255,0,0), 0, 4); //LEDs rot
   ws2812.show();
-  delay(1000);
-  ws2812.fill(ws2812.Color(0,255,0), 0, 4); //gruen
+  delay(1000); //1s warten
+  ws2812.fill(ws2812.Color(0,255,0), 0, 4); //LEDs gruen
   ws2812.show();
-  delay(1000);
-  ws2812.fill(ws2812.Color(0,0,255), 0, 4); //blau
+  delay(1000); //1s warten
+  ws2812.fill(ws2812.Color(0,0,255), 0, 4); //LEDs blau
   ws2812.show();
-  delay(1000);
-  ws2812.fill(ws2812.Color(0,0,0), 0, 4); //aus
+  delay(1000); //1s warten
+  ws2812.fill(ws2812.Color(0,0,0), 0, 4); //LEDs aus
 
   //Sensor-Test
   for(okay=0; okay < 15;)
   {
-    if(digitalRead(PIN_SWITCH) == 0)
+    if(digitalRead(PIN_SWITCH) == 0) //Taster gedrueckt?
     {
-      calibration = 1; //Kalibrierung starten
+      calibration = 1; //Kalibrierung ausfuehren
       analogWrite(PIN_BUZZER, 255/2); //Buzzer an
-      delay(20);
+      delay(25); //25ms warten
       analogWrite(PIN_BUZZER, 0); //Buzzer aus
     }
 
-    digitalWrite(PIN_LED, HIGH);
-    delay(100);
-    digitalWrite(PIN_LED, LOW);
-    delay(100);
+    digitalWrite(PIN_LED, HIGH); //Status-LED an
+    delay(100); //100ms warten
+    digitalWrite(PIN_LED, LOW); //Status-LED aus
+    delay(100); //100ms warten
 
     digitalWrite(PIN_LSENSOR_PWR, HIGH); //Lichtsensor an
-    delay(50);
+    delay(50); //50ms warten
     light = analogRead(PIN_LSENSOR); //0...1024
     digitalWrite(PIN_LSENSOR_PWR, LOW); //Lichtsensor aus
-    if((light > 50) && (light < 1000))
+    if((light >= 50) && (light <= 1000)) //50-1000
     {
       okay |= (1<<0);
       ws2812.setPixelColor(0, ws2812.Color(0,255,0));
@@ -162,7 +191,7 @@ unsigned int self_test(void) //Testprogramm
       temp = sensor.getTemperature();
       humi = sensor.getHumidity();
 
-      if((co2 > 300) && (co2 < 1500)) //300-1500ppm
+      if((co2 >= 300) && (co2 <= 1500)) //300-1500ppm
       {
         okay |= (1<<1);
         ws2812.setPixelColor(1, ws2812.Color(0,255,0));
@@ -173,7 +202,7 @@ unsigned int self_test(void) //Testprogramm
         ws2812.setPixelColor(1, ws2812.Color(0,0,0));
       }
 
-      if((temp > 15) && (temp < 35)) //15-35°C
+      if((temp >= 15) && (temp <= 35)) //15-35°C
       {
         okay |= (1<<2);
         ws2812.setPixelColor(2, ws2812.Color(0,255,0));
@@ -184,7 +213,7 @@ unsigned int self_test(void) //Testprogramm
         ws2812.setPixelColor(2, ws2812.Color(0,0,0));
       }
 
-      if((humi > 20) && (humi < 80)) //20-80%
+      if((humi >= 20) && (humi <= 80)) //20-80%
       {
         okay |= (1<<3);
         ws2812.setPixelColor(3, ws2812.Color(0,255,0));
@@ -205,16 +234,16 @@ unsigned int self_test(void) //Testprogramm
     co2_last = co2;
     for(okay=0; okay < 60;) //mindestens 60 Messungen (ca. 2 Minuten)
     {
-      if(digitalRead(PIN_SWITCH) == 0)
+      if(digitalRead(PIN_SWITCH) == 0) //Taster gedrueckt?
       {
         calibration = 0;
-        break;
+        break; //Abbruch
       }
 
-      digitalWrite(PIN_LED, HIGH);
-      delay(100);
-      digitalWrite(PIN_LED, LOW);
-      delay(100);
+      digitalWrite(PIN_LED, HIGH); //Status-LED an
+      delay(100); //100ms warten
+      digitalWrite(PIN_LED, LOW); //Status-LED an
+      delay(100); //100ms warten
 
       if(sensor.dataAvailable()) //alle 2s
       {
@@ -251,14 +280,9 @@ unsigned int self_test(void) //Testprogramm
         #if SERIELLE_AUSGABE > 0
           Serial.print("ok: ");
           Serial.println(okay);
-          Serial.print("co2: ");
-          Serial.println(co2); //ppm
-          Serial.print("temp: ");
-          Serial.println(temp, 1); //°C
-          Serial.print("humidity: ");
-          Serial.println(humi, 1); //%
-          Serial.println();
         #endif
+
+        show_data();
       }
     }
     if(calibration && (okay >= 60))
@@ -314,7 +338,7 @@ void setup()
 
   //Wire/I2C
   Wire.begin();
-  Wire.setClock(50000); //50kHz
+  Wire.setClock(50000); //50kHz, empfohlen fue SCD30
 
   delay(250); //250ms warten
 
@@ -357,8 +381,10 @@ void setup()
     self_test(); //starte Testmodus
   }
 
-  sensor.setMeasurementInterval(INTERVALL); //setze Interval 
+  sensor.setMeasurementInterval(INTERVALL); //setze Messinterval 
   delay(INTERVALL*1000); //Intervallsekunden warten
+
+  return;
 }
 
 
@@ -429,29 +455,8 @@ void loop()
     co2  = sensor.getCO2();
     temp = sensor.getTemperature();
     humi = sensor.getHumidity();
-
-    #if SERIELLE_AUSGABE > 0
-      Serial.print("co2: ");
-      Serial.println(co2); //ppm
-      Serial.print("temp: ");
-      Serial.println(temp, 1); //°C
-      Serial.print("humidity: ");
-      Serial.println(humi, 1); //%
-      Serial.print("light: ");
-      Serial.println(light);
-      Serial.println();
-    #endif
-
-    #if DISPLAY_AUSGABE > 0
-      display.clearDisplay();
-      display.setTextSize(5);
-      display.setCursor(5,5);
-      display.println(co2);
-      display.setTextSize(1);
-      display.setCursor(5,56);
-      display.println("CO2 Level in ppm");
-      display.display();
-    #endif
+    
+    show_data();
   }
 
   if((ampel < START_GELB) && 
