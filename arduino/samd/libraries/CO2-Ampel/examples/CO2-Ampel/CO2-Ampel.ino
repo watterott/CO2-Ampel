@@ -36,8 +36,8 @@
 */
 
 //--- Ampelhelligkeit (LEDs) ---
-#define HELLIGKEIT         180 //1-255 
-#define HELLIGKEIT_DUNKEL  10  //1-100%
+#define HELLIGKEIT         180 //1-255 (255=100%)
+#define HELLIGKEIT_DUNKEL  10  //1-100 (100=100% von HELLIGKEIT)
 
 //--- Lichtsensor ---
 #define LICHT_DUNKEL       20   //<20 -> dunkel
@@ -252,8 +252,8 @@ unsigned int self_test(void) //Testprogramm
         humi = sensor.getHumidity();
 
         if((co2 > 200) && (co2 < 600) && 
-           (co2 > (co2_last-30)) &&
-           (co2 < (co2_last+30))) //+/-30ppm Toleranz zum vorherigen Wert
+           (co2 > (co2_last-20)) &&
+           (co2 < (co2_last+20))) //+/-20ppm Toleranz zum vorherigen Wert
         {
           okay++;
         }
@@ -376,7 +376,7 @@ void setup()
     display.display();
   #endif
 
-  if(run_test)
+  if(run_test && (digitalRead(PIN_SWITCH) == 0)) //Switch-Taster beim Einschalten und aktuell noch gedrueckt
   {
     self_test(); //starte Testmodus
   }
