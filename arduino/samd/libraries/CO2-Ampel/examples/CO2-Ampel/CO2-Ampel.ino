@@ -406,7 +406,7 @@ void loop()
   static unsigned int blinken=0, dunkel=0, sw=HIGH;
   static long long t_ampel=0, t_light=0;
   unsigned int ampel=0;
-  
+
   if(digitalRead(PIN_SWITCH) == LOW) //Taster gedrueckt
   {
     sw = sw<<1; //1x nach links (MSB) schieben
@@ -420,24 +420,27 @@ void loop()
   if(sw & 0x8000) //hoechstes Bit gesetzt = Taster gedrueckt
   {
     sw = 0;
-    brightness = brightness/2;
+    brightness = brightness/2; //Helligkeit halbieren
     if(brightness < 10) //kleiner 10
     {
       brightness = HELLIGKEIT;
     }
     ws2812.setBrightness(brightness);
   }
-  else if((millis()-t_ampel) < 1000) //Ampelfunktion nur jede Sekunde ausfuehren
+  else if((millis()-t_ampel) > 1000) //Ampelfunktion nur jede Sekunde ausfuehren
+  {
+    t_ampel = millis(); //Zeit speichern
+
+    co2_average = (co2_average + co2) / 2; //Berechnung jede Sekunde
+
+    digitalWrite(PIN_LED, HIGH); //Status-LED an
+    delay(1); //1ms warten
+    digitalWrite(PIN_LED, LOW); //Status-LED aus
+  }
+  else
   {
     return;
   }
-  t_ampel = millis(); //Zeit speichern
-
-  digitalWrite(PIN_LED, HIGH); //Status-LED an
-  delay(1); //1ms warten
-  digitalWrite(PIN_LED, LOW); //Status-LED aus
-
-  co2_average = (co2_average + co2) / 2; //Berechnung jede Sekunde
 
   #if AMPEL_DURCHSCHNITT > 0
     ampel = co2_average;
