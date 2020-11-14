@@ -1,5 +1,5 @@
 /*
-  CO2-Ampel (v2)
+  CO2-Ampel (v3)
 
   Testmodus:
   1. Den Switch-Taster beim Einschalten gedrueckt halten.
@@ -36,8 +36,8 @@
 */
 
 //--- Ampelhelligkeit (LEDs) ---
-#define HELLIGKEIT         180 //1-255 (255=100%)
-#define HELLIGKEIT_DUNKEL  10  //1-100 (100=100% von HELLIGKEIT)
+#define HELLIGKEIT         180 //1-255 (255=100%, 179=70%)
+#define HELLIGKEIT_DUNKEL  20  //1-255 (255=100%, 25=10%)
 
 //--- Lichtsensor ---
 #define LICHT_DUNKEL       20   //<20 -> dunkel
@@ -49,9 +49,9 @@
 #define SERIELLE_AUSGABE   0 //1 = serielle Ausgabe aktivieren (9600 Baud)
 #define DISPLAY_AUSGABE    0 //1 = Ausgabe auf Display aktivieren
 
-#define FARBE_GRUEN        0,HELLIGKEIT,0
-#define FARBE_GELB         HELLIGKEIT,HELLIGKEIT-HELLIGKEIT/2,0
-#define FARBE_ROT          HELLIGKEIT,0,0
+#define FARBE_GRUEN          0,255,0
+#define FARBE_GELB         255,127,0
+#define FARBE_ROT          255,  0,0
 
 #define STARTWERT          500 //500ppm, CO2-Startwert
 
@@ -71,6 +71,7 @@ Adafruit_NeoPixel ws2812 = Adafruit_NeoPixel(4, PIN_WS2812, NEO_GRB + NEO_KHZ800
   Adafruit_SSD1306 display(128, 64); //128x64 Pixel
 #endif
 
+unsigned int brightness=HELLIGKEIT;
 unsigned int co2=STARTWERT, co2_average=STARTWERT;
 unsigned int light=1024;
 float temp=0, humi=0;
@@ -104,13 +105,13 @@ unsigned int light_sensor(void) //Auslesen des Lichtsensors
 void show_data(void) //Daten anzeigen
 {
   #if SERIELLE_AUSGABE > 0
-    Serial.print("co2: ");
-    Serial.println(co2); //ppm
-    Serial.print("temp: ");
-    Serial.println(temp, 1); //°C
-    Serial.print("humidity: ");
-    Serial.println(humi, 1); //%
-    Serial.print("light: ");
+    Serial.print("c: ");     //CO2
+    Serial.println(co2);     //Wert in ppm
+    Serial.print("t: ");     //Temperatur
+    Serial.println(temp, 1); //Wert in °C
+    Serial.print("h: ");     //Humidity/Luftfeuchte
+    Serial.println(humi, 1); //Wert in %
+    Serial.print("l: ");     //Licht
     Serial.println(light);
     Serial.println();
   #endif
@@ -133,6 +134,8 @@ void show_data(void) //Daten anzeigen
 unsigned int self_test(void) //Testprogramm
 {
   unsigned int calibration=0, okay=0, co2_last=0;
+  
+  Serial.begin(9600); //seriellen Port starten
 
   sensor.setMeasurementInterval(2); //2s (kleinster Intervall)
 
@@ -190,6 +193,16 @@ unsigned int self_test(void) //Testprogramm
       co2  = sensor.getCO2();
       temp = sensor.getTemperature();
       humi = sensor.getHumidity();
+
+      Serial.print("c: ");     //CO2
+      Serial.println(co2);     //Wert in ppm
+      Serial.print("t: ");     //Temperatur
+      Serial.println(temp, 1); //Wert in °C
+      Serial.print("h: ");     //Humidity/Luftfeuchte
+      Serial.println(humi, 1); //Wert in %
+      Serial.print("l: ");     //Licht
+      Serial.println(light);
+      Serial.println();
 
       if((co2 >= 300) && (co2 <= 1500)) //300-1500ppm
       {
@@ -296,7 +309,7 @@ unsigned int self_test(void) //Testprogramm
     }
   }
 
-  ws2812.setBrightness(255); //0...255
+  ws2812.setBrightness(brightness); //0...255
 
   return calibration;
 }
@@ -318,20 +331,20 @@ void setup()
   pinMode(PIN_LSENSOR, INPUT);
   pinMode(PIN_SWITCH, INPUT_PULLUP);
 
-  if(digitalRead(PIN_SWITCH) == 0)
+  if(digitalRead(PIN_SWITCH) == LOW) //Taster gedrueckt
   {
     run_test = 1;
   }
 
   //WS2812
   ws2812.begin();
-  ws2812.setBrightness(255); //0...255
-  ws2812.fill(ws2812.Color(5,5,5), 0, 4);
+  ws2812.setBrightness(brightness); //0...255
+  ws2812.fill(ws2812.Color(20,20,20), 0, 4); //weiss
   ws2812.show();
 
   //serielle Ausgabe (USB)
   #if SERIELLE_AUSGABE > 0
-    Serial.begin(9600);
+    Serial.begin(9600); //seriellen Port starten
     //while(!Serial); //warten auf USB-Verbindung
     Serial.println("CO2 Ampel");
   #endif
@@ -376,7 +389,7 @@ void setup()
     display.display();
   #endif
 
-  if(run_test && (digitalRead(PIN_SWITCH) == 0)) //Switch-Taster beim Einschalten und aktuell noch gedrueckt
+  if(run_test && (digitalRead(PIN_SWITCH) == LOW)) //Taster beim Einschalten und aktuell noch gedrueckt
   {
     self_test(); //starte Testmodus
   }
@@ -390,9 +403,39 @@ void setup()
 
 void loop()
 {
-  static int blinken=0, dunkel=0;
-  static long long t_light=0;
+  static unsigned int blinken=0, dunkel=0, sw=HIGH;
+  static long long t_ampel=0, t_light=0;
   unsigned int ampel=0;
+  
+  if(digitalRead(PIN_SWITCH) == LOW) //Taster gedrueckt
+  {
+    sw = sw<<1; //1x nach links (MSB) schieben
+    delay(5);   //5ms warten
+  }
+  else
+  {
+    sw = 1; //0x0001
+  }
+
+  if(sw & 0x8000) //hoechstes Bit gesetzt = Taster gedrueckt
+  {
+    sw = 0;
+    brightness = brightness/2;
+    if(brightness < 10) //kleiner 10
+    {
+      brightness = HELLIGKEIT;
+    }
+    ws2812.setBrightness(brightness);
+  }
+  else if((millis()-t_ampel) < 1000) //Ampelfunktion nur jede Sekunde ausfuehren
+  {
+    return;
+  }
+  t_ampel = millis(); //Zeit speichern
+
+  digitalWrite(PIN_LED, HIGH); //Status-LED an
+  delay(1); //1ms warten
+  digitalWrite(PIN_LED, LOW); //Status-LED aus
 
   co2_average = (co2_average + co2) / 2; //Berechnung jede Sekunde
 
@@ -462,7 +505,7 @@ void loop()
   if((ampel < START_GELB) && 
     ((millis()-t_light) > (LICHT_INTERVALL*1000)))
   {
-    t_light = millis();
+    t_light = millis(); //Zeit speichern
 
     light = light_sensor();
     if(light < LICHT_DUNKEL)
@@ -471,7 +514,7 @@ void loop()
       {
         dunkel = 1;
         sensor.setMeasurementInterval(INTERVALL_DUNKEL); 
-        ws2812.setBrightness(255/(100/HELLIGKEIT_DUNKEL));
+        ws2812.setBrightness(HELLIGKEIT_DUNKEL); //0...255
       }
     }
     else
@@ -480,12 +523,10 @@ void loop()
       {
         dunkel = 0;
         sensor.setMeasurementInterval(INTERVALL); 
-        ws2812.setBrightness(255); //0...255
+        ws2812.setBrightness(brightness); //0...255
       }
     }
   }
-
-  delay(1000); //1s warten
 
   return;
 }
