@@ -1,5 +1,5 @@
 /*
-  CO2-Ampel (v3)
+  CO2-Ampel (v4)
 
   Testmodus:
   1. Den Switch-Taster beim Einschalten gedrueckt halten.
@@ -204,7 +204,7 @@ unsigned int self_test(void) //Testprogramm
       Serial.println(light);
       Serial.println();
 
-      if((co2 >= 300) && (co2 <= 1500)) //300-1500ppm
+      if((co2 >= 200) && (co2 <= 1500)) //200-1500ppm
       {
         okay |= (1<<1);
         ws2812.setPixelColor(1, ws2812.Color(0,255,0));
@@ -215,7 +215,7 @@ unsigned int self_test(void) //Testprogramm
         ws2812.setPixelColor(1, ws2812.Color(0,0,0));
       }
 
-      if((temp >= 15) && (temp <= 35)) //15-35°C
+      if((temp >= 5) && (temp <= 35)) //5-35°C
       {
         okay |= (1<<2);
         ws2812.setPixelColor(2, ws2812.Color(0,255,0));
@@ -264,9 +264,9 @@ unsigned int self_test(void) //Testprogramm
         temp = sensor.getTemperature();
         humi = sensor.getHumidity();
 
-        if((co2 > 200) && (co2 < 600) && 
-           (co2 > (co2_last-20)) &&
-           (co2 < (co2_last+20))) //+/-20ppm Toleranz zum vorherigen Wert
+        if((co2 > 200) && (co2 < 1000) && 
+           (co2 >= (co2_last-30)) &&
+           (co2 <= (co2_last+30))) //+/-30ppm Toleranz zum vorherigen Wert
         {
           okay++;
         }
@@ -280,7 +280,7 @@ unsigned int self_test(void) //Testprogramm
         {
           ws2812.fill(ws2812.Color(0,255,0), 0, 4);   //gruen
         }
-        else if(co2 < 600)
+        else if(co2 < 700)
         {
           ws2812.fill(ws2812.Color(255,255,0), 0, 4); //gelb
         }
@@ -310,6 +310,9 @@ unsigned int self_test(void) //Testprogramm
   }
 
   ws2812.setBrightness(brightness); //0...255
+  co2 = STARTWERT;
+  co2_average = STARTWERT;
+  light = 1024;
 
   return calibration;
 }
@@ -421,7 +424,7 @@ void loop()
   {
     sw = 0;
     brightness = brightness/2; //Helligkeit halbieren
-    if(brightness < 10) //kleiner 10
+    if(brightness < HELLIGKEIT_DUNKEL)
     {
       brightness = HELLIGKEIT;
     }
@@ -468,11 +471,11 @@ void loop()
   {
     if(blinken == 0)
     {
-      ws2812.fill(ws2812.Color(10,0,0), 0, 4);
+      ws2812.fill(ws2812.Color(10,0,0), 0, 4);  //rot schwache Helligkeit
     }
     else
     {
-      ws2812.fill(ws2812.Color(255,0,0), 0, 4); //rot maximale Helligkeit
+      ws2812.fill(ws2812.Color(FARBE_ROT), 0, 4); //rot
     }
     blinken = 1-blinken; //invertieren
   }
@@ -505,8 +508,7 @@ void loop()
     show_data();
   }
 
-  if((ampel < START_GELB) && 
-    ((millis()-t_light) > (LICHT_INTERVALL*1000)))
+  if((millis()-t_light) > (LICHT_INTERVALL*1000))
   {
     t_light = millis(); //Zeit speichern
 
