@@ -50,8 +50,17 @@ void setup()
   server.begin();
 
   // print device IP
-  IPAddress ip = WiFi.localIP();
+  IPAddress ip;
+  ip = WiFi.localIP();
   Serial.print("IP: ");
+  Serial.println(ip);
+
+  ip = WiFi.subnetMask();
+  Serial.print("NM: ");
+  Serial.println(ip);
+
+  ip = WiFi.gatewayIP();
+  Serial.print("GW: ");
   Serial.println(ip);
 }
 
@@ -73,7 +82,7 @@ void loop()
         // if you've gotten to the end of the line (received a newline
         // character) and the line is blank, the http request has ended,
         // so you can send a reply
-        if (c == '\n' && currentLineIsBlank)
+        if(c == '\n' && currentLineIsBlank)
         {
           // send standard http response header
           client.println("HTTP/1.1 200 OK");
@@ -85,12 +94,12 @@ void loop()
           client.println("<html>Webserver</html>");
           break;
         }
-        if (c == '\n')
+        if(c == '\n')
         {
           // you're starting a new line
           currentLineIsBlank = true;
         }
-        else if (c != '\r')
+        else if(c != '\r')
         {
           // you've gotten a character on the current line
           currentLineIsBlank = false;
