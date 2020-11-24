@@ -39,7 +39,7 @@ void loop()
     {
       Serial.print("Unknow error at 0x");
       Serial.println(address, HEX);
-    }    
+    }
   }
 
   if(devices == 0)
