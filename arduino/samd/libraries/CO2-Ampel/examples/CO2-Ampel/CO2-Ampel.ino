@@ -22,7 +22,7 @@
     2. Den Testmodus starten.
     3. Nach dem LED-Test (blaue LEDs) den Switch-Taster waehrend des Sensor-Tests kurz drücken (Buzzer ertoent).
     4. Die Kalibrierung wird nach dem Sensor-Test ausgeführt und dauert mindestens 2 Minuten.
-       Die LEDs zeigen dabei den aktuellen CO2-Wert an: gruen bis 499ppm, gelb bis 599ppm, rot ab 600ppm
+       Die LEDs zeigen dabei den aktuellen CO2-Wert an: gruen bis 499ppm, gelb bis 699ppm, rot ab 700ppm
     5. Nach erfolgreicher Kalibrierung leuchten die LEDs kurz blau und der Buzzer ertoent.
 */
 
@@ -480,7 +480,7 @@ unsigned int self_test(void) //Testprogramm
         {
           ws2812.fill(ws2812.Color(255,255,0), 0, 4); //gelb
         }
-        else //>=600
+        else //>=700
         {
           ws2812.fill(ws2812.Color(255,0,0), 0, 4);   //rot
         }
