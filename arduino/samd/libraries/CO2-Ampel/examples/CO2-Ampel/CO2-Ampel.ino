@@ -7,9 +7,13 @@
   Serielle Befehle
     R=0      - Fernsteuerung aus
     R=1      - Fernsteuerung an
+    S=1      - Save/speichern
     L=RRGGBB - LED-Farbe (000000-FFFFFF)
     H=7F     - LED-Helligkeit (0-FF)
     B=1      - Buzzer an 500ms
+    A=X      - Altitude/Hoehe ueber dem Meeresspiegel (0-3000)
+    P=X      - Pressure/Luftdruck in hPa (0 oder 700-1400)
+    C=1      - Calibration/Kalibrierung auf 400ppm (mind. 2min Betrieb an Frischluft vor Befehl)
 
   Testmodus
     1. Den Switch-Taster beim Einschalten gedrueckt halten.
@@ -26,11 +30,7 @@
     5. Nach erfolgreicher Kalibrierung leuchten die LEDs kurz blau und der Buzzer ertoent.
 */
 
-#define VERSION "5"
-
-//--- Messintervall ---
-#define INTERVALL            3 //2-1800s (normal)
-#define INTERVALL_DUNKEL    30 //2-1800s (bei Dunkelheit)
+#define VERSION "6"
 
 //--- CO2-Werte ---
 //Covid Praevention: https://www.umwelt-campus.de/forschung/projekte/iot-werkstatt/ideen-zur-corona-krise
@@ -47,6 +47,10 @@
 #define START_BUZZER       1600 //>=1600ppm
 */
 
+//--- Messintervall ---
+#define INTERVALL            3 //2-1800s (normal)
+#define INTERVALL_DUNKEL    30 //2-1800s (bei Dunkelheit)
+
 //--- Ampelhelligkeit (LEDs) ---
 #define HELLIGKEIT         180 //1-255 (255=100%, 179=70%)
 #define HELLIGKEIT_DUNKEL  20  //1-255 (255=100%, 25=10%)
@@ -56,6 +60,7 @@
 #define LICHT_INTERVALL    3600 //1-60000s (Sensorpruefung)
 
 //--- Allgemein ---
+#define ALTITUDE           0 //0 Meter ueber dem Meeresspiegel
 #define AMPEL_DURCHSCHNITT 1 //1 = CO2 Durchschnitt fuer Ampel verwenden
 #define AUTO_KALIBRIERUNG  0 //1 = automatische Kalibrierung an (erfordert 7 Tage Dauerbetrieb mit 1h Frischluft pro Tag)
 #define DISPLAY_AUSGABE    0 //1 = Ausgabe auf Display aktivieren
@@ -70,6 +75,7 @@
 
 #include <Wire.h>
 #include <SPI.h>
+#include <FlashStorage.h>
 #include <SparkFun_SCD30_Arduino_Library.h>
 #include <Adafruit_NeoPixel.h>
 #include <WiFi101.h>
@@ -79,6 +85,16 @@
 #endif
 
 
+typedef struct
+{
+  boolean valid;
+  unsigned int brightness;
+  unsigned int altitude;
+} SETTINGS;
+
+FlashStorage(flash_settings, SETTINGS);
+SETTINGS settings;
+
 SCD30 sensor;
 Adafruit_NeoPixel ws2812 = Adafruit_NeoPixel(4, PIN_WS2812, NEO_GRB + NEO_KHZ800);
 #if DISPLAY_AUSGABE > 0
@@ -87,7 +103,6 @@ Adafruit_NeoPixel ws2812 = Adafruit_NeoPixel(4, PIN_WS2812, NEO_GRB + NEO_KHZ800
 WiFiServer server(80); //Webserver Port 80 (Plus Version)
 
 unsigned int plus_version=0, remote_on=0;
-unsigned int brightness=HELLIGKEIT;
 unsigned int co2=STARTWERT, co2_average=STARTWERT;
 unsigned int light=1024;
 float temp=0, humi=0;
@@ -188,9 +203,18 @@ void serial_service(void)
       else
       {
         remote_on = 0;
-        ws2812.setBrightness(brightness);
+        ws2812.setBrightness(settings.brightness);
       }
       Serial.println("OK");
+      break;
+
+    case 'S': //Save/speichern
+      cmd = Serial.read();
+      if(cmd == '1')
+      {
+        flash_settings.write(settings); //Einstellungen speichern
+        Serial.println("OK");
+      }
       break;
 
     case 'H': //LED Helligkeit
@@ -207,7 +231,7 @@ void serial_service(void)
         {
           val = 255;
         }
-        brightness = val;
+        settings.brightness = val;
         ws2812.setBrightness(val);
         ws2812.show();
         Serial.println("OK");
@@ -233,6 +257,44 @@ void serial_service(void)
         analogWrite(PIN_BUZZER, 255/2); //Buzzer an
         delay(500); //500ms warten
         analogWrite(PIN_BUZZER, 0); //Buzzer aus
+        Serial.println("OK");
+      }
+      break;
+      
+    case 'A': //Altitude/Hoehe ueber dem Meeresspiegel
+      i = Serial.readBytesUntil('\n', tmp, sizeof(tmp));
+      if(i > 0)
+      {
+        tmp[i] = 0;
+        sscanf(tmp, "%d", &val);
+        if((val >= 0) && (val <= 3000))
+        {
+          settings.altitude = val;
+          sensor.setAltitudeCompensation(val); //Meter ueber dem Meeresspiegel
+          Serial.println("OK");
+        }
+      }
+      break;
+
+    case 'P': //Pressure/Luftdruck in hPa
+      i = Serial.readBytesUntil('\n', tmp, sizeof(tmp));
+      if(i > 0)
+      {
+        tmp[i] = 0;
+        sscanf(tmp, "%d", &val);
+        if((val == 0) || ((val >= 700) && (val <= 1400)))
+        {
+          sensor.setAmbientPressure(val); //0 oder 700-1400, Luftdruck in hPa
+          Serial.println("OK");
+        }
+      }
+      break;
+      
+    case 'C': //Calibration/Kalibrierung
+      cmd = Serial.read();
+      if(cmd == '1')
+      {
+        sensor.setForcedRecalibrationFactor(400); //400ppm = Frischluft
         Serial.println("OK");
       }
       break;
@@ -290,9 +352,9 @@ void webserver_service(void)
 }
 
 
-unsigned int self_test(void) //Testprogramm
+void self_test(void) //Testprogramm
 {
-  unsigned int calibration=0, okay=0, co2_last=0;
+  unsigned int calibration=0, okay, sw, co2_last;
   unsigned int atecc, atwinc;
 
   sensor.setMeasurementInterval(2); //2s (kleinster Intervall)
@@ -303,7 +365,7 @@ unsigned int self_test(void) //Testprogramm
   analogWrite(PIN_BUZZER, 0); //Buzzer aus
 
   //LED-Test
-  ws2812.setBrightness(10); //0...255
+  ws2812.setBrightness(20); //0...255
   ws2812.fill(ws2812.Color(255,0,0), 0, 4); //LEDs rot
   ws2812.show();
   delay(1000); //1s warten
@@ -330,7 +392,7 @@ unsigned int self_test(void) //Testprogramm
     {
       if(Serial)
       {
-        Serial.println("Fehler: ATECC608");
+        Serial.println("Error: ATECC608");
       }
       while(1)
       {
@@ -346,7 +408,7 @@ unsigned int self_test(void) //Testprogramm
     {
       if(Serial)
       {
-        Serial.println("Fehler: ATWINC1500");
+        Serial.println("Error: ATWINC1500");
       }
       while(1)
       {
@@ -398,7 +460,7 @@ unsigned int self_test(void) //Testprogramm
       temp = sensor.getTemperature();
       humi = sensor.getHumidity();
 
-      if((co2 >= 200) && (co2 <= 1500)) //200-1500ppm
+      if((co2 >= 100) && (co2 <= 1500)) //100-1500ppm
       {
         okay |= (1<<1);
         ws2812.setPixelColor(1, ws2812.Color(0,255,0));
@@ -437,9 +499,63 @@ unsigned int self_test(void) //Testprogramm
   }
   delay(2000); //2s warten
 
-  //Kalibrierung
-  if(calibration)
+  if(calibration) //Kalibrierung starten?
   {
+    //Altitude
+    calibration = settings.altitude/250; //Meter ueber dem Meeresspiegel
+    ws2812.fill(ws2812.Color(255,255,255), 0, 4); //LEDs weiss
+    if(calibration > 0)
+    {
+      ws2812.fill(ws2812.Color(255,0,0), 0, calibration); //LEDs rot
+    }
+    ws2812.show();
+    for(sw=0, okay=0; okay<1000; okay++) //10s Timeout
+    {
+      digitalWrite(PIN_LED, HIGH); //Status-LED an
+      delay(5); //5ms warten
+      digitalWrite(PIN_LED, LOW); //Status-LED aus
+      delay(5); //5ms warten
+
+      if(digitalRead(PIN_SWITCH) == LOW) //Taster gedrueckt
+      {
+        sw++;
+        okay=0;
+      }
+      else //Taster losgelassen
+      {
+        if(sw > 200) //2s Tastendruck
+        {
+          break;
+        }
+        else if(sw > 15) //150ms Tastendruck
+        {
+          calibration++;
+          if(calibration > 4)
+          {
+            calibration = 0;
+          }
+          ws2812.fill(ws2812.Color(255,255,255), 0, 4); //LEDs weiss
+          if(calibration > 0)
+          {
+            ws2812.fill(ws2812.Color(255,0,0), 0, calibration); //LEDs rot
+          }
+          ws2812.show();
+        }
+        sw = 0;
+      }
+    }
+    settings.altitude = 250*calibration;
+    sensor.setAltitudeCompensation(settings.altitude); //Meter ueber dem Meeresspiegel
+    flash_settings.write(settings); //Einstellungen speichern
+    if(Serial)
+    {
+      Serial.print("Altitude: ");
+      Serial.println(settings.altitude, DEC);
+    }
+
+    //Kalibrierung
+    ws2812.fill(ws2812.Color(255,255,255), 0, 4); //LEDs weiss
+    ws2812.show();
     co2_last = co2;
     for(okay=0; okay < 60;) //mindestens 60 Messungen (ca. 2 Minuten)
     {
@@ -460,7 +576,7 @@ unsigned int self_test(void) //Testprogramm
         temp = sensor.getTemperature();
         humi = sensor.getHumidity();
 
-        if((co2 > 200) && (co2 < 1000) && 
+        if((co2 >= 30) && (co2 <= 1500) && 
            (co2 >= (co2_last-30)) &&
            (co2 <= (co2_last+30))) //+/-30ppm Toleranz zum vorherigen Wert
         {
@@ -472,17 +588,17 @@ unsigned int self_test(void) //Testprogramm
         }
         co2_last = co2;
 
-        if(co2 < 500)
+        if(co2 < 600)
         {
-          ws2812.fill(ws2812.Color(0,255,0), 0, 4);   //gruen
+          ws2812.fill(ws2812.Color(0,255,0), 2, 3);   //gruen
         }
-        else if(co2 < 700)
+        else if(co2 < 1500)
         {
-          ws2812.fill(ws2812.Color(255,255,0), 0, 4); //gelb
+          ws2812.fill(ws2812.Color(255,255,0), 2, 2); //gelb
         }
         else //>=700
         {
-          ws2812.fill(ws2812.Color(255,0,0), 0, 4);   //rot
+          ws2812.fill(ws2812.Color(255,0,0), 2, 2);   //rot
         }
         ws2812.show();
 
@@ -498,20 +614,28 @@ unsigned int self_test(void) //Testprogramm
     if(calibration && (okay >= 60))
     {
       sensor.setForcedRecalibrationFactor(400); //400ppm = Frischluft
-      ws2812.fill(ws2812.Color(0,0,255), 0, 4); //blau
+      ws2812.fill(ws2812.Color(0,0,255), 0, 4); //LEDs blau
       ws2812.show();
       analogWrite(PIN_BUZZER, 255/2); //Buzzer an
       delay(500); //500ms warten
       analogWrite(PIN_BUZZER, 0); //Buzzer aus
+      ws2812.fill(ws2812.Color(0,0,0), 0, 4);  //LEDs aus
+      ws2812.show();
+      if(Serial)
+      {
+        Serial.println("Calibration OK");
+      }
     }
   }
 
-  ws2812.setBrightness(brightness); //0...255
+  ws2812.setBrightness(settings.brightness); //0...255
+  ws2812.fill(ws2812.Color(20,20,20), 0, 4); //LEDs weiss
+  ws2812.show();
   co2 = STARTWERT;
   co2_average = STARTWERT;
   light = 1024;
 
-  return calibration;
+  return;
 }
 
 
@@ -536,20 +660,21 @@ void setup()
     run_test = 1;
   }
 
+  //Einstellungen
+  settings = flash_settings.read(); //Einstellungen lesen
+  if((settings.valid == false) || (settings.brightness > 255))
+  {
+    settings.brightness = HELLIGKEIT;
+    settings.altitude = ALTITUDE;
+    settings.valid = true;
+    flash_settings.write(settings);
+  }
+
   //WS2812
   ws2812.begin();
-  ws2812.setBrightness(brightness); //0...255
-  ws2812.fill(ws2812.Color(20,20,20), 0, 4); //weiss
+  ws2812.setBrightness(settings.brightness); //0...255
+  ws2812.fill(ws2812.Color(20,20,20), 0, 4); //LEDs weiss
   ws2812.show();
-
-  //serielle Schnittstelle (USB)
-  Serial.begin(BAUDRATE); //seriellen Port starten
-  Serial.setTimeout(500); //500ms Timeout beim Lesen
-  //while(!Serial); //warten auf USB-Verbindung
-  if(Serial)
-  {
-    Serial.println("\nCO2 Ampel v"VERSION);
-  }
 
   //Wire/I2C
   Wire.begin();
@@ -558,6 +683,20 @@ void setup()
   Wire1.setClock(100000); //100kHz ATECC
 
   delay(250); //250ms warten
+
+  //serielle Schnittstelle (USB)
+  Serial.begin(BAUDRATE); //seriellen Port starten
+  Serial.setTimeout(500); //500ms Timeout beim Lesen
+  //while(!Serial); //warten auf USB-Verbindung
+  if(Serial)
+  {
+    Serial.println("\nCO2 Ampel v" VERSION);
+    if(settings.altitude > 0)
+    {
+      Serial.print("Altitude: ");
+      Serial.println(settings.altitude, DEC);
+    }
+  }
 
   //ATECC608+ATWINC1500
   Wire1.beginTransmission(0x60); //Dummy Test
@@ -571,7 +710,7 @@ void setup()
       plus_version = 1;
       if(Serial)
       {
-        Serial.println("(Plus Version)");
+        Serial.println("Plus Version");
       }
     }
     else
@@ -595,11 +734,11 @@ void setup()
     delay(500); //500ms warten
     if(Serial)
     {
-      Serial.println("Fehler: CO2 Sensor nicht gefunden.");
+      Serial.println("Error: CO2 sensor not found");
     }
   }
-  //sensor.setAltitudeCompensation(800); //Meter ueber dem Meeresspiegel
-  //sensor.setAmbientPressure(1000); //700-1200, Luftdruck in hPa
+  sensor.setAltitudeCompensation(settings.altitude); //Meter ueber dem Meeresspiegel
+  //sensor.setAmbientPressure(1000); //0 oder 700-1400, Luftdruck in hPa
 
   #if DISPLAY_AUSGABE > 0
     display.clearDisplay();
@@ -744,12 +883,12 @@ void loop()
   if(sw & 0x8000) //hoechstes Bit gesetzt = Taster gedrueckt
   {
     sw = 0;
-    brightness = brightness/2; //Helligkeit halbieren
-    if(brightness < HELLIGKEIT_DUNKEL)
+    settings.brightness = settings.brightness/2; //Helligkeit halbieren
+    if(settings.brightness < HELLIGKEIT_DUNKEL)
     {
-      brightness = HELLIGKEIT;
+      settings.brightness = HELLIGKEIT;
     }
-    ws2812.setBrightness(brightness);
+    ws2812.setBrightness(settings.brightness);
   }
   else if((millis()-t_ampel) > 1000) //Ampelfunktion nur jede Sekunde ausfuehren
   {
@@ -766,16 +905,6 @@ void loop()
     return;
   }
 
-  //Ampel
-  if(remote_on == 0)
-  {
-    #if AMPEL_DURCHSCHNITT > 0
-      ampel(co2_average);
-    #else
-      ampel(co2);
-    #endif
-  }
-
   //Sensordaten auslesen
   if(sensor.dataAvailable())
   {
@@ -784,6 +913,16 @@ void loop()
     humi = sensor.getHumidity();
     
     show_data();
+  }
+
+  //Ampel
+  if(remote_on == 0)
+  {
+    #if AMPEL_DURCHSCHNITT > 0
+      ampel(co2_average);
+    #else
+      ampel(co2);
+    #endif
   }
 
   //Lichtsensor
@@ -809,7 +948,7 @@ void loop()
         {
           dunkel = 0;
           sensor.setMeasurementInterval(INTERVALL); 
-          ws2812.setBrightness(brightness); //0...255
+          ws2812.setBrightness(settings.brightness); //0...255
         }
       }
     }
