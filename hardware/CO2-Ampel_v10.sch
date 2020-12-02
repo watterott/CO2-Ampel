@@ -8058,27 +8058,11 @@ red, green, blue -&gt; 0603</description>
 <pad name="4" x="-8.48" y="-10.09" drill="0.9"/>
 <pad name="5" x="-5.94" y="-10.09" drill="0.9"/>
 <pad name="6" x="-3.4" y="-10.09" drill="0.9"/>
-<pad name="7" x="-0.86" y="-10.09" drill="0.9"/>
 <hole x="-15.7" y="-6.62" drill="2.5"/>
 <hole x="15.62" y="9.64" drill="2.5"/>
 <text x="0.06" y="2.135" size="0.8128" layer="25" font="vector" ratio="10" align="center">&gt;NAME</text>
 <text x="0.06" y="-1.675" size="0.8128" layer="27" font="vector" ratio="10" rot="R180" align="center">&gt;VALUE</text>
-</package>
-<package name="C0603">
-<wire x1="0.45" y1="0.85" x2="0.45" y2="0.45" width="0.127" layer="21"/>
-<wire x1="0.45" y1="0.45" x2="0.45" y2="-0.45" width="0.127" layer="21"/>
-<wire x1="0.45" y1="-0.45" x2="0.45" y2="-0.85" width="0.127" layer="21"/>
-<wire x1="-0.45" y1="0.85" x2="-0.45" y2="0.45" width="0.127" layer="21"/>
-<wire x1="-0.45" y1="0.45" x2="-0.45" y2="-0.45" width="0.127" layer="21"/>
-<wire x1="-0.45" y1="-0.45" x2="-0.45" y2="-0.85" width="0.127" layer="21"/>
-<wire x1="0.45" y1="-0.85" x2="-0.45" y2="-0.85" width="0.127" layer="21"/>
-<wire x1="0.45" y1="0.85" x2="-0.45" y2="0.85" width="0.127" layer="21"/>
-<wire x1="0.45" y1="0.45" x2="-0.45" y2="0.45" width="0.127" layer="21"/>
-<wire x1="0.45" y1="-0.45" x2="-0.45" y2="-0.45" width="0.127" layer="21"/>
-<text x="-1.27" y="0" size="0.8128" layer="25" font="vector" ratio="10" rot="R270" align="center">&gt;NAME</text>
-<text x="1.27" y="0" size="0.8128" layer="27" font="vector" ratio="10" rot="R270" align="center">&gt;VALUE</text>
-<smd name="1" x="0" y="0.8" dx="1" dy="0.95" layer="1" roundness="20"/>
-<smd name="2" x="0" y="-0.8" dx="1" dy="0.95" layer="1" roundness="20"/>
+<pad name="7" x="-0.86" y="-10.09" drill="0.9"/>
 </package>
 </packages>
 <symbols>
@@ -8087,73 +8071,36 @@ red, green, blue -&gt; 0603</description>
 <pin name="VCC" x="-15.24" y="-2.54" length="middle" direction="pwr"/>
 <pin name="RX/SDA" x="15.24" y="-2.54" length="middle" rot="R180"/>
 <pin name="GND" x="-15.24" y="-7.62" length="middle" direction="pwr"/>
-<pin name="PWM" x="15.24" y="2.54" length="middle" rot="R180"/>
-<pin name="RDY" x="15.24" y="7.62" length="middle" rot="R180"/>
-<pin name="SEL" x="-15.24" y="7.62" length="middle"/>
 <wire x1="-10.16" y1="10.16" x2="-10.16" y2="-10.16" width="0.254" layer="94"/>
 <wire x1="-10.16" y1="-10.16" x2="10.16" y2="-10.16" width="0.254" layer="94"/>
 <wire x1="10.16" y1="-10.16" x2="10.16" y2="10.16" width="0.254" layer="94"/>
 <wire x1="10.16" y1="10.16" x2="-10.16" y2="10.16" width="0.254" layer="94"/>
 <text x="-10.16" y="12.7" size="1.778" layer="95" rot="MR180">&gt;NAME</text>
 <text x="-10.16" y="-12.7" size="1.778" layer="96">&gt;VALUE</text>
-</symbol>
-<symbol name="PHOTOTRANSISTOR">
-<wire x1="2.54" y1="2.54" x2="0.508" y2="1.524" width="0.1524" layer="94"/>
-<wire x1="1.778" y1="-1.524" x2="2.54" y2="-2.54" width="0.1524" layer="94"/>
-<wire x1="2.54" y1="-2.54" x2="1.27" y2="-2.54" width="0.1524" layer="94"/>
-<wire x1="1.27" y1="-2.54" x2="1.778" y2="-1.524" width="0.1524" layer="94"/>
-<wire x1="1.54" y1="-2.04" x2="0.308" y2="-1.424" width="0.1524" layer="94"/>
-<wire x1="1.524" y1="-2.413" x2="2.286" y2="-2.413" width="0.254" layer="94"/>
-<wire x1="2.286" y1="-2.413" x2="1.778" y2="-1.778" width="0.254" layer="94"/>
-<wire x1="1.778" y1="-1.778" x2="1.524" y2="-2.286" width="0.254" layer="94"/>
-<wire x1="1.524" y1="-2.286" x2="1.905" y2="-2.286" width="0.254" layer="94"/>
-<wire x1="1.905" y1="-2.286" x2="1.778" y2="-2.032" width="0.254" layer="94"/>
-<wire x1="-5.08" y1="2.54" x2="-2.54" y2="0" width="0.1524" layer="94"/>
-<wire x1="-3.302" y1="0" x2="-2.54" y2="0" width="0.1524" layer="94"/>
-<wire x1="-2.54" y1="0" x2="-2.54" y2="0.762" width="0.1524" layer="94"/>
-<wire x1="-5.588" y1="1.524" x2="-3.048" y2="-1.016" width="0.1524" layer="94"/>
-<wire x1="-3.81" y1="-1.016" x2="-3.048" y2="-1.016" width="0.1524" layer="94"/>
-<wire x1="-3.048" y1="-1.016" x2="-3.048" y2="-0.254" width="0.1524" layer="94"/>
-<text x="3.81" y="0" size="1.778" layer="95">&gt;NAME</text>
-<text x="3.81" y="-2.54" size="1.778" layer="96">&gt;VALUE</text>
-<rectangle x1="-0.254" y1="-2.54" x2="0.508" y2="2.54" layer="94"/>
-<pin name="E" x="2.54" y="-5.08" visible="off" length="short" direction="pas" swaplevel="3" rot="R90"/>
-<pin name="C" x="2.54" y="5.08" visible="off" length="short" direction="pas" swaplevel="2" rot="R270"/>
+<pin name="PWM" x="15.24" y="2.54" length="middle" direction="out" rot="R180"/>
+<pin name="RDY" x="15.24" y="7.62" length="middle" direction="out" rot="R180"/>
+<pin name="SEL" x="-15.24" y="7.62" length="middle"/>
+<text x="-7.62" y="5.842" size="0.8128" layer="95" align="top-left">I2C=low
+Modbus=high</text>
 </symbol>
 </symbols>
 <devicesets>
-<deviceset name="SCD30">
-<description>Sensirion SCD30 CO2, humidity, and temperature sensor</description>
+<deviceset name="SCD30" prefix="IC">
+<description>Sensirion SCD30
+CO2, Humidity, Temperature Sensor</description>
 <gates>
-<gate name="G$1" symbol="SCD30" x="0" y="0"/>
+<gate name="IC" symbol="SCD30" x="0" y="0"/>
 </gates>
 <devices>
 <device name="" package="SCD30">
 <connects>
-<connect gate="G$1" pin="GND" pad="2"/>
-<connect gate="G$1" pin="PWM" pad="6"/>
-<connect gate="G$1" pin="RDY" pad="5"/>
-<connect gate="G$1" pin="RX/SDA" pad="4"/>
-<connect gate="G$1" pin="SEL" pad="7"/>
-<connect gate="G$1" pin="TX/SCL" pad="3"/>
-<connect gate="G$1" pin="VCC" pad="1"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-</devices>
-</deviceset>
-<deviceset name="IN-S63DTLS">
-<description>Phototransistor</description>
-<gates>
-<gate name="IC1" symbol="PHOTOTRANSISTOR" x="0" y="0"/>
-</gates>
-<devices>
-<device name="" package="C0603">
-<connects>
-<connect gate="IC1" pin="C" pad="1"/>
-<connect gate="IC1" pin="E" pad="2"/>
+<connect gate="IC" pin="GND" pad="2"/>
+<connect gate="IC" pin="PWM" pad="6"/>
+<connect gate="IC" pin="RDY" pad="5"/>
+<connect gate="IC" pin="RX/SDA" pad="4"/>
+<connect gate="IC" pin="SEL" pad="7"/>
+<connect gate="IC" pin="TX/SCL" pad="3"/>
+<connect gate="IC" pin="VCC" pad="1"/>
 </connects>
 <technologies>
 <technology name=""/>
@@ -8425,6 +8372,77 @@ BTS3018TC (Vin=0...10V, Vds&amp;lt;=60V, Id=6A + Rds=0.02Ohm @ Vin=5V)&lt;br&gt;
 </deviceset>
 </devicesets>
 </library>
+<library name="we-opto@1">
+<description>Displays, LEDs, Photocoupler/Optocoupler, Photointerrupter...</description>
+<packages>
+<package name="C0603T">
+<wire x1="-0.3" y1="0.8" x2="0.3" y2="0.8" width="0.1016" layer="21" curve="170.055574"/>
+<wire x1="-0.275" y1="-0.825" x2="0.275" y2="-0.825" width="0.0508" layer="21" curve="-180"/>
+<wire x1="-0.4" y1="0.375" x2="-0.4" y2="-0.35" width="0.1016" layer="21"/>
+<wire x1="0.4" y1="0.35" x2="0.4" y2="-0.35" width="0.1016" layer="21"/>
+<circle x="-0.35" y="0.625" radius="0.075" width="0.0508" layer="21"/>
+<smd name="C" x="0" y="0.75" dx="0.9" dy="0.8" layer="1" roundness="20"/>
+<smd name="E" x="0" y="-0.75" dx="0.9" dy="0.8" layer="1" roundness="20"/>
+<text x="-1.27" y="0" size="0.8128" layer="25" font="vector" ratio="10" rot="R270" align="center">&gt;NAME</text>
+<text x="1.27" y="0" size="0.8128" layer="27" font="vector" ratio="10" rot="R270" align="center">&gt;VALUE</text>
+<rectangle x1="-0.45" y1="0.7" x2="-0.25" y2="0.85" layer="21"/>
+<rectangle x1="-0.275" y1="0.55" x2="-0.225" y2="0.6" layer="21"/>
+<rectangle x1="-0.45" y1="0.35" x2="-0.4" y2="0.725" layer="21"/>
+<rectangle x1="0.25" y1="0.55" x2="0.45" y2="0.85" layer="21"/>
+<rectangle x1="-0.45" y1="0.35" x2="0.45" y2="0.575" layer="21"/>
+<rectangle x1="-0.45" y1="-0.85" x2="-0.25" y2="-0.35" layer="21"/>
+<rectangle x1="0.25" y1="-0.85" x2="0.45" y2="-0.35" layer="21"/>
+<rectangle x1="-0.275" y1="-0.575" x2="0.275" y2="-0.35" layer="21"/>
+<rectangle x1="-0.275" y1="-0.65" x2="-0.175" y2="-0.55" layer="21"/>
+<rectangle x1="0.175" y1="-0.65" x2="0.275" y2="-0.55" layer="21"/>
+<rectangle x1="-0.125" y1="0" x2="0.125" y2="0.25" layer="21"/>
+</package>
+</packages>
+<symbols>
+<symbol name="PHOTOTRANSISTOR">
+<wire x1="2.54" y1="2.54" x2="0.508" y2="1.524" width="0.1524" layer="94"/>
+<wire x1="1.778" y1="-1.524" x2="2.54" y2="-2.54" width="0.1524" layer="94"/>
+<wire x1="2.54" y1="-2.54" x2="1.27" y2="-2.54" width="0.1524" layer="94"/>
+<wire x1="1.27" y1="-2.54" x2="1.778" y2="-1.524" width="0.1524" layer="94"/>
+<wire x1="1.54" y1="-2.04" x2="0.308" y2="-1.424" width="0.1524" layer="94"/>
+<wire x1="1.524" y1="-2.413" x2="2.286" y2="-2.413" width="0.254" layer="94"/>
+<wire x1="2.286" y1="-2.413" x2="1.778" y2="-1.778" width="0.254" layer="94"/>
+<wire x1="1.778" y1="-1.778" x2="1.524" y2="-2.286" width="0.254" layer="94"/>
+<wire x1="1.524" y1="-2.286" x2="1.905" y2="-2.286" width="0.254" layer="94"/>
+<wire x1="1.905" y1="-2.286" x2="1.778" y2="-2.032" width="0.254" layer="94"/>
+<wire x1="-5.08" y1="2.54" x2="-2.54" y2="0" width="0.1524" layer="94"/>
+<wire x1="-3.302" y1="0" x2="-2.54" y2="0" width="0.1524" layer="94"/>
+<wire x1="-2.54" y1="0" x2="-2.54" y2="0.762" width="0.1524" layer="94"/>
+<wire x1="-5.588" y1="1.524" x2="-3.048" y2="-1.016" width="0.1524" layer="94"/>
+<wire x1="-3.81" y1="-1.016" x2="-3.048" y2="-1.016" width="0.1524" layer="94"/>
+<wire x1="-3.048" y1="-1.016" x2="-3.048" y2="-0.254" width="0.1524" layer="94"/>
+<text x="3.81" y="0" size="1.778" layer="95">&gt;NAME</text>
+<text x="3.81" y="-2.54" size="1.778" layer="96">&gt;VALUE</text>
+<rectangle x1="-0.254" y1="-2.54" x2="0.508" y2="2.54" layer="94"/>
+<pin name="E" x="2.54" y="-5.08" visible="off" length="short" direction="pas" swaplevel="3" rot="R90"/>
+<pin name="C" x="2.54" y="5.08" visible="off" length="short" direction="pas" swaplevel="2" rot="R270"/>
+</symbol>
+</symbols>
+<devicesets>
+<deviceset name="PT" prefix="T">
+<description>Phototransistor</description>
+<gates>
+<gate name="T" symbol="PHOTOTRANSISTOR" x="-2.54" y="0"/>
+</gates>
+<devices>
+<device name="-IN-S63DTLS" package="C0603T">
+<connects>
+<connect gate="T" pin="C" pad="C"/>
+<connect gate="T" pin="E" pad="E"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+</devicesets>
+</library>
 </libraries>
 <attributes>
 </attributes>
@@ -8439,117 +8457,117 @@ BTS3018TC (Vin=0...10V, Vds&amp;lt;=60V, Id=6A + Rds=0.02Ohm @ Vin=5V)&lt;br&gt;
 </class>
 </classes>
 <parts>
-<part name="X2" library="we-symbol" deviceset="PASSER" device="-07"/>
 <part name="X1" library="we-symbol" deviceset="PASSER" device="-07"/>
 <part name="X3" library="we-symbol" deviceset="PASSER" device="-07"/>
+<part name="X4" library="we-symbol" deviceset="PASSER" device="-07"/>
 <part name="FRAME1" library="we-symbol" deviceset="FRAME-A4L" device=""/>
 <part name="LOGO3" library="we-symbol" deviceset="LOGO_OSHW" device="-3" value="OSHW_LOGOX0070"/>
-<part name="X4" library="we-symbol" deviceset="PASSER" device="-07"/>
-<part name="IC2" library="we-chip" deviceset="ATSAMD21G" device="18A-MU"/>
-<part name="SW2" library="we-switch" deviceset="SW-TACTILE" device="-PTS840P" value="PTS645SK50SMTR92-Red"/>
-<part name="SWD" library="we-board" deviceset="SWD" device="-2X5-SMD">
+<part name="X2" library="we-symbol" deviceset="PASSER" device="-07"/>
+<part name="IC1" library="we-chip" deviceset="ATSAMD21G" device="18A-MU"/>
+<part name="SW1" library="we-switch" deviceset="SW-TACTILE" device="-PTS840P" value="PTS645SK50SMTR92-Red"/>
+<part name="J2" library="we-board" deviceset="SWD" device="-2X5-SMD">
 <variant name="light" populate="no"/>
 </part>
 <part name="+3V31" library="supply1" deviceset="+3V3" device=""/>
 <part name="+3V315" library="supply1" deviceset="+3V3" device=""/>
-<part name="C27" library="we-rcl" deviceset="CAPACITOR" device="-0402" value="100n"/>
+<part name="C18" library="we-rcl" deviceset="CAPACITOR" device="-0402" value="100n"/>
 <part name="GND34" library="supply1" deviceset="GND" device=""/>
 <part name="GND9" library="supply1" deviceset="GND" device=""/>
 <part name="+3V32" library="supply1" deviceset="+3V3" device=""/>
 <part name="GND1" library="supply1" deviceset="GND" device=""/>
-<part name="R1" library="we-rcl" deviceset="RESISTOR" device="-0603" value="0"/>
+<part name="R5" library="we-rcl" deviceset="RESISTOR" device="-0603" value="0"/>
 <part name="F1" library="we-rcl" deviceset="FUSE" device="-0805" value="0.5A"/>
 <part name="P+1" library="supply1" deviceset="+5V" device=""/>
-<part name="D5" library="we-rcl" deviceset="D_ESD5V3U2U" device="-03F"/>
+<part name="D1" library="we-rcl" deviceset="D_ESD5V3U2U" device="-03F"/>
 <part name="GND6" library="supply1" deviceset="GND" device=""/>
-<part name="IC1" library="we-power" deviceset="VREG" device="-TS1117CW-3V3" value="VREG-AP2111H-3V3"/>
+<part name="IC2" library="we-power" deviceset="VREG" device="-TS1117CW-3V3" value="VREG-AP2111H-3V3"/>
 <part name="P+2" library="supply1" deviceset="+5V" device=""/>
 <part name="GND7" library="supply1" deviceset="GND" device=""/>
-<part name="C3" library="we-rcl" deviceset="CAPACITOR" device="-0402" value="100n"/>
-<part name="C7" library="we-rcl" deviceset="CAPACITOR" device="-0402" value="100n"/>
-<part name="D2" library="we-opto" deviceset="LED" device="-0603" value="red"/>
-<part name="R3" library="we-rcl" deviceset="RESISTOR" device="-0402" value="1k"/>
-<part name="C13" library="we-rcl" deviceset="CAPACITOR" device="-0402" value="2u2"/>
+<part name="C10" library="we-rcl" deviceset="CAPACITOR" device="-0402" value="100n"/>
 <part name="C11" library="we-rcl" deviceset="CAPACITOR" device="-0402" value="100n"/>
+<part name="D2" library="we-opto" deviceset="LED" device="-0603" value="red"/>
+<part name="R7" library="we-rcl" deviceset="RESISTOR" device="-0402" value="1k"/>
 <part name="C8" library="we-rcl" deviceset="CAPACITOR" device="-0402" value="2u2"/>
-<part name="C12" library="we-rcl" deviceset="CAPACITOR" device="-0402" value="100n"/>
+<part name="C7" library="we-rcl" deviceset="CAPACITOR" device="-0402" value="100n"/>
+<part name="C5" library="we-rcl" deviceset="CAPACITOR" device="-0402" value="2u2"/>
+<part name="C1" library="we-rcl" deviceset="CAPACITOR" device="-0402" value="100n"/>
 <part name="GND10" library="supply1" deviceset="GND" device=""/>
 <part name="GND11" library="supply1" deviceset="GND" device=""/>
-<part name="R7" library="we-rcl" deviceset="RESISTOR" device="-0402" value="10k"/>
-<part name="R6" library="we-rcl" deviceset="RESISTOR" device="-0402" value="330"/>
+<part name="R1" library="we-rcl" deviceset="RESISTOR" device="-0402" value="10k"/>
+<part name="R2" library="we-rcl" deviceset="RESISTOR" device="-0402" value="330"/>
 <part name="+3V34" library="supply1" deviceset="+3V3" device=""/>
-<part name="R5" library="we-rcl" deviceset="RESISTOR" device="-0402" value="1k"/>
-<part name="C6" library="we-rcl" deviceset="CAPACITOR" device="-0402" value="100n"/>
-<part name="C5" library="we-rcl" deviceset="CAPACITOR" device="-0402" value="100n"/>
+<part name="R6" library="we-rcl" deviceset="RESISTOR" device="-0402" value="1k"/>
 <part name="C4" library="we-rcl" deviceset="CAPACITOR" device="-0402" value="100n"/>
+<part name="C3" library="we-rcl" deviceset="CAPACITOR" device="-0402" value="100n"/>
+<part name="C2" library="we-rcl" deviceset="CAPACITOR" device="-0402" value="100n"/>
 <part name="FRAME2" library="we-symbol" deviceset="FRAME-A4L" device=""/>
-<part name="C2" library="we-rcl" deviceset="CAPACITOR" device="-0805" value="22u"/>
 <part name="C9" library="we-rcl" deviceset="CAPACITOR" device="-0805" value="22u"/>
+<part name="C12" library="we-rcl" deviceset="CAPACITOR" device="-0805" value="22u"/>
 <part name="GND4" library="supply1" deviceset="GND" device=""/>
 <part name="+3V33" library="supply1" deviceset="+3V3" device=""/>
-<part name="SW1" library="we-switch" deviceset="SW-TACTILE" device="-PTS840P" value="PTS645SH50SMTR92-Grey">
+<part name="SW2" library="we-switch" deviceset="SW-TACTILE" device="-PTS840P" value="PTS645SH50SMTR92-Grey">
 <variant name="light" populate="no"/>
 </part>
 <part name="GND3" library="supply1" deviceset="GND" device=""/>
 <part name="L1" library="we-rcl" deviceset="INDUCTOR" device="-0603" value="BLM18PG221SH1D"/>
-<part name="C10" library="we-rcl" deviceset="CAPACITOR" device="-0402" value="2u2"/>
+<part name="C6" library="we-rcl" deviceset="CAPACITOR" device="-0402" value="2u2"/>
 <part name="GND8" library="supply1" deviceset="GND" device=""/>
-<part name="LOGO7" library="we-symbol" deviceset="LOGO_CE" device="-4"/>
-<part name="LOGO5" library="we-symbol" deviceset="LOGO_ROHS" device="-4"/>
-<part name="LOGO6" library="we-symbol" deviceset="LOGO_WEEE" device="-4"/>
-<part name="LOGO4" library="we-symbol" deviceset="LOGO_SPARK" device="-4"/>
-<part name="IC7" library="we-chip" deviceset="ATECC608A" device="-MAHDA"/>
+<part name="LOGO5" library="we-symbol" deviceset="LOGO_CE" device="-4"/>
+<part name="LOGO4" library="we-symbol" deviceset="LOGO_ROHS" device="-4"/>
+<part name="LOGO2" library="we-symbol" deviceset="LOGO_WEEE" device="-4"/>
+<part name="LOGO1" library="we-symbol" deviceset="LOGO_SPARK" device="-4"/>
+<part name="IC4" library="we-chip" deviceset="ATECC608A" device="-MAHDA"/>
 <part name="J1" library="we-con" deviceset="USB-C" device="-S"/>
-<part name="R47" library="we-rcl" deviceset="RESISTOR" device="-0402" value="5k1"/>
-<part name="R46" library="we-rcl" deviceset="RESISTOR" device="-0402" value="5k1"/>
+<part name="R3" library="we-rcl" deviceset="RESISTOR" device="-0402" value="5k1"/>
+<part name="R4" library="we-rcl" deviceset="RESISTOR" device="-0402" value="5k1"/>
 <part name="GND37" library="supply1" deviceset="GND" device=""/>
-<part name="C17" library="we-rcl" deviceset="CAPACITOR" device="-0402" value="100n"/>
+<part name="C25" library="we-rcl" deviceset="CAPACITOR" device="-0402" value="100n"/>
 <part name="+3V3" library="supply1" deviceset="+3V3" device=""/>
 <part name="GND5" library="supply1" deviceset="GND" device=""/>
 <part name="+3V5" library="supply1" deviceset="+3V3" device=""/>
-<part name="R9" library="we-rcl" deviceset="RESISTOR" device="-0402" value="100k"/>
-<part name="IC3" library="we-chip" deviceset="ATWINC1500" device="-MR210PB"/>
-<part name="C19" library="we-rcl" deviceset="CAPACITOR" device="-0402" value="2u2"/>
-<part name="W4" library="we-opto" deviceset="WS2812B" device=""/>
-<part name="W3" library="we-opto" deviceset="WS2812B" device=""/>
-<part name="W2" library="we-opto" deviceset="WS2812B" device=""/>
-<part name="W1" library="we-opto" deviceset="WS2812B" device=""/>
-<part name="IC34" library="we-sensor" deviceset="SCD30" device=""/>
+<part name="R12" library="we-rcl" deviceset="RESISTOR" device="-0402" value="100k"/>
+<part name="IC5" library="we-chip" deviceset="ATWINC1500" device="-MR210PB"/>
+<part name="C24" library="we-rcl" deviceset="CAPACITOR" device="-0402" value="2u2"/>
+<part name="D6" library="we-opto" deviceset="WS2812B" device=""/>
+<part name="D5" library="we-opto" deviceset="WS2812B" device=""/>
+<part name="D4" library="we-opto" deviceset="WS2812B" device=""/>
+<part name="D3" library="we-opto" deviceset="WS2812B" device=""/>
+<part name="IC3" library="we-sensor" deviceset="SCD30" device=""/>
 <part name="GND13" library="supply1" deviceset="GND" device=""/>
-<part name="R8" library="we-rcl" deviceset="RESISTOR" device="-0402" value="330"/>
+<part name="R11" library="we-rcl" deviceset="RESISTOR" device="-0402" value="330"/>
 <part name="+3V8" library="supply1" deviceset="+3V3" device=""/>
 <part name="GND14" library="supply1" deviceset="GND" device=""/>
+<part name="C20" library="we-rcl" deviceset="CAPACITOR" device="-0402" value="100n"/>
 <part name="C21" library="we-rcl" deviceset="CAPACITOR" device="-0402" value="100n"/>
 <part name="C22" library="we-rcl" deviceset="CAPACITOR" device="-0402" value="100n"/>
-<part name="C23" library="we-rcl" deviceset="CAPACITOR" device="-0402" value="100n"/>
 <part name="P+4" library="supply1" deviceset="+5V" device=""/>
 <part name="GND16" library="supply1" deviceset="GND" device=""/>
-<part name="IC33" library="we-sensor" deviceset="IN-S63DTLS" device=""/>
-<part name="R4" library="we-rcl" deviceset="RESISTOR" device="-0402" value="100k"/>
+<part name="R8" library="we-rcl" deviceset="RESISTOR" device="-0402" value="100k"/>
 <part name="GND12" library="supply1" deviceset="GND" device=""/>
-<part name="J2" library="we-con" deviceset="JST4" device="" value="JST4"/>
+<part name="J4" library="we-con" deviceset="JST4" device="" value="JST4"/>
 <part name="GND17" library="supply1" deviceset="GND" device=""/>
 <part name="+3V2" library="supply1" deviceset="+3V3" device=""/>
-<part name="T1" library="we-transistor" deviceset="MOSFET-N" device="-SOT23" value="N-Chn"/>
+<part name="T2" library="we-transistor" deviceset="MOSFET-N" device="-SOT23" value="N-Chn"/>
 <part name="+3V4" library="supply1" deviceset="+3V3" device=""/>
 <part name="GND18" library="supply1" deviceset="GND" device=""/>
 <part name="R10" library="we-rcl" deviceset="RESISTOR" device="-0402" value="100k"/>
-<part name="R11" library="we-rcl" deviceset="RESISTOR" device="-0402" value="100"/>
+<part name="R9" library="we-rcl" deviceset="RESISTOR" device="-0402" value="100"/>
 <part name="LS1" library="we-audio" deviceset="CSS-0575A-SMT" device=""/>
 <part name="J5" library="we-con" deviceset="JST4" device=""/>
 <part name="GND20" library="supply1" deviceset="GND" device=""/>
 <part name="P+6" library="supply1" deviceset="+5V" device=""/>
 <part name="C14" library="we-rcl" deviceset="CAPACITOR" device="-0402" value="100n"/>
 <part name="GND19" library="supply1" deviceset="GND" device=""/>
-<part name="C15" library="we-rcl" deviceset="CAPACITOR" device="-0402" value="2u2"/>
-<part name="C16" library="we-rcl" deviceset="CAPACITOR" device="-0402" value="100n"/>
-<part name="C18" library="we-rcl" deviceset="CAPACITOR" device="-0402" value="2u2"/>
+<part name="C23" library="we-rcl" deviceset="CAPACITOR" device="-0402" value="2u2"/>
+<part name="C17" library="we-rcl" deviceset="CAPACITOR" device="-0402" value="100n"/>
+<part name="C16" library="we-rcl" deviceset="CAPACITOR" device="-0402" value="2u2"/>
 <part name="P+5" library="supply1" deviceset="+5V" device=""/>
-<part name="C1" library="we-rcl" deviceset="CAPACITOR" device="-0402" value="100n"/>
-<part name="C20" library="we-rcl" deviceset="CAPACITOR" device="-0402" value="100n"/>
-<part name="SWD_TP" library="we-board" deviceset="SWD" device="-1X5-SMDNC"/>
-<part name="C24" library="we-rcl" deviceset="CAPACITOR" device="-0402" value="100n"/>
+<part name="C19" library="we-rcl" deviceset="CAPACITOR" device="-0402" value="100n"/>
+<part name="C15" library="we-rcl" deviceset="CAPACITOR" device="-0402" value="100n"/>
+<part name="J3" library="we-board" deviceset="SWD" device="-1X5-SMDNC"/>
+<part name="C13" library="we-rcl" deviceset="CAPACITOR" device="-0402" value="100n"/>
 <part name="GND2" library="supply1" deviceset="GND" device=""/>
+<part name="T1" library="we-opto@1" deviceset="PT" device="-IN-S63DTLS"/>
 </parts>
 <sheets>
 <sheet>
@@ -8561,24 +8579,24 @@ Designed by Watterott electronic</text>
 <text x="15.24" y="158.75" size="1.778" layer="97">VBUS: 4-5.3V</text>
 </plain>
 <instances>
-<instance part="X2" gate="X" x="168.91" y="11.43" smashed="yes"/>
-<instance part="X1" gate="X" x="165.1" y="7.62" smashed="yes"/>
-<instance part="X3" gate="X" x="172.72" y="7.62" smashed="yes"/>
+<instance part="X1" gate="X" x="168.91" y="11.43" smashed="yes"/>
+<instance part="X3" gate="X" x="165.1" y="7.62" smashed="yes"/>
+<instance part="X4" gate="X" x="172.72" y="7.62" smashed="yes"/>
 <instance part="FRAME1" gate="F" x="0" y="0" smashed="yes">
 <attribute name="DRAWING_NAME" x="217.17" y="15.24" size="1.27" layer="94" font="vector" ratio="10"/>
 <attribute name="LAST_DATE_TIME" x="217.17" y="10.16" size="1.27" layer="94" font="vector" ratio="10"/>
 <attribute name="SHEET" x="230.505" y="5.08" size="2.54" layer="94" font="vector" ratio="10"/>
 </instance>
 <instance part="LOGO3" gate="L" x="200.66" y="7.62" smashed="yes"/>
-<instance part="X4" gate="X" x="176.53" y="11.43" smashed="yes"/>
-<instance part="IC2" gate="IC" x="172.72" y="97.79" smashed="yes">
+<instance part="X2" gate="X" x="176.53" y="11.43" smashed="yes"/>
+<instance part="IC1" gate="IC" x="172.72" y="97.79" smashed="yes">
 <attribute name="VALUE" x="149.86" y="44.45" size="1.778" layer="96" rot="MR180" align="top-left"/>
 <attribute name="NAME" x="149.86" y="151.13" size="1.778" layer="95" align="top-left"/>
 </instance>
-<instance part="SW2" gate="SW" x="134.62" y="128.27" smashed="yes" rot="MR270">
+<instance part="SW1" gate="SW" x="134.62" y="128.27" smashed="yes" rot="MR270">
 <attribute name="NAME" x="129.54" y="128.27" size="1.778" layer="95" rot="MR270" align="bottom-center"/>
 </instance>
-<instance part="SWD" gate="J" x="127" y="97.79" smashed="yes">
+<instance part="J2" gate="J" x="127" y="97.79" smashed="yes">
 <attribute name="NAME" x="121.92" y="107.95" size="1.778" layer="95" align="top-left"/>
 <attribute name="VALUE" x="121.92" y="87.63" size="1.778" layer="95"/>
 </instance>
@@ -8594,7 +8612,7 @@ Designed by Watterott electronic</text>
 <instance part="GND1" gate="1" x="34.29" y="124.46" smashed="yes">
 <attribute name="VALUE" x="31.75" y="121.92" size="1.778" layer="96"/>
 </instance>
-<instance part="R1" gate="R" x="29.21" y="129.54" smashed="yes" rot="R180">
+<instance part="R5" gate="R" x="29.21" y="129.54" smashed="yes" rot="R180">
 <attribute name="NAME" x="29.21" y="128.27" size="1.778" layer="95" rot="R180" align="bottom-center"/>
 <attribute name="VALUE" x="29.21" y="130.81" size="1.778" layer="96" rot="R180" align="top-center"/>
 </instance>
@@ -8605,14 +8623,14 @@ Designed by Watterott electronic</text>
 <instance part="P+1" gate="1" x="52.07" y="158.75" smashed="yes">
 <attribute name="VALUE" x="54.61" y="161.29" size="1.778" layer="96" rot="R180"/>
 </instance>
-<instance part="D5" gate="D" x="66.04" y="137.16" smashed="yes">
+<instance part="D1" gate="D" x="66.04" y="137.16" smashed="yes">
 <attribute name="NAME" x="66.04" y="142.748" size="1.778" layer="95" align="bottom-center"/>
 <attribute name="VALUE" x="66.04" y="125.73" size="1.778" layer="96" align="bottom-center"/>
 </instance>
 <instance part="GND6" gate="1" x="66.04" y="124.46" smashed="yes">
 <attribute name="VALUE" x="63.5" y="121.92" size="1.778" layer="96"/>
 </instance>
-<instance part="IC1" gate="IC" x="104.14" y="19.05" smashed="yes">
+<instance part="IC2" gate="IC" x="104.14" y="19.05" smashed="yes">
 <attribute name="NAME" x="96.52" y="26.67" size="1.778" layer="95" align="top-left"/>
 <attribute name="VALUE" x="96.52" y="24.13" size="1.778" layer="96" align="top-left"/>
 </instance>
@@ -8622,11 +8640,11 @@ Designed by Watterott electronic</text>
 <instance part="GND7" gate="1" x="104.14" y="8.89" smashed="yes">
 <attribute name="VALUE" x="101.6" y="6.35" size="1.778" layer="96"/>
 </instance>
-<instance part="C3" gate="C" x="88.9" y="15.24" smashed="yes" rot="R90">
+<instance part="C10" gate="C" x="88.9" y="15.24" smashed="yes" rot="R90">
 <attribute name="NAME" x="86.36" y="15.24" size="1.778" layer="95" rot="R90" align="bottom-center"/>
 <attribute name="VALUE" x="88.9" y="10.16" size="1.778" layer="96" align="top-center"/>
 </instance>
-<instance part="C7" gate="C" x="119.38" y="15.24" smashed="yes" rot="R90">
+<instance part="C11" gate="C" x="119.38" y="15.24" smashed="yes" rot="R90">
 <attribute name="NAME" x="116.84" y="15.24" size="1.778" layer="95" rot="R90" align="bottom-center"/>
 <attribute name="VALUE" x="119.38" y="10.16" size="1.778" layer="96" align="top-center"/>
 </instance>
@@ -8634,23 +8652,23 @@ Designed by Watterott electronic</text>
 <attribute name="NAME" x="66.802" y="75.946" size="1.778" layer="95" rot="R180"/>
 <attribute name="VALUE" x="66.802" y="78.105" size="1.778" layer="96" rot="R180"/>
 </instance>
-<instance part="R3" gate="R" x="52.07" y="72.39" smashed="yes">
+<instance part="R7" gate="R" x="52.07" y="72.39" smashed="yes">
 <attribute name="NAME" x="52.07" y="73.66" size="1.778" layer="95" align="bottom-center"/>
 <attribute name="VALUE" x="52.07" y="71.12" size="1.778" layer="96" align="top-center"/>
 </instance>
-<instance part="C13" gate="C" x="142.24" y="55.88" smashed="yes" rot="R90">
+<instance part="C8" gate="C" x="142.24" y="55.88" smashed="yes" rot="R90">
 <attribute name="NAME" x="139.7" y="57.15" size="1.778" layer="95" align="bottom-center"/>
 <attribute name="VALUE" x="139.7" y="53.975" size="1.778" layer="96" align="top-center"/>
 </instance>
-<instance part="C11" gate="C" x="135.89" y="55.88" smashed="yes" rot="R90">
+<instance part="C7" gate="C" x="135.89" y="55.88" smashed="yes" rot="R90">
 <attribute name="NAME" x="133.35" y="57.15" size="1.778" layer="95" align="bottom-center"/>
 <attribute name="VALUE" x="133.35" y="53.975" size="1.778" layer="96" align="top-center"/>
 </instance>
-<instance part="C8" gate="C" x="125.73" y="55.88" smashed="yes" rot="R90">
+<instance part="C5" gate="C" x="125.73" y="55.88" smashed="yes" rot="R90">
 <attribute name="NAME" x="123.19" y="57.15" size="1.778" layer="95" align="bottom-center"/>
 <attribute name="VALUE" x="123.19" y="53.975" size="1.778" layer="96" align="top-center"/>
 </instance>
-<instance part="C12" gate="C" x="142.24" y="134.62" smashed="yes" rot="R90">
+<instance part="C1" gate="C" x="142.24" y="134.62" smashed="yes" rot="R90">
 <attribute name="NAME" x="138.43" y="135.89" size="1.778" layer="95" rot="R180" align="bottom-center"/>
 <attribute name="VALUE" x="138.43" y="132.715" size="1.778" layer="96" align="top-center"/>
 </instance>
@@ -8660,38 +8678,38 @@ Designed by Watterott electronic</text>
 <instance part="GND11" gate="1" x="142.24" y="119.38" smashed="yes">
 <attribute name="VALUE" x="139.7" y="116.84" size="1.778" layer="96"/>
 </instance>
-<instance part="R7" gate="R" x="142.24" y="151.13" smashed="yes" rot="R270">
+<instance part="R1" gate="R" x="142.24" y="151.13" smashed="yes" rot="R270">
 <attribute name="NAME" x="143.51" y="151.13" size="1.778" layer="95" rot="R270" align="bottom-center"/>
 <attribute name="VALUE" x="140.97" y="151.13" size="1.778" layer="96" rot="R270" align="top-center"/>
 </instance>
-<instance part="R6" gate="R" x="134.62" y="140.97" smashed="yes" rot="R270">
+<instance part="R2" gate="R" x="134.62" y="140.97" smashed="yes" rot="R270">
 <attribute name="NAME" x="135.89" y="140.97" size="1.778" layer="95" rot="R270" align="bottom-center"/>
 <attribute name="VALUE" x="133.35" y="140.97" size="1.778" layer="96" rot="R270" align="top-center"/>
 </instance>
 <instance part="+3V34" gate="G$1" x="142.24" y="158.75" smashed="yes">
 <attribute name="VALUE" x="145.415" y="161.29" size="1.778" layer="96" rot="R180"/>
 </instance>
-<instance part="R5" gate="R" x="111.76" y="104.14" smashed="yes" rot="R270">
+<instance part="R6" gate="R" x="111.76" y="104.14" smashed="yes" rot="R270">
 <attribute name="NAME" x="113.03" y="104.14" size="1.778" layer="95" rot="R270" align="bottom-center"/>
 <attribute name="VALUE" x="110.49" y="104.14" size="1.778" layer="96" rot="R270" align="top-center"/>
 </instance>
-<instance part="C6" gate="C" x="119.38" y="55.88" smashed="yes" rot="R90">
+<instance part="C4" gate="C" x="119.38" y="55.88" smashed="yes" rot="R90">
 <attribute name="NAME" x="116.84" y="57.15" size="1.778" layer="95" align="bottom-center"/>
 <attribute name="VALUE" x="116.84" y="53.975" size="1.778" layer="96" align="top-center"/>
 </instance>
-<instance part="C5" gate="C" x="114.3" y="55.88" smashed="yes" rot="R90">
+<instance part="C3" gate="C" x="114.3" y="55.88" smashed="yes" rot="R90">
 <attribute name="NAME" x="111.76" y="57.15" size="1.778" layer="95" align="bottom-center"/>
 <attribute name="VALUE" x="111.76" y="53.975" size="1.778" layer="96" align="top-center"/>
 </instance>
-<instance part="C4" gate="C" x="109.22" y="55.88" smashed="yes" rot="R90">
+<instance part="C2" gate="C" x="109.22" y="55.88" smashed="yes" rot="R90">
 <attribute name="NAME" x="106.68" y="57.15" size="1.778" layer="95" align="bottom-center"/>
 <attribute name="VALUE" x="106.68" y="53.975" size="1.778" layer="96" align="top-center"/>
 </instance>
-<instance part="C2" gate="C" x="81.28" y="15.24" smashed="yes" rot="R90">
+<instance part="C9" gate="C" x="81.28" y="15.24" smashed="yes" rot="R90">
 <attribute name="NAME" x="78.74" y="15.24" size="1.778" layer="95" rot="R90" align="bottom-center"/>
 <attribute name="VALUE" x="81.28" y="10.16" size="1.778" layer="96" align="top-center"/>
 </instance>
-<instance part="C9" gate="C" x="127" y="15.24" smashed="yes" rot="R90">
+<instance part="C12" gate="C" x="127" y="15.24" smashed="yes" rot="R90">
 <attribute name="NAME" x="124.46" y="15.24" size="1.778" layer="95" rot="R90" align="bottom-center"/>
 <attribute name="VALUE" x="127" y="10.16" size="1.778" layer="96" align="top-center"/>
 </instance>
@@ -8701,7 +8719,7 @@ Designed by Watterott electronic</text>
 <instance part="+3V33" gate="G$1" x="134.62" y="24.13" smashed="yes">
 <attribute name="VALUE" x="137.795" y="26.67" size="1.778" layer="96" rot="R180"/>
 </instance>
-<instance part="SW1" gate="SW" x="58.42" y="86.36" smashed="yes">
+<instance part="SW2" gate="SW" x="58.42" y="86.36" smashed="yes">
 <attribute name="NAME" x="58.42" y="91.44" size="1.778" layer="95" align="bottom-center"/>
 </instance>
 <instance part="GND3" gate="1" x="69.85" y="83.82" smashed="yes">
@@ -8711,33 +8729,33 @@ Designed by Watterott electronic</text>
 <attribute name="NAME" x="121.92" y="76.2" size="1.778" layer="95" align="bottom-center"/>
 <attribute name="VALUE" x="121.92" y="73.66" size="1.778" layer="96" align="top-center"/>
 </instance>
-<instance part="C10" gate="C" x="130.81" y="55.88" smashed="yes" rot="R90">
+<instance part="C6" gate="C" x="130.81" y="55.88" smashed="yes" rot="R90">
 <attribute name="NAME" x="128.27" y="57.15" size="1.778" layer="95" align="bottom-center"/>
 <attribute name="VALUE" x="128.27" y="53.975" size="1.778" layer="96" align="top-center"/>
 </instance>
 <instance part="GND8" gate="1" x="109.22" y="44.45" smashed="yes">
 <attribute name="VALUE" x="106.68" y="41.91" size="1.778" layer="96"/>
 </instance>
-<instance part="LOGO7" gate="G$1" x="210.82" y="7.62" smashed="yes"/>
-<instance part="LOGO5" gate="G$1" x="205.74" y="7.62" smashed="yes"/>
-<instance part="LOGO6" gate="L" x="210.82" y="12.7" smashed="yes"/>
-<instance part="LOGO4" gate="G$1" x="203.2" y="12.7" smashed="yes"/>
+<instance part="LOGO5" gate="G$1" x="210.82" y="7.62" smashed="yes"/>
+<instance part="LOGO4" gate="G$1" x="205.74" y="7.62" smashed="yes"/>
+<instance part="LOGO2" gate="L" x="210.82" y="12.7" smashed="yes"/>
+<instance part="LOGO1" gate="G$1" x="203.2" y="12.7" smashed="yes"/>
 <instance part="J1" gate="J1" x="21.59" y="142.24" smashed="yes" rot="MR0">
 <attribute name="NAME" x="26.67" y="154.94" size="1.778" layer="95" rot="MR0" align="top-left"/>
 <attribute name="VALUE" x="13.97" y="144.78" size="1.778" layer="95" rot="MR90" align="bottom-center"/>
 </instance>
-<instance part="R47" gate="R" x="39.37" y="135.89" smashed="yes" rot="R270">
+<instance part="R3" gate="R" x="39.37" y="135.89" smashed="yes" rot="R270">
 <attribute name="NAME" x="40.64" y="135.89" size="1.778" layer="95" rot="R270" align="bottom-center"/>
 <attribute name="VALUE" x="38.1" y="135.89" size="1.778" layer="96" rot="R270" align="top-center"/>
 </instance>
-<instance part="R46" gate="R" x="46.99" y="135.89" smashed="yes" rot="R270">
+<instance part="R4" gate="R" x="46.99" y="135.89" smashed="yes" rot="R270">
 <attribute name="NAME" x="48.26" y="135.89" size="1.778" layer="95" rot="R270" align="bottom-center"/>
 <attribute name="VALUE" x="45.72" y="135.89" size="1.778" layer="96" rot="R270" align="top-center"/>
 </instance>
 <instance part="GND37" gate="1" x="43.18" y="124.46" smashed="yes">
 <attribute name="VALUE" x="40.64" y="121.92" size="1.778" layer="96"/>
 </instance>
-<instance part="SWD_TP" gate="J" x="127" y="97.79" smashed="yes">
+<instance part="J3" gate="J" x="127" y="97.79" smashed="yes">
 <attribute name="NAME" x="121.92" y="107.95" size="1.778" layer="95" align="top-left"/>
 <attribute name="VALUE" x="121.92" y="87.63" size="1.778" layer="95"/>
 </instance>
@@ -8748,16 +8766,16 @@ Designed by Watterott electronic</text>
 <net name="GND" class="0">
 <segment>
 <pinref part="GND9" gate="1" pin="GND"/>
-<pinref part="SWD" gate="J" pin="GND"/>
+<pinref part="J2" gate="J" pin="GND"/>
 <wire x1="116.84" y1="91.44" x2="116.84" y2="100.33" width="0.1524" layer="91"/>
 <wire x1="116.84" y1="100.33" x2="119.38" y2="100.33" width="0.1524" layer="91"/>
-<pinref part="SWD_TP" gate="J" pin="GND"/>
+<pinref part="J3" gate="J" pin="GND"/>
 <junction x="119.38" y="100.33"/>
 </segment>
 <segment>
-<pinref part="R46" gate="R" pin="2"/>
+<pinref part="R4" gate="R" pin="2"/>
 <wire x1="46.99" y1="129.54" x2="46.99" y2="130.81" width="0.1524" layer="91"/>
-<pinref part="R47" gate="R" pin="2"/>
+<pinref part="R3" gate="R" pin="2"/>
 <wire x1="39.37" y1="129.54" x2="39.37" y2="130.81" width="0.1524" layer="91"/>
 <wire x1="39.37" y1="129.54" x2="43.18" y2="129.54" width="0.1524" layer="91"/>
 <wire x1="43.18" y1="129.54" x2="46.99" y2="129.54" width="0.1524" layer="91"/>
@@ -8766,7 +8784,7 @@ Designed by Watterott electronic</text>
 <wire x1="43.18" y1="127" x2="43.18" y2="129.54" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<pinref part="R1" gate="R" pin="1"/>
+<pinref part="R5" gate="R" pin="1"/>
 <pinref part="GND1" gate="1" pin="GND"/>
 <wire x1="29.21" y1="137.16" x2="34.29" y2="137.16" width="0.1524" layer="91"/>
 <wire x1="34.29" y1="137.16" x2="34.29" y2="129.54" width="0.1524" layer="91"/>
@@ -8775,55 +8793,55 @@ Designed by Watterott electronic</text>
 <pinref part="J1" gate="J1" pin="GND"/>
 </segment>
 <segment>
-<pinref part="D5" gate="D" pin="A"/>
+<pinref part="D1" gate="D" pin="A"/>
 <pinref part="GND6" gate="1" pin="GND"/>
 </segment>
 <segment>
-<pinref part="IC1" gate="IC" pin="GND"/>
+<pinref part="IC2" gate="IC" pin="GND"/>
 <pinref part="GND7" gate="1" pin="GND"/>
-<pinref part="C7" gate="C" pin="1"/>
+<pinref part="C11" gate="C" pin="1"/>
 <wire x1="104.14" y1="11.43" x2="119.38" y2="11.43" width="0.1524" layer="91"/>
 <wire x1="119.38" y1="11.43" x2="119.38" y2="12.7" width="0.1524" layer="91"/>
 <junction x="104.14" y="11.43"/>
 <wire x1="119.38" y1="11.43" x2="127" y2="11.43" width="0.1524" layer="91"/>
 <wire x1="127" y1="11.43" x2="127" y2="12.7" width="0.1524" layer="91"/>
 <junction x="119.38" y="11.43"/>
-<pinref part="C3" gate="C" pin="1"/>
+<pinref part="C10" gate="C" pin="1"/>
 <wire x1="104.14" y1="11.43" x2="88.9" y2="11.43" width="0.1524" layer="91"/>
 <wire x1="88.9" y1="11.43" x2="88.9" y2="12.7" width="0.1524" layer="91"/>
 <wire x1="88.9" y1="11.43" x2="81.28" y2="11.43" width="0.1524" layer="91"/>
 <wire x1="81.28" y1="11.43" x2="81.28" y2="12.7" width="0.1524" layer="91"/>
 <junction x="88.9" y="11.43"/>
-<pinref part="C2" gate="C" pin="1"/>
 <pinref part="C9" gate="C" pin="1"/>
+<pinref part="C12" gate="C" pin="1"/>
 </segment>
 <segment>
-<pinref part="C12" gate="C" pin="1"/>
+<pinref part="C1" gate="C" pin="1"/>
 <pinref part="GND11" gate="1" pin="GND"/>
 <wire x1="142.24" y1="121.92" x2="142.24" y2="132.08" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<pinref part="C6" gate="C" pin="1"/>
-<wire x1="119.38" y1="53.34" x2="119.38" y2="49.53" width="0.1524" layer="91"/>
 <pinref part="C4" gate="C" pin="1"/>
+<wire x1="119.38" y1="53.34" x2="119.38" y2="49.53" width="0.1524" layer="91"/>
+<pinref part="C2" gate="C" pin="1"/>
 <wire x1="109.22" y1="53.34" x2="109.22" y2="49.53" width="0.1524" layer="91"/>
 <wire x1="109.22" y1="49.53" x2="114.3" y2="49.53" width="0.1524" layer="91"/>
 <junction x="119.38" y="49.53"/>
-<pinref part="C5" gate="C" pin="1"/>
+<pinref part="C3" gate="C" pin="1"/>
 <wire x1="114.3" y1="49.53" x2="119.38" y2="49.53" width="0.1524" layer="91"/>
 <wire x1="114.3" y1="53.34" x2="114.3" y2="49.53" width="0.1524" layer="91"/>
 <junction x="114.3" y="49.53"/>
-<pinref part="C11" gate="C" pin="1"/>
-<pinref part="C8" gate="C" pin="1"/>
-<pinref part="C10" gate="C" pin="1"/>
+<pinref part="C7" gate="C" pin="1"/>
+<pinref part="C5" gate="C" pin="1"/>
+<pinref part="C6" gate="C" pin="1"/>
 <wire x1="135.89" y1="53.34" x2="135.89" y2="49.53" width="0.1524" layer="91"/>
 <wire x1="119.38" y1="49.53" x2="125.73" y2="49.53" width="0.1524" layer="91"/>
 <junction x="135.89" y="49.53"/>
-<pinref part="IC2" gate="IC" pin="GND"/>
+<pinref part="IC1" gate="IC" pin="GND"/>
 <wire x1="125.73" y1="49.53" x2="130.81" y2="49.53" width="0.1524" layer="91"/>
 <wire x1="130.81" y1="49.53" x2="135.89" y2="49.53" width="0.1524" layer="91"/>
 <wire x1="144.78" y1="49.53" x2="142.24" y2="49.53" width="0.1524" layer="91"/>
-<pinref part="C13" gate="C" pin="1"/>
+<pinref part="C8" gate="C" pin="1"/>
 <wire x1="142.24" y1="53.34" x2="142.24" y2="49.53" width="0.1524" layer="91"/>
 <junction x="142.24" y="49.53"/>
 <wire x1="135.89" y1="49.53" x2="142.24" y2="49.53" width="0.1524" layer="91"/>
@@ -8841,48 +8859,48 @@ Designed by Watterott electronic</text>
 <wire x1="69.85" y1="72.39" x2="67.31" y2="72.39" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<pinref part="SW1" gate="SW" pin="S1"/>
+<pinref part="SW2" gate="SW" pin="S1"/>
 <pinref part="GND3" gate="1" pin="GND"/>
 <wire x1="69.85" y1="86.36" x2="63.5" y2="86.36" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="GND10" gate="1" pin="GND"/>
-<pinref part="SW2" gate="SW" pin="S1"/>
+<pinref part="SW1" gate="SW" pin="S1"/>
 <wire x1="134.62" y1="121.92" x2="134.62" y2="123.19" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="+3V3" class="0">
 <segment>
 <pinref part="+3V32" gate="G$1" pin="+3V3"/>
-<pinref part="SWD" gate="J" pin="VCC"/>
+<pinref part="J2" gate="J" pin="VCC"/>
 <wire x1="111.76" y1="110.49" x2="111.76" y2="109.22" width="0.1524" layer="91"/>
 <wire x1="111.76" y1="109.22" x2="116.84" y2="109.22" width="0.1524" layer="91"/>
 <wire x1="116.84" y1="109.22" x2="116.84" y2="102.87" width="0.1524" layer="91"/>
 <wire x1="116.84" y1="102.87" x2="119.38" y2="102.87" width="0.1524" layer="91"/>
-<pinref part="R5" gate="R" pin="1"/>
+<pinref part="R6" gate="R" pin="1"/>
 <junction x="111.76" y="109.22"/>
-<pinref part="SWD_TP" gate="J" pin="VCC"/>
+<pinref part="J3" gate="J" pin="VCC"/>
 <junction x="119.38" y="102.87"/>
 </segment>
 <segment>
-<pinref part="IC2" gate="IC" pin="VCCIO"/>
+<pinref part="IC1" gate="IC" pin="VCCIO"/>
 <pinref part="+3V31" gate="G$1" pin="+3V3"/>
 <wire x1="144.78" y1="64.77" x2="109.22" y2="64.77" width="0.1524" layer="91"/>
 <wire x1="109.22" y1="64.77" x2="109.22" y2="69.85" width="0.1524" layer="91"/>
-<pinref part="IC2" gate="IC" pin="VCCIN"/>
+<pinref part="IC1" gate="IC" pin="VCCIN"/>
 <wire x1="109.22" y1="69.85" x2="109.22" y2="74.93" width="0.1524" layer="91"/>
 <wire x1="109.22" y1="74.93" x2="109.22" y2="77.47" width="0.1524" layer="91"/>
 <wire x1="144.78" y1="69.85" x2="109.22" y2="69.85" width="0.1524" layer="91"/>
 <junction x="109.22" y="69.85"/>
 <wire x1="109.22" y1="74.93" x2="116.84" y2="74.93" width="0.1524" layer="91"/>
 <junction x="109.22" y="74.93"/>
-<pinref part="C6" gate="C" pin="2"/>
+<pinref part="C4" gate="C" pin="2"/>
 <wire x1="119.38" y1="58.42" x2="119.38" y2="59.69" width="0.1524" layer="91"/>
 <wire x1="119.38" y1="59.69" x2="109.22" y2="59.69" width="0.1524" layer="91"/>
-<pinref part="C4" gate="C" pin="2"/>
+<pinref part="C2" gate="C" pin="2"/>
 <wire x1="114.3" y1="59.69" x2="109.22" y2="59.69" width="0.1524" layer="91"/>
 <wire x1="109.22" y1="59.69" x2="109.22" y2="58.42" width="0.1524" layer="91"/>
-<pinref part="C5" gate="C" pin="2"/>
+<pinref part="C3" gate="C" pin="2"/>
 <wire x1="114.3" y1="58.42" x2="114.3" y2="59.69" width="0.1524" layer="91"/>
 <junction x="114.3" y="59.69"/>
 <wire x1="109.22" y1="59.69" x2="109.22" y2="64.77" width="0.1524" layer="91"/>
@@ -8891,19 +8909,19 @@ Designed by Watterott electronic</text>
 <pinref part="L1" gate="L" pin="1"/>
 </segment>
 <segment>
-<pinref part="R7" gate="R" pin="1"/>
+<pinref part="R1" gate="R" pin="1"/>
 <pinref part="+3V34" gate="G$1" pin="+3V3"/>
 </segment>
 <segment>
-<pinref part="IC1" gate="IC" pin="VOUT"/>
-<pinref part="C7" gate="C" pin="2"/>
+<pinref part="IC2" gate="IC" pin="VOUT"/>
+<pinref part="C11" gate="C" pin="2"/>
 <wire x1="114.3" y1="19.05" x2="119.38" y2="19.05" width="0.1524" layer="91"/>
 <wire x1="119.38" y1="19.05" x2="119.38" y2="17.78" width="0.1524" layer="91"/>
 <wire x1="119.38" y1="19.05" x2="127" y2="19.05" width="0.1524" layer="91"/>
 <wire x1="127" y1="19.05" x2="127" y2="17.78" width="0.1524" layer="91"/>
 <junction x="119.38" y="19.05"/>
 <junction x="127" y="19.05"/>
-<pinref part="C9" gate="C" pin="2"/>
+<pinref part="C12" gate="C" pin="2"/>
 <wire x1="127" y1="19.05" x2="134.62" y2="19.05" width="0.1524" layer="91"/>
 <pinref part="+3V33" gate="G$1" pin="+3V3"/>
 <wire x1="134.62" y1="21.59" x2="134.62" y2="19.05" width="0.1524" layer="91"/>
@@ -8911,89 +8929,89 @@ Designed by Watterott electronic</text>
 </net>
 <net name="D15_WINC_MOSI" class="0">
 <segment>
-<pinref part="IC2" gate="IC" pin="(SDA/S1:0|3:0/T2:0|0:6)PA16"/>
+<pinref part="IC1" gate="IC" pin="(SDA/S1:0|3:0/T2:0|0:6)PA16"/>
 <wire x1="205.74" y1="105.41" x2="200.66" y2="105.41" width="0.1524" layer="91"/>
 <label x="205.74" y="105.41" size="1.27" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="D16_WINC_SCK" class="0">
 <segment>
-<pinref part="IC2" gate="IC" pin="(SCL/S1:1|3:1/T2:1|0:7)PA17"/>
+<pinref part="IC1" gate="IC" pin="(SCL/S1:1|3:1/T2:1|0:7)PA17"/>
 <wire x1="205.74" y1="102.87" x2="200.66" y2="102.87" width="0.1524" layer="91"/>
 <label x="205.74" y="102.87" size="1.27" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="D6_SDA" class="0">
 <segment>
-<pinref part="IC2" gate="IC" pin="(SDA/S0:0|2:0/T0:0|1:2/AIN16)PA08"/>
+<pinref part="IC1" gate="IC" pin="(SDA/S0:0|2:0/T0:0|1:2/AIN16)PA08"/>
 <wire x1="205.74" y1="125.73" x2="200.66" y2="125.73" width="0.1524" layer="91"/>
 <label x="205.74" y="125.73" size="1.27" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="D7_SCL" class="0">
 <segment>
-<pinref part="IC2" gate="IC" pin="(SCL/S0:1|2:1/T0:1|1:3/AIN17)PA09"/>
+<pinref part="IC1" gate="IC" pin="(SCL/S0:1|2:1/T0:1|1:3/AIN17)PA09"/>
 <wire x1="205.74" y1="123.19" x2="200.66" y2="123.19" width="0.1524" layer="91"/>
 <label x="205.74" y="123.19" size="1.27" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="SWCLK" class="0">
 <segment>
-<pinref part="IC2" gate="IC" pin="(SWCLK/S1:2/T1:0)PA30"/>
+<pinref part="IC1" gate="IC" pin="(SWCLK/S1:2/T1:0)PA30"/>
 <wire x1="205.74" y1="74.93" x2="200.66" y2="74.93" width="0.1524" layer="91"/>
 <label x="205.74" y="74.93" size="1.27" layer="95" xref="yes"/>
 </segment>
 <segment>
-<pinref part="SWD" gate="J" pin="SWCLK"/>
+<pinref part="J2" gate="J" pin="SWCLK"/>
 <label x="109.22" y="95.25" size="1.27" layer="95" rot="R180" xref="yes"/>
 <wire x1="109.22" y1="95.25" x2="111.76" y2="95.25" width="0.1524" layer="91"/>
-<pinref part="R5" gate="R" pin="2"/>
+<pinref part="R6" gate="R" pin="2"/>
 <wire x1="111.76" y1="95.25" x2="119.38" y2="95.25" width="0.1524" layer="91"/>
 <wire x1="111.76" y1="95.25" x2="111.76" y2="99.06" width="0.1524" layer="91"/>
 <junction x="111.76" y="95.25"/>
-<pinref part="SWD_TP" gate="J" pin="SWCLK"/>
+<pinref part="J3" gate="J" pin="SWCLK"/>
 <junction x="119.38" y="95.25"/>
 </segment>
 </net>
 <net name="SWDIO" class="0">
 <segment>
-<pinref part="IC2" gate="IC" pin="(SWDIO/S1:3/T1:1)PA31"/>
+<pinref part="IC1" gate="IC" pin="(SWDIO/S1:3/T1:1)PA31"/>
 <wire x1="205.74" y1="72.39" x2="200.66" y2="72.39" width="0.1524" layer="91"/>
 <label x="205.74" y="72.39" size="1.27" layer="95" xref="yes"/>
 </segment>
 <segment>
-<pinref part="SWD" gate="J" pin="SWDIO"/>
+<pinref part="J2" gate="J" pin="SWDIO"/>
 <wire x1="109.22" y1="92.71" x2="119.38" y2="92.71" width="0.1524" layer="91"/>
 <label x="109.22" y="92.71" size="1.27" layer="95" rot="R180" xref="yes"/>
-<pinref part="SWD_TP" gate="J" pin="SWDIO"/>
+<pinref part="J3" gate="J" pin="SWDIO"/>
 <junction x="119.38" y="92.71"/>
 </segment>
 </net>
 <net name="RST" class="0">
 <segment>
-<pinref part="IC2" gate="IC" pin="!RESET"/>
+<pinref part="IC1" gate="IC" pin="!RESET"/>
 <wire x1="144.78" y1="146.05" x2="142.24" y2="146.05" width="0.1524" layer="91"/>
 <label x="127" y="146.05" size="1.27" layer="95" rot="R180" xref="yes"/>
-<pinref part="R7" gate="R" pin="2"/>
+<pinref part="R1" gate="R" pin="2"/>
 <wire x1="142.24" y1="146.05" x2="134.62" y2="146.05" width="0.1524" layer="91"/>
 <junction x="142.24" y="146.05"/>
-<pinref part="R6" gate="R" pin="1"/>
+<pinref part="R2" gate="R" pin="1"/>
 <wire x1="134.62" y1="146.05" x2="127" y2="146.05" width="0.1524" layer="91"/>
 <junction x="134.62" y="146.05"/>
-<pinref part="C12" gate="C" pin="2"/>
+<pinref part="C1" gate="C" pin="2"/>
 <wire x1="142.24" y1="146.05" x2="142.24" y2="137.16" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<pinref part="SWD" gate="J" pin="RST"/>
+<pinref part="J2" gate="J" pin="RST"/>
 <wire x1="109.22" y1="97.79" x2="119.38" y2="97.79" width="0.1524" layer="91"/>
 <label x="109.22" y="97.79" size="1.27" layer="95" rot="R180" xref="yes"/>
-<pinref part="SWD_TP" gate="J" pin="RST"/>
+<pinref part="J3" gate="J" pin="RST"/>
 <junction x="119.38" y="97.79"/>
 </segment>
 </net>
 <net name="D17_WINC_MISO" class="0">
 <segment>
-<pinref part="IC2" gate="IC" pin="(S1:3|3:3/T3:1|0:3)PA19"/>
+<pinref part="IC1" gate="IC" pin="(S1:3|3:3/T3:1|0:3)PA19"/>
 <wire x1="205.74" y1="97.79" x2="200.66" y2="97.79" width="0.1524" layer="91"/>
 <label x="205.74" y="97.79" size="1.27" layer="95" xref="yes"/>
 </segment>
@@ -9006,8 +9024,8 @@ Designed by Watterott electronic</text>
 <wire x1="49.53" y1="153.67" x2="52.07" y2="153.67" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<pinref part="IC1" gate="IC" pin="VIN"/>
-<pinref part="C3" gate="C" pin="2"/>
+<pinref part="IC2" gate="IC" pin="VIN"/>
+<pinref part="C10" gate="C" pin="2"/>
 <wire x1="93.98" y1="19.05" x2="88.9" y2="19.05" width="0.1524" layer="91"/>
 <wire x1="88.9" y1="19.05" x2="88.9" y2="17.78" width="0.1524" layer="91"/>
 <wire x1="88.9" y1="19.05" x2="81.28" y2="19.05" width="0.1524" layer="91"/>
@@ -9016,7 +9034,7 @@ Designed by Watterott electronic</text>
 <pinref part="P+2" gate="1" pin="+5V"/>
 <wire x1="81.28" y1="21.59" x2="81.28" y2="19.05" width="0.1524" layer="91"/>
 <junction x="81.28" y="19.05"/>
-<pinref part="C2" gate="C" pin="2"/>
+<pinref part="C9" gate="C" pin="2"/>
 </segment>
 </net>
 <net name="VBUS" class="0">
@@ -9030,7 +9048,7 @@ Designed by Watterott electronic</text>
 </net>
 <net name="USB_N" class="1">
 <segment>
-<pinref part="D5" gate="D" pin="C1"/>
+<pinref part="D1" gate="D" pin="C1"/>
 <wire x1="29.21" y1="147.32" x2="60.96" y2="147.32" width="0.1524" layer="91"/>
 <wire x1="60.96" y1="147.32" x2="60.96" y2="144.78" width="0.1524" layer="91"/>
 <wire x1="60.96" y1="147.32" x2="77.47" y2="147.32" width="0.1524" layer="91"/>
@@ -9041,12 +9059,12 @@ Designed by Watterott electronic</text>
 <segment>
 <wire x1="200.66" y1="85.09" x2="205.74" y2="85.09" width="0.1524" layer="91"/>
 <label x="205.74" y="85.09" size="1.27" layer="95" xref="yes"/>
-<pinref part="IC2" gate="IC" pin="(USBM/S3:2|5:2/T5:0|1:2)PA24"/>
+<pinref part="IC1" gate="IC" pin="(USBM/S3:2|5:2/T5:0|1:2)PA24"/>
 </segment>
 </net>
 <net name="USB_P" class="1">
 <segment>
-<pinref part="D5" gate="D" pin="C2"/>
+<pinref part="D1" gate="D" pin="C2"/>
 <wire x1="29.21" y1="149.86" x2="71.12" y2="149.86" width="0.1524" layer="91"/>
 <wire x1="71.12" y1="149.86" x2="71.12" y2="144.78" width="0.1524" layer="91"/>
 <wire x1="77.47" y1="149.86" x2="71.12" y2="149.86" width="0.1524" layer="91"/>
@@ -9057,33 +9075,33 @@ Designed by Watterott electronic</text>
 <segment>
 <wire x1="205.74" y1="82.55" x2="200.66" y2="82.55" width="0.1524" layer="91"/>
 <label x="205.74" y="82.55" size="1.27" layer="95" xref="yes"/>
-<pinref part="IC2" gate="IC" pin="(USBP/S3:3|5:3/T5:1|1:3)PA25"/>
+<pinref part="IC1" gate="IC" pin="(USBP/S3:3|5:3/T5:1|1:3)PA25"/>
 </segment>
 </net>
 <net name="D11_WINC_WAKE" class="0">
 <segment>
 <wire x1="205.74" y1="54.61" x2="200.66" y2="54.61" width="0.1524" layer="91"/>
 <label x="205.74" y="54.61" size="1.27" layer="95" xref="yes"/>
-<pinref part="IC2" gate="IC" pin="(S4:3/T5:1|0:5)PB11"/>
+<pinref part="IC1" gate="IC" pin="(S4:3/T5:1|0:5)PB11"/>
 </segment>
 </net>
 <net name="D14_WINC_CS" class="0">
 <segment>
-<pinref part="IC2" gate="IC" pin="(S1:2|3:2/T3:0|0:2)PA18"/>
+<pinref part="IC1" gate="IC" pin="(S1:2|3:2/T3:0|0:2)PA18"/>
 <wire x1="205.74" y1="100.33" x2="200.66" y2="100.33" width="0.1524" layer="91"/>
 <label x="205.74" y="100.33" size="1.27" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="D18_WINC_RX" class="0">
 <segment>
-<pinref part="IC2" gate="IC" pin="(S5:3/T7:1)PB23"/>
+<pinref part="IC1" gate="IC" pin="(S5:3/T7:1)PB23"/>
 <wire x1="205.74" y1="49.53" x2="200.66" y2="49.53" width="0.1524" layer="91"/>
 <label x="205.74" y="49.53" size="1.27" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="D19_WINC_TX" class="0">
 <segment>
-<pinref part="IC2" gate="IC" pin="(S5:2/T7:0)PB22"/>
+<pinref part="IC1" gate="IC" pin="(S5:2/T7:0)PB22"/>
 <wire x1="205.74" y1="52.07" x2="200.66" y2="52.07" width="0.1524" layer="91"/>
 <label x="205.74" y="52.07" size="1.27" layer="95" xref="yes"/>
 </segment>
@@ -9092,28 +9110,28 @@ Designed by Watterott electronic</text>
 <segment>
 <wire x1="205.74" y1="95.25" x2="200.66" y2="95.25" width="0.1524" layer="91"/>
 <label x="205.74" y="95.25" size="1.27" layer="95" xref="yes"/>
-<pinref part="IC2" gate="IC" pin="(S5:2|3:2/T7:0|0:6)PA20"/>
+<pinref part="IC1" gate="IC" pin="(S5:2|3:2/T7:0|0:6)PA20"/>
 </segment>
 </net>
 <net name="VCCCORE" class="0">
 <segment>
-<pinref part="IC2" gate="IC" pin="VCCCORE"/>
-<pinref part="C13" gate="C" pin="2"/>
+<pinref part="IC1" gate="IC" pin="VCCCORE"/>
+<pinref part="C8" gate="C" pin="2"/>
 <wire x1="144.78" y1="59.69" x2="142.24" y2="59.69" width="0.1524" layer="91"/>
 <wire x1="142.24" y1="59.69" x2="142.24" y2="58.42" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="VCCANA" class="0">
 <segment>
-<pinref part="IC2" gate="IC" pin="VCCANA"/>
+<pinref part="IC1" gate="IC" pin="VCCANA"/>
 <wire x1="127" y1="74.93" x2="135.89" y2="74.93" width="0.1524" layer="91"/>
 <pinref part="L1" gate="L" pin="2"/>
 <wire x1="135.89" y1="74.93" x2="144.78" y2="74.93" width="0.1524" layer="91"/>
 <wire x1="135.89" y1="58.42" x2="135.89" y2="59.69" width="0.1524" layer="91"/>
-<pinref part="C8" gate="C" pin="2"/>
+<pinref part="C5" gate="C" pin="2"/>
 <wire x1="135.89" y1="59.69" x2="135.89" y2="74.93" width="0.1524" layer="91"/>
-<pinref part="C11" gate="C" pin="2"/>
-<pinref part="C10" gate="C" pin="2"/>
+<pinref part="C7" gate="C" pin="2"/>
+<pinref part="C6" gate="C" pin="2"/>
 <wire x1="125.73" y1="59.69" x2="125.73" y2="58.42" width="0.1524" layer="91"/>
 <wire x1="125.73" y1="59.69" x2="130.81" y2="59.69" width="0.1524" layer="91"/>
 <wire x1="130.81" y1="59.69" x2="130.81" y2="58.42" width="0.1524" layer="91"/>
@@ -9125,14 +9143,14 @@ Designed by Watterott electronic</text>
 </net>
 <net name="D8_SDA" class="0">
 <segment>
-<pinref part="IC2" gate="IC" pin="(SDA/S2:0|4:0/T2:0|0:6)PA12"/>
+<pinref part="IC1" gate="IC" pin="(SDA/S2:0|4:0/T2:0|0:6)PA12"/>
 <wire x1="200.66" y1="115.57" x2="205.74" y2="115.57" width="0.1524" layer="91"/>
 <label x="205.74" y="115.57" size="1.27" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="D9_SCL" class="0">
 <segment>
-<pinref part="IC2" gate="IC" pin="(SCL/S2:1|4:1/T2:1|0:7)PA13"/>
+<pinref part="IC1" gate="IC" pin="(SCL/S2:1|4:1/T2:1|0:7)PA13"/>
 <wire x1="200.66" y1="113.03" x2="205.74" y2="113.03" width="0.1524" layer="91"/>
 <label x="205.74" y="113.03" size="1.27" layer="95" xref="yes"/>
 </segment>
@@ -9141,19 +9159,19 @@ Designed by Watterott electronic</text>
 <segment>
 <label x="205.74" y="90.17" size="1.27" layer="95" xref="yes"/>
 <wire x1="200.66" y1="90.17" x2="205.74" y2="90.17" width="0.1524" layer="91"/>
-<pinref part="IC2" gate="IC" pin="(SDA/S3:0|5:0/T4:0|0:4)PA22"/>
+<pinref part="IC1" gate="IC" pin="(SDA/S3:0|5:0/T4:0|0:4)PA22"/>
 </segment>
 </net>
 <net name="D10_WINC_EN" class="0">
 <segment>
 <wire x1="205.74" y1="57.15" x2="200.66" y2="57.15" width="0.1524" layer="91"/>
 <label x="205.74" y="57.15" size="1.27" layer="95" xref="yes"/>
-<pinref part="IC2" gate="IC" pin="(S4:2/T5:0|0:4)PB10"/>
+<pinref part="IC1" gate="IC" pin="(S4:2/T5:0|0:4)PB10"/>
 </segment>
 </net>
 <net name="N$3" class="0">
 <segment>
-<pinref part="R3" gate="R" pin="2"/>
+<pinref part="R7" gate="R" pin="2"/>
 <pinref part="D2" gate="D" pin="A"/>
 <wire x1="57.15" y1="72.39" x2="59.69" y2="72.39" width="0.1524" layer="91"/>
 </segment>
@@ -9162,32 +9180,32 @@ Designed by Watterott electronic</text>
 <segment>
 <wire x1="205.74" y1="133.35" x2="200.66" y2="133.35" width="0.1524" layer="91"/>
 <label x="205.74" y="133.35" size="1.27" layer="95" xref="yes"/>
-<pinref part="IC2" gate="IC" pin="(S0:1/T0:1/AIN5)PA05"/>
+<pinref part="IC1" gate="IC" pin="(S0:1/T0:1/AIN5)PA05"/>
 </segment>
 </net>
 <net name="D2_SWITCH" class="0">
 <segment>
 <label x="205.74" y="64.77" size="1.27" layer="95" xref="yes"/>
 <wire x1="200.66" y1="64.77" x2="205.74" y2="64.77" width="0.1524" layer="91"/>
-<pinref part="IC2" gate="IC" pin="(S:1/T6:1/AIN11)PB03"/>
+<pinref part="IC1" gate="IC" pin="(S:1/T6:1/AIN11)PB03"/>
 </segment>
 <segment>
 <wire x1="41.91" y1="86.36" x2="53.34" y2="86.36" width="0.1524" layer="91"/>
 <label x="41.91" y="86.36" size="1.27" layer="95" rot="R180" xref="yes"/>
-<pinref part="SW1" gate="SW" pin="P1"/>
+<pinref part="SW2" gate="SW" pin="P1"/>
 </segment>
 </net>
 <net name="SHLD" class="0">
 <segment>
 <pinref part="J1" gate="J1" pin="SHIELD"/>
-<pinref part="R1" gate="R" pin="2"/>
+<pinref part="R5" gate="R" pin="2"/>
 <wire x1="24.13" y1="129.54" x2="24.13" y2="132.08" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="CC2" class="0">
 <segment>
 <pinref part="J1" gate="J1" pin="CC2"/>
-<pinref part="R47" gate="R" pin="1"/>
+<pinref part="R3" gate="R" pin="1"/>
 <wire x1="29.21" y1="142.24" x2="39.37" y2="142.24" width="0.1524" layer="91"/>
 <wire x1="39.37" y1="142.24" x2="39.37" y2="140.97" width="0.1524" layer="91"/>
 </segment>
@@ -9195,7 +9213,7 @@ Designed by Watterott electronic</text>
 <net name="CC1" class="0">
 <segment>
 <pinref part="J1" gate="J1" pin="CC1"/>
-<pinref part="R46" gate="R" pin="1"/>
+<pinref part="R4" gate="R" pin="1"/>
 <wire x1="29.21" y1="144.78" x2="46.99" y2="144.78" width="0.1524" layer="91"/>
 <wire x1="46.99" y1="144.78" x2="46.99" y2="140.97" width="0.1524" layer="91"/>
 </segment>
@@ -9204,26 +9222,26 @@ Designed by Watterott electronic</text>
 <segment>
 <wire x1="205.74" y1="120.65" x2="200.66" y2="120.65" width="0.1524" layer="91"/>
 <label x="205.74" y="120.65" size="1.27" layer="95" xref="yes"/>
-<pinref part="IC2" gate="IC" pin="(S0:2|2:2/T1:0|0:2/AIN18)PA10"/>
+<pinref part="IC1" gate="IC" pin="(S0:2|2:2/T1:0|0:2/AIN18)PA10"/>
 </segment>
 </net>
 <net name="N$8" class="0">
 <segment>
-<pinref part="R6" gate="R" pin="2"/>
-<pinref part="SW2" gate="SW" pin="P1"/>
+<pinref part="R2" gate="R" pin="2"/>
+<pinref part="SW1" gate="SW" pin="P1"/>
 <wire x1="134.62" y1="135.89" x2="134.62" y2="133.35" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="D1_LIGHTSENS_PWR" class="0">
 <segment>
-<pinref part="IC2" gate="IC" pin="(REFA/AIN1)PA03"/>
+<pinref part="IC1" gate="IC" pin="(REFA/AIN1)PA03"/>
 <wire x1="205.74" y1="138.43" x2="200.66" y2="138.43" width="0.1524" layer="91"/>
 <label x="205.74" y="138.43" size="1.27" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="D0_LIGHTSENS" class="0">
 <segment>
-<pinref part="IC2" gate="IC" pin="(DAC/AIN0)PA02"/>
+<pinref part="IC1" gate="IC" pin="(DAC/AIN0)PA02"/>
 <wire x1="200.66" y1="140.97" x2="205.74" y2="140.97" width="0.1524" layer="91"/>
 <label x="205.74" y="140.97" size="1.27" layer="95" xref="yes"/>
 </segment>
@@ -9232,10 +9250,10 @@ Designed by Watterott electronic</text>
 <segment>
 <wire x1="205.74" y1="80.01" x2="200.66" y2="80.01" width="0.1524" layer="91"/>
 <label x="205.74" y="80.01" size="1.27" layer="95" xref="yes"/>
-<pinref part="IC2" gate="IC" pin="PA27"/>
+<pinref part="IC1" gate="IC" pin="PA27"/>
 </segment>
 <segment>
-<pinref part="R3" gate="R" pin="1"/>
+<pinref part="R7" gate="R" pin="1"/>
 <wire x1="41.91" y1="72.39" x2="46.99" y2="72.39" width="0.1524" layer="91"/>
 <label x="41.91" y="72.39" size="1.27" layer="95" rot="R180" xref="yes"/>
 </segment>
@@ -9261,7 +9279,7 @@ Designed by Watterott electronic</text>
 <attribute name="LAST_DATE_TIME" x="217.17" y="10.16" size="1.27" layer="94" font="vector" ratio="10"/>
 <attribute name="SHEET" x="230.505" y="5.08" size="2.54" layer="94" font="vector" ratio="10"/>
 </instance>
-<instance part="C17" gate="C" x="54.61" y="19.05" smashed="yes" rot="R90">
+<instance part="C25" gate="C" x="54.61" y="19.05" smashed="yes" rot="R90">
 <attribute name="NAME" x="50.8" y="19.05" size="1.778" layer="95" rot="R270" align="bottom-center"/>
 <attribute name="VALUE" x="57.15" y="19.05" size="1.778" layer="96" rot="R90" align="top-center"/>
 </instance>
@@ -9274,42 +9292,42 @@ Designed by Watterott electronic</text>
 <instance part="+3V5" gate="G$1" x="55.88" y="72.39" smashed="yes">
 <attribute name="VALUE" x="59.055" y="74.93" size="1.778" layer="96" rot="R180"/>
 </instance>
-<instance part="R9" gate="R" x="55.88" y="64.77" smashed="yes" rot="R90">
+<instance part="R12" gate="R" x="55.88" y="64.77" smashed="yes" rot="R90">
 <attribute name="NAME" x="54.61" y="64.77" size="1.778" layer="95" rot="R90" align="bottom-center"/>
 <attribute name="VALUE" x="57.15" y="64.77" size="1.778" layer="96" rot="R90" align="top-center"/>
 </instance>
-<instance part="IC3" gate="IC" x="81.28" y="38.1" smashed="yes">
+<instance part="IC5" gate="IC" x="81.28" y="38.1" smashed="yes">
 <attribute name="NAME" x="66.04" y="63.5" size="1.778" layer="95" align="top-left"/>
 <attribute name="VALUE" x="66.04" y="10.16" size="1.778" layer="96" rot="MR180" align="top-left"/>
 </instance>
-<instance part="C19" gate="C" x="45.72" y="19.05" smashed="yes" rot="R90">
+<instance part="C24" gate="C" x="45.72" y="19.05" smashed="yes" rot="R90">
 <attribute name="NAME" x="41.91" y="19.05" size="1.778" layer="95" rot="R270" align="bottom-center"/>
 <attribute name="VALUE" x="48.26" y="19.05" size="1.778" layer="96" rot="R90" align="top-center"/>
 </instance>
-<instance part="W4" gate="LED" x="214.63" y="90.17" smashed="yes" rot="MR270">
+<instance part="D6" gate="LED" x="214.63" y="90.17" smashed="yes" rot="MR270">
 <attribute name="NAME" x="207.01" y="97.79" size="1.778" layer="95" rot="MR270" align="top-left"/>
 <attribute name="VALUE" x="222.25" y="97.79" size="1.778" layer="96" rot="MR270"/>
 </instance>
-<instance part="W3" gate="LED" x="198.12" y="90.17" smashed="yes" rot="MR270">
+<instance part="D5" gate="LED" x="198.12" y="90.17" smashed="yes" rot="MR270">
 <attribute name="NAME" x="190.5" y="97.79" size="1.778" layer="95" rot="MR270" align="top-left"/>
 <attribute name="VALUE" x="205.74" y="97.79" size="1.778" layer="96" rot="MR270"/>
 </instance>
-<instance part="W2" gate="LED" x="181.61" y="90.17" smashed="yes" rot="MR270">
+<instance part="D4" gate="LED" x="181.61" y="90.17" smashed="yes" rot="MR270">
 <attribute name="NAME" x="173.99" y="97.79" size="1.778" layer="95" rot="MR270" align="top-left"/>
 <attribute name="VALUE" x="189.23" y="97.79" size="1.778" layer="96" rot="MR270"/>
 </instance>
-<instance part="W1" gate="LED" x="165.1" y="90.17" smashed="yes" rot="MR270">
+<instance part="D3" gate="LED" x="165.1" y="90.17" smashed="yes" rot="MR270">
 <attribute name="NAME" x="157.48" y="97.79" size="1.778" layer="95" rot="MR270" align="top-left"/>
 <attribute name="VALUE" x="172.72" y="97.79" size="1.778" layer="96" rot="MR270"/>
 </instance>
-<instance part="IC34" gate="G$1" x="204.47" y="149.86" smashed="yes">
+<instance part="IC3" gate="IC" x="204.47" y="149.86" smashed="yes">
 <attribute name="NAME" x="194.31" y="162.56" size="1.778" layer="95" rot="MR180"/>
 <attribute name="VALUE" x="194.31" y="137.16" size="1.778" layer="96"/>
 </instance>
 <instance part="GND13" gate="1" x="226.06" y="100.33" smashed="yes">
 <attribute name="VALUE" x="223.52" y="97.79" size="1.778" layer="96"/>
 </instance>
-<instance part="R8" gate="R" x="162.56" y="73.66" smashed="yes" rot="R270">
+<instance part="R11" gate="R" x="162.56" y="73.66" smashed="yes" rot="R270">
 <attribute name="NAME" x="163.83" y="73.66" size="1.778" layer="95" rot="R270" align="bottom-center"/>
 <attribute name="VALUE" x="161.29" y="73.66" size="1.778" layer="96" rot="R270" align="top-center"/>
 </instance>
@@ -9319,15 +9337,15 @@ Designed by Watterott electronic</text>
 <instance part="GND14" gate="1" x="189.23" y="139.7" smashed="yes">
 <attribute name="VALUE" x="186.69" y="137.16" size="1.778" layer="96"/>
 </instance>
-<instance part="C21" gate="C" x="233.68" y="87.63" smashed="yes" rot="R90">
+<instance part="C20" gate="C" x="233.68" y="87.63" smashed="yes" rot="R90">
 <attribute name="NAME" x="231.14" y="91.44" size="1.778" layer="95" align="bottom-center"/>
 <attribute name="VALUE" x="231.14" y="84.328" size="1.778" layer="96" align="top-center"/>
 </instance>
-<instance part="C22" gate="C" x="240.03" y="87.63" smashed="yes" rot="R90">
+<instance part="C21" gate="C" x="240.03" y="87.63" smashed="yes" rot="R90">
 <attribute name="NAME" x="237.49" y="91.44" size="1.778" layer="95" align="bottom-center"/>
 <attribute name="VALUE" x="237.49" y="84.328" size="1.778" layer="96" align="top-center"/>
 </instance>
-<instance part="C23" gate="C" x="246.38" y="87.63" smashed="yes" rot="R90">
+<instance part="C22" gate="C" x="246.38" y="87.63" smashed="yes" rot="R90">
 <attribute name="NAME" x="243.84" y="91.44" size="1.778" layer="95" align="bottom-center"/>
 <attribute name="VALUE" x="243.84" y="84.328" size="1.778" layer="96" align="top-center"/>
 </instance>
@@ -9337,18 +9355,14 @@ Designed by Watterott electronic</text>
 <instance part="GND16" gate="1" x="240.03" y="80.01" smashed="yes">
 <attribute name="VALUE" x="237.49" y="77.47" size="1.778" layer="96"/>
 </instance>
-<instance part="IC33" gate="IC1" x="19.05" y="154.94" smashed="yes">
-<attribute name="NAME" x="22.86" y="154.94" size="1.778" layer="95"/>
-<attribute name="VALUE" x="22.86" y="152.4" size="1.778" layer="96"/>
-</instance>
-<instance part="R4" gate="R" x="21.59" y="144.78" smashed="yes" rot="R90">
+<instance part="R8" gate="R" x="21.59" y="144.78" smashed="yes" rot="R90">
 <attribute name="NAME" x="20.32" y="144.78" size="1.778" layer="95" rot="R90" align="bottom-center"/>
 <attribute name="VALUE" x="22.86" y="144.78" size="1.778" layer="96" rot="R90" align="top-center"/>
 </instance>
 <instance part="GND12" gate="1" x="21.59" y="137.16" smashed="yes">
 <attribute name="VALUE" x="19.05" y="134.62" size="1.778" layer="96"/>
 </instance>
-<instance part="J2" gate="J" x="93.98" y="151.13" smashed="yes" rot="MR0">
+<instance part="J4" gate="J" x="93.98" y="151.13" smashed="yes" rot="MR0">
 <attribute name="VALUE" x="95.25" y="140.97" size="1.778" layer="96" rot="MR0"/>
 <attribute name="NAME" x="95.25" y="156.972" size="1.778" layer="95" rot="MR0"/>
 </instance>
@@ -9358,7 +9372,7 @@ Designed by Watterott electronic</text>
 <instance part="+3V2" gate="G$1" x="82.55" y="160.02" smashed="yes">
 <attribute name="VALUE" x="85.725" y="162.56" size="1.778" layer="96" rot="R180"/>
 </instance>
-<instance part="T1" gate="T" x="148.59" y="140.97" smashed="yes">
+<instance part="T2" gate="T" x="148.59" y="140.97" smashed="yes">
 <attribute name="NAME" x="151.13" y="140.97" size="1.778" layer="95"/>
 <attribute name="VALUE" x="151.13" y="138.43" size="1.778" layer="96"/>
 </instance>
@@ -9372,7 +9386,7 @@ Designed by Watterott electronic</text>
 <attribute name="NAME" x="142.24" y="133.35" size="1.778" layer="95" rot="R270" align="bottom-center"/>
 <attribute name="VALUE" x="139.7" y="133.35" size="1.778" layer="96" rot="R270" align="top-center"/>
 </instance>
-<instance part="R11" gate="R" x="133.35" y="138.43" smashed="yes">
+<instance part="R9" gate="R" x="133.35" y="138.43" smashed="yes">
 <attribute name="NAME" x="133.35" y="139.7" size="1.778" layer="95" align="bottom-center"/>
 <attribute name="VALUE" x="133.35" y="137.16" size="1.778" layer="96" align="top-center"/>
 </instance>
@@ -9383,14 +9397,14 @@ Designed by Watterott electronic</text>
 <instance part="+3V315" gate="G$1" x="44.45" y="106.68" smashed="yes">
 <attribute name="VALUE" x="47.625" y="109.22" size="1.778" layer="96" rot="R180"/>
 </instance>
-<instance part="C27" gate="C" x="44.45" y="96.52" smashed="yes" rot="R90">
+<instance part="C18" gate="C" x="44.45" y="96.52" smashed="yes" rot="R90">
 <attribute name="NAME" x="40.64" y="97.79" size="1.778" layer="95" rot="R180" align="bottom-center"/>
 <attribute name="VALUE" x="40.64" y="94.615" size="1.778" layer="96" align="top-center"/>
 </instance>
 <instance part="GND34" gate="1" x="44.45" y="88.9" smashed="yes">
 <attribute name="VALUE" x="41.91" y="86.36" size="1.778" layer="96"/>
 </instance>
-<instance part="IC7" gate="IC" x="63.5" y="96.52" smashed="yes">
+<instance part="IC4" gate="IC" x="63.5" y="96.52" smashed="yes">
 <attribute name="NAME" x="53.34" y="104.14" size="1.778" layer="95" align="top-left"/>
 <attribute name="VALUE" x="53.34" y="88.9" size="1.778" layer="95"/>
 </instance>
@@ -9411,35 +9425,39 @@ Designed by Watterott electronic</text>
 <instance part="GND19" gate="1" x="29.21" y="137.16" smashed="yes">
 <attribute name="VALUE" x="26.67" y="134.62" size="1.778" layer="96"/>
 </instance>
-<instance part="C15" gate="C" x="36.83" y="19.05" smashed="yes" rot="R90">
+<instance part="C23" gate="C" x="36.83" y="19.05" smashed="yes" rot="R90">
 <attribute name="NAME" x="33.02" y="19.05" size="1.778" layer="95" rot="R270" align="bottom-center"/>
 <attribute name="VALUE" x="39.37" y="19.05" size="1.778" layer="96" rot="R90" align="top-center"/>
 </instance>
-<instance part="C16" gate="C" x="186.69" y="144.78" smashed="yes" rot="R90">
+<instance part="C17" gate="C" x="186.69" y="144.78" smashed="yes" rot="R90">
 <attribute name="NAME" x="182.88" y="144.78" size="1.778" layer="95" rot="R270" align="bottom-center"/>
 <attribute name="VALUE" x="189.23" y="144.78" size="1.778" layer="96" rot="R90" align="top-center"/>
 </instance>
-<instance part="C18" gate="C" x="177.8" y="144.78" smashed="yes" rot="R90">
+<instance part="C16" gate="C" x="177.8" y="144.78" smashed="yes" rot="R90">
 <attribute name="NAME" x="173.99" y="144.78" size="1.778" layer="95" rot="R270" align="bottom-center"/>
 <attribute name="VALUE" x="180.34" y="144.78" size="1.778" layer="96" rot="R90" align="top-center"/>
 </instance>
 <instance part="P+5" gate="1" x="212.09" y="110.49" smashed="yes">
 <attribute name="VALUE" x="214.63" y="113.03" size="1.778" layer="96" rot="R180"/>
 </instance>
-<instance part="C1" gate="C" x="227.33" y="87.63" smashed="yes" rot="R90">
+<instance part="C19" gate="C" x="227.33" y="87.63" smashed="yes" rot="R90">
 <attribute name="NAME" x="224.79" y="91.44" size="1.778" layer="95" align="bottom-center"/>
 <attribute name="VALUE" x="224.79" y="84.328" size="1.778" layer="96" align="top-center"/>
 </instance>
-<instance part="C20" gate="C" x="73.66" y="144.78" smashed="yes" rot="R90">
+<instance part="C15" gate="C" x="73.66" y="144.78" smashed="yes" rot="R90">
 <attribute name="NAME" x="69.85" y="144.78" size="1.778" layer="95" rot="R270" align="bottom-center"/>
 <attribute name="VALUE" x="76.2" y="144.78" size="1.778" layer="96" rot="R90" align="top-center"/>
 </instance>
-<instance part="C24" gate="C" x="135.89" y="152.4" smashed="yes" rot="R90">
+<instance part="C13" gate="C" x="135.89" y="152.4" smashed="yes" rot="R90">
 <attribute name="NAME" x="132.08" y="152.4" size="1.778" layer="95" rot="R270" align="bottom-center"/>
 <attribute name="VALUE" x="138.43" y="152.4" size="1.778" layer="96" rot="R90" align="top-center"/>
 </instance>
 <instance part="GND2" gate="1" x="135.89" y="146.05" smashed="yes">
 <attribute name="VALUE" x="133.35" y="143.51" size="1.778" layer="96"/>
+</instance>
+<instance part="T1" gate="T" x="19.05" y="154.94" smashed="yes">
+<attribute name="NAME" x="22.86" y="154.94" size="1.778" layer="95"/>
+<attribute name="VALUE" x="22.86" y="152.4" size="1.778" layer="96"/>
 </instance>
 </instances>
 <busses>
@@ -9451,32 +9469,32 @@ Designed by Watterott electronic</text>
 <wire x1="45.72" y1="12.7" x2="45.72" y2="15.24" width="0.1524" layer="91"/>
 <wire x1="45.72" y1="15.24" x2="54.61" y2="15.24" width="0.1524" layer="91"/>
 <wire x1="54.61" y1="15.24" x2="60.96" y2="15.24" width="0.1524" layer="91"/>
-<pinref part="C17" gate="C" pin="1"/>
+<pinref part="C25" gate="C" pin="1"/>
 <wire x1="54.61" y1="16.51" x2="54.61" y2="15.24" width="0.1524" layer="91"/>
 <junction x="54.61" y="15.24"/>
-<pinref part="IC3" gate="IC" pin="GND"/>
-<pinref part="C19" gate="C" pin="1"/>
+<pinref part="IC5" gate="IC" pin="GND"/>
+<pinref part="C24" gate="C" pin="1"/>
 <wire x1="45.72" y1="16.51" x2="45.72" y2="15.24" width="0.1524" layer="91"/>
 <junction x="45.72" y="15.24"/>
 <wire x1="36.83" y1="16.51" x2="36.83" y2="15.24" width="0.1524" layer="91"/>
 <wire x1="45.72" y1="15.24" x2="36.83" y2="15.24" width="0.1524" layer="91"/>
-<pinref part="C15" gate="C" pin="1"/>
+<pinref part="C23" gate="C" pin="1"/>
 </segment>
 <segment>
-<pinref part="IC34" gate="G$1" pin="GND"/>
+<pinref part="IC3" gate="IC" pin="GND"/>
 <pinref part="GND14" gate="1" pin="GND"/>
-<pinref part="C16" gate="C" pin="1"/>
+<pinref part="C17" gate="C" pin="1"/>
 <wire x1="189.23" y1="142.24" x2="186.69" y2="142.24" width="0.1524" layer="91"/>
 <junction x="189.23" y="142.24"/>
-<pinref part="C18" gate="C" pin="1"/>
+<pinref part="C16" gate="C" pin="1"/>
 <wire x1="186.69" y1="142.24" x2="177.8" y2="142.24" width="0.1524" layer="91"/>
 <junction x="186.69" y="142.24"/>
 </segment>
 <segment>
-<pinref part="C23" gate="C" pin="1"/>
 <pinref part="C22" gate="C" pin="1"/>
-<wire x1="246.38" y1="85.09" x2="240.03" y2="85.09" width="0.1524" layer="91"/>
 <pinref part="C21" gate="C" pin="1"/>
+<wire x1="246.38" y1="85.09" x2="240.03" y2="85.09" width="0.1524" layer="91"/>
+<pinref part="C20" gate="C" pin="1"/>
 <wire x1="240.03" y1="85.09" x2="233.68" y2="85.09" width="0.1524" layer="91"/>
 <junction x="240.03" y="85.09"/>
 <pinref part="GND16" gate="1" pin="GND"/>
@@ -9485,22 +9503,22 @@ Designed by Watterott electronic</text>
 <junction x="246.38" y="85.09"/>
 <junction x="233.68" y="85.09"/>
 <wire x1="233.68" y1="85.09" x2="227.33" y2="85.09" width="0.1524" layer="91"/>
-<pinref part="C1" gate="C" pin="1"/>
+<pinref part="C19" gate="C" pin="1"/>
 </segment>
 <segment>
-<pinref part="R4" gate="R" pin="1"/>
+<pinref part="R8" gate="R" pin="1"/>
 <pinref part="GND12" gate="1" pin="GND"/>
 </segment>
 <segment>
-<pinref part="J2" gate="J" pin="1"/>
+<pinref part="J4" gate="J" pin="1"/>
 <pinref part="GND17" gate="1" pin="GND"/>
 <wire x1="86.36" y1="142.24" x2="86.36" y2="146.05" width="0.1524" layer="91"/>
-<pinref part="C20" gate="C" pin="1"/>
+<pinref part="C15" gate="C" pin="1"/>
 <wire x1="86.36" y1="142.24" x2="73.66" y2="142.24" width="0.1524" layer="91"/>
 <junction x="86.36" y="142.24"/>
 </segment>
 <segment>
-<pinref part="T1" gate="T" pin="S"/>
+<pinref part="T2" gate="T" pin="S"/>
 <pinref part="GND18" gate="1" pin="GND"/>
 <wire x1="148.59" y1="128.27" x2="148.59" y2="135.89" width="0.1524" layer="91"/>
 <pinref part="R10" gate="R" pin="2"/>
@@ -9508,12 +9526,12 @@ Designed by Watterott electronic</text>
 <junction x="148.59" y="128.27"/>
 </segment>
 <segment>
-<pinref part="C27" gate="C" pin="1"/>
+<pinref part="C18" gate="C" pin="1"/>
 <wire x1="48.26" y1="93.98" x2="44.45" y2="93.98" width="0.1524" layer="91"/>
 <pinref part="GND34" gate="1" pin="GND"/>
 <wire x1="44.45" y1="93.98" x2="44.45" y2="91.44" width="0.1524" layer="91"/>
 <junction x="44.45" y="93.98"/>
-<pinref part="IC7" gate="IC" pin="GND"/>
+<pinref part="IC4" gate="IC" pin="GND"/>
 </segment>
 <segment>
 <pinref part="J5" gate="J" pin="1"/>
@@ -9528,23 +9546,23 @@ Designed by Watterott electronic</text>
 <segment>
 <pinref part="GND13" gate="1" pin="GND"/>
 <wire x1="226.06" y1="102.87" x2="217.17" y2="102.87" width="0.1524" layer="91"/>
-<pinref part="W4" gate="LED" pin="GND"/>
+<pinref part="D6" gate="LED" pin="GND"/>
 <wire x1="217.17" y1="102.87" x2="217.17" y2="100.33" width="0.1524" layer="91"/>
-<pinref part="W3" gate="LED" pin="GND"/>
+<pinref part="D5" gate="LED" pin="GND"/>
 <wire x1="217.17" y1="102.87" x2="200.66" y2="102.87" width="0.1524" layer="91"/>
 <wire x1="200.66" y1="102.87" x2="200.66" y2="100.33" width="0.1524" layer="91"/>
 <junction x="217.17" y="102.87"/>
-<pinref part="W2" gate="LED" pin="GND"/>
+<pinref part="D4" gate="LED" pin="GND"/>
 <wire x1="200.66" y1="102.87" x2="184.15" y2="102.87" width="0.1524" layer="91"/>
 <wire x1="184.15" y1="102.87" x2="184.15" y2="100.33" width="0.1524" layer="91"/>
 <junction x="200.66" y="102.87"/>
-<pinref part="W1" gate="LED" pin="GND"/>
+<pinref part="D3" gate="LED" pin="GND"/>
 <wire x1="184.15" y1="102.87" x2="167.64" y2="102.87" width="0.1524" layer="91"/>
 <wire x1="167.64" y1="102.87" x2="167.64" y2="100.33" width="0.1524" layer="91"/>
 <junction x="184.15" y="102.87"/>
 </segment>
 <segment>
-<pinref part="C24" gate="C" pin="1"/>
+<pinref part="C13" gate="C" pin="1"/>
 <pinref part="GND2" gate="1" pin="GND"/>
 <wire x1="135.89" y1="149.86" x2="135.89" y2="148.59" width="0.1524" layer="91"/>
 </segment>
@@ -9553,41 +9571,41 @@ Designed by Watterott electronic</text>
 <segment>
 <wire x1="106.68" y1="48.26" x2="101.6" y2="48.26" width="0.1524" layer="91"/>
 <label x="106.68" y="48.26" size="1.27" layer="95" xref="yes"/>
-<pinref part="IC3" gate="IC" pin="MOSI"/>
+<pinref part="IC5" gate="IC" pin="MOSI"/>
 </segment>
 </net>
 <net name="D16_WINC_SCK" class="0">
 <segment>
 <wire x1="106.68" y1="50.8" x2="101.6" y2="50.8" width="0.1524" layer="91"/>
 <label x="106.68" y="50.8" size="1.27" layer="95" xref="yes"/>
-<pinref part="IC3" gate="IC" pin="SCK"/>
+<pinref part="IC5" gate="IC" pin="SCK"/>
 </segment>
 </net>
 <net name="D17_WINC_MISO" class="0">
 <segment>
 <wire x1="106.68" y1="45.72" x2="101.6" y2="45.72" width="0.1524" layer="91"/>
 <label x="106.68" y="45.72" size="1.27" layer="95" xref="yes"/>
-<pinref part="IC3" gate="IC" pin="MISO"/>
+<pinref part="IC5" gate="IC" pin="MISO"/>
 </segment>
 </net>
 <net name="D18_WINC_RX" class="0">
 <segment>
 <wire x1="106.68" y1="40.64" x2="101.6" y2="40.64" width="0.1524" layer="91"/>
 <label x="106.68" y="40.64" size="1.27" layer="95" xref="yes"/>
-<pinref part="IC3" gate="IC" pin="TXD"/>
+<pinref part="IC5" gate="IC" pin="TXD"/>
 </segment>
 </net>
 <net name="+3V3" class="0">
 <segment>
-<pinref part="C17" gate="C" pin="2"/>
+<pinref part="C25" gate="C" pin="2"/>
 <wire x1="54.61" y1="22.86" x2="60.96" y2="22.86" width="0.1524" layer="91"/>
 <wire x1="54.61" y1="22.86" x2="54.61" y2="21.59" width="0.1524" layer="91"/>
 <junction x="54.61" y="22.86"/>
-<pinref part="IC3" gate="IC" pin="VBAT"/>
+<pinref part="IC5" gate="IC" pin="VBAT"/>
 <pinref part="+3V3" gate="G$1" pin="+3V3"/>
 <wire x1="45.72" y1="30.48" x2="60.96" y2="30.48" width="0.1524" layer="91"/>
-<pinref part="IC3" gate="IC" pin="VCCIO"/>
-<pinref part="C19" gate="C" pin="2"/>
+<pinref part="IC5" gate="IC" pin="VCCIO"/>
+<pinref part="C24" gate="C" pin="2"/>
 <wire x1="45.72" y1="21.59" x2="45.72" y2="22.86" width="0.1524" layer="91"/>
 <junction x="45.72" y="30.48"/>
 <wire x1="45.72" y1="22.86" x2="45.72" y2="30.48" width="0.1524" layer="91"/>
@@ -9595,43 +9613,43 @@ Designed by Watterott electronic</text>
 <junction x="45.72" y="22.86"/>
 <wire x1="36.83" y1="21.59" x2="36.83" y2="22.86" width="0.1524" layer="91"/>
 <wire x1="45.72" y1="22.86" x2="36.83" y2="22.86" width="0.1524" layer="91"/>
-<pinref part="C15" gate="C" pin="2"/>
+<pinref part="C23" gate="C" pin="2"/>
 </segment>
 <segment>
 <pinref part="+3V5" gate="G$1" pin="+3V3"/>
-<pinref part="R9" gate="R" pin="2"/>
+<pinref part="R12" gate="R" pin="2"/>
 </segment>
 <segment>
-<pinref part="IC34" gate="G$1" pin="VCC"/>
+<pinref part="IC3" gate="IC" pin="VCC"/>
 <pinref part="+3V8" gate="G$1" pin="+3V3"/>
-<pinref part="C16" gate="C" pin="2"/>
+<pinref part="C17" gate="C" pin="2"/>
 <wire x1="189.23" y1="147.32" x2="186.69" y2="147.32" width="0.1524" layer="91"/>
 <junction x="189.23" y="147.32"/>
-<pinref part="C18" gate="C" pin="2"/>
+<pinref part="C16" gate="C" pin="2"/>
 <wire x1="186.69" y1="147.32" x2="177.8" y2="147.32" width="0.1524" layer="91"/>
 <junction x="186.69" y="147.32"/>
 </segment>
 <segment>
-<pinref part="J2" gate="J" pin="2"/>
+<pinref part="J4" gate="J" pin="2"/>
 <wire x1="86.36" y1="148.59" x2="82.55" y2="148.59" width="0.1524" layer="91"/>
 <wire x1="82.55" y1="148.59" x2="82.55" y2="157.48" width="0.1524" layer="91"/>
 <pinref part="+3V2" gate="G$1" pin="+3V3"/>
-<pinref part="C20" gate="C" pin="2"/>
+<pinref part="C15" gate="C" pin="2"/>
 <wire x1="82.55" y1="148.59" x2="73.66" y2="148.59" width="0.1524" layer="91"/>
 <wire x1="73.66" y1="148.59" x2="73.66" y2="147.32" width="0.1524" layer="91"/>
 <junction x="82.55" y="148.59"/>
 </segment>
 <segment>
-<pinref part="C27" gate="C" pin="2"/>
+<pinref part="C18" gate="C" pin="2"/>
 <wire x1="48.26" y1="99.06" x2="44.45" y2="99.06" width="0.1524" layer="91"/>
 <pinref part="+3V315" gate="G$1" pin="+3V3"/>
 <wire x1="44.45" y1="99.06" x2="44.45" y2="104.14" width="0.1524" layer="91"/>
 <junction x="44.45" y="99.06"/>
-<pinref part="IC7" gate="IC" pin="VCC"/>
+<pinref part="IC4" gate="IC" pin="VCC"/>
 </segment>
 <segment>
 <pinref part="+3V4" gate="G$1" pin="+3V3"/>
-<pinref part="C24" gate="C" pin="2"/>
+<pinref part="C13" gate="C" pin="2"/>
 <wire x1="135.89" y1="157.48" x2="135.89" y2="156.21" width="0.1524" layer="91"/>
 <pinref part="LS1" gate="G$1" pin="P"/>
 <wire x1="135.89" y1="156.21" x2="135.89" y2="154.94" width="0.1524" layer="91"/>
@@ -9641,32 +9659,32 @@ Designed by Watterott electronic</text>
 </net>
 <net name="CFG" class="0">
 <segment>
-<pinref part="R9" gate="R" pin="1"/>
+<pinref part="R12" gate="R" pin="1"/>
 <wire x1="60.96" y1="43.18" x2="55.88" y2="43.18" width="0.1524" layer="91"/>
 <wire x1="55.88" y1="43.18" x2="55.88" y2="59.69" width="0.1524" layer="91"/>
-<pinref part="IC3" gate="IC" pin="!SDIO!/SPI_CFG"/>
+<pinref part="IC5" gate="IC" pin="!SDIO!/SPI_CFG"/>
 </segment>
 </net>
 <net name="D10_WINC_EN" class="0">
 <segment>
 <wire x1="27.94" y1="58.42" x2="60.96" y2="58.42" width="0.1524" layer="91"/>
 <label x="27.94" y="58.42" size="1.27" layer="95" rot="R180" xref="yes"/>
-<pinref part="IC3" gate="IC" pin="EN"/>
+<pinref part="IC5" gate="IC" pin="EN"/>
 </segment>
 </net>
 <net name="D11_WINC_WAKE" class="0">
 <segment>
 <wire x1="60.96" y1="53.34" x2="27.94" y2="53.34" width="0.1524" layer="91"/>
 <label x="27.94" y="53.34" size="1.27" layer="95" rot="R180" xref="yes"/>
-<pinref part="IC3" gate="IC" pin="WAKE"/>
+<pinref part="IC5" gate="IC" pin="WAKE"/>
 </segment>
 </net>
 <net name="+5V" class="0">
 <segment>
+<pinref part="C20" gate="C" pin="2"/>
 <pinref part="C21" gate="C" pin="2"/>
-<pinref part="C22" gate="C" pin="2"/>
 <wire x1="233.68" y1="90.17" x2="240.03" y2="90.17" width="0.1524" layer="91"/>
-<pinref part="C23" gate="C" pin="2"/>
+<pinref part="C22" gate="C" pin="2"/>
 <wire x1="240.03" y1="90.17" x2="246.38" y2="90.17" width="0.1524" layer="91"/>
 <junction x="240.03" y="90.17"/>
 <pinref part="P+4" gate="1" pin="+5V"/>
@@ -9675,7 +9693,7 @@ Designed by Watterott electronic</text>
 <junction x="246.38" y="90.17"/>
 <junction x="233.68" y="90.17"/>
 <wire x1="233.68" y1="90.17" x2="227.33" y2="90.17" width="0.1524" layer="91"/>
-<pinref part="C1" gate="C" pin="2"/>
+<pinref part="C19" gate="C" pin="2"/>
 </segment>
 <segment>
 <pinref part="J5" gate="J" pin="2"/>
@@ -9684,18 +9702,18 @@ Designed by Watterott electronic</text>
 <wire x1="220.98" y1="67.31" x2="220.98" y2="72.39" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<pinref part="W1" gate="LED" pin="VCC"/>
+<pinref part="D3" gate="LED" pin="VCC"/>
 <wire x1="162.56" y1="100.33" x2="162.56" y2="107.95" width="0.1524" layer="91"/>
-<pinref part="W2" gate="LED" pin="VCC"/>
+<pinref part="D4" gate="LED" pin="VCC"/>
 <wire x1="162.56" y1="107.95" x2="179.07" y2="107.95" width="0.1524" layer="91"/>
 <wire x1="179.07" y1="107.95" x2="179.07" y2="100.33" width="0.1524" layer="91"/>
 <wire x1="179.07" y1="107.95" x2="195.58" y2="107.95" width="0.1524" layer="91"/>
 <wire x1="195.58" y1="107.95" x2="195.58" y2="100.33" width="0.1524" layer="91"/>
 <junction x="179.07" y="107.95"/>
-<pinref part="W3" gate="LED" pin="VCC"/>
+<pinref part="D5" gate="LED" pin="VCC"/>
 <wire x1="195.58" y1="107.95" x2="212.09" y2="107.95" width="0.1524" layer="91"/>
 <junction x="195.58" y="107.95"/>
-<pinref part="W4" gate="LED" pin="VCC"/>
+<pinref part="D6" gate="LED" pin="VCC"/>
 <wire x1="212.09" y1="107.95" x2="212.09" y2="100.33" width="0.1524" layer="91"/>
 <pinref part="P+5" gate="1" pin="+5V"/>
 <junction x="212.09" y="107.95"/>
@@ -9705,44 +9723,43 @@ Designed by Watterott electronic</text>
 <segment>
 <wire x1="162.56" y1="68.58" x2="162.56" y2="66.04" width="0.1524" layer="91"/>
 <label x="162.56" y="66.04" size="1.27" layer="95" rot="R180" xref="yes"/>
-<pinref part="R8" gate="R" pin="2"/>
+<pinref part="R11" gate="R" pin="2"/>
 </segment>
 </net>
 <net name="D12_WINC_RST" class="0">
 <segment>
 <label x="27.94" y="48.26" size="1.27" layer="95" rot="R180" xref="yes"/>
 <wire x1="27.94" y1="48.26" x2="60.96" y2="48.26" width="0.1524" layer="91"/>
-<pinref part="IC3" gate="IC" pin="!RESET"/>
+<pinref part="IC5" gate="IC" pin="!RESET"/>
 </segment>
 </net>
 <net name="D6_SDA" class="0">
 <segment>
-<pinref part="IC34" gate="G$1" pin="RX/SDA"/>
+<pinref part="IC3" gate="IC" pin="RX/SDA"/>
 <wire x1="219.71" y1="147.32" x2="228.6" y2="147.32" width="0.1524" layer="91"/>
 <label x="228.6" y="147.32" size="1.27" layer="95" xref="yes"/>
 </segment>
 <segment>
-<pinref part="J2" gate="J" pin="3"/>
+<pinref part="J4" gate="J" pin="3"/>
 <wire x1="86.36" y1="151.13" x2="80.01" y2="151.13" width="0.1524" layer="91"/>
 <label x="80.01" y="151.13" size="1.27" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
 <net name="D7_SCL" class="0">
 <segment>
-<pinref part="IC34" gate="G$1" pin="TX/SCL"/>
+<pinref part="IC3" gate="IC" pin="TX/SCL"/>
 <wire x1="219.71" y1="142.24" x2="228.6" y2="142.24" width="0.1524" layer="91"/>
 <label x="228.6" y="142.24" size="1.27" layer="95" xref="yes"/>
 </segment>
 <segment>
-<pinref part="J2" gate="J" pin="4"/>
+<pinref part="J4" gate="J" pin="4"/>
 <wire x1="86.36" y1="153.67" x2="80.01" y2="153.67" width="0.1524" layer="91"/>
 <label x="80.01" y="153.67" size="1.27" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
 <net name="D0_LIGHTSENS" class="0">
 <segment>
-<pinref part="IC33" gate="IC1" pin="E"/>
-<pinref part="R4" gate="R" pin="2"/>
+<pinref part="R8" gate="R" pin="2"/>
 <wire x1="21.59" y1="149.86" x2="29.21" y2="149.86" width="0.1524" layer="91"/>
 <junction x="21.59" y="149.86"/>
 <label x="33.02" y="149.86" size="1.27" layer="95" xref="yes"/>
@@ -9750,27 +9767,28 @@ Designed by Watterott electronic</text>
 <wire x1="29.21" y1="149.86" x2="33.02" y2="149.86" width="0.1524" layer="91"/>
 <wire x1="29.21" y1="147.32" x2="29.21" y2="149.86" width="0.1524" layer="91"/>
 <junction x="29.21" y="149.86"/>
+<pinref part="T1" gate="T" pin="E"/>
 </segment>
 </net>
 <net name="N$2" class="0">
 <segment>
-<pinref part="T1" gate="T" pin="G"/>
+<pinref part="T2" gate="T" pin="G"/>
 <pinref part="R10" gate="R" pin="1"/>
 <wire x1="143.51" y1="138.43" x2="140.97" y2="138.43" width="0.1524" layer="91"/>
-<pinref part="R11" gate="R" pin="2"/>
+<pinref part="R9" gate="R" pin="2"/>
 <wire x1="140.97" y1="138.43" x2="138.43" y2="138.43" width="0.1524" layer="91"/>
 <junction x="140.97" y="138.43"/>
 </segment>
 </net>
 <net name="N$1" class="0">
 <segment>
-<pinref part="T1" gate="T" pin="D"/>
+<pinref part="T2" gate="T" pin="D"/>
 <pinref part="LS1" gate="G$1" pin="N"/>
 </segment>
 </net>
 <net name="D4_BUZZER" class="0">
 <segment>
-<pinref part="R11" gate="R" pin="1"/>
+<pinref part="R9" gate="R" pin="1"/>
 <wire x1="128.27" y1="138.43" x2="124.46" y2="138.43" width="0.1524" layer="91"/>
 <label x="124.46" y="138.43" size="1.27" layer="95" rot="R180" xref="yes"/>
 </segment>
@@ -9779,21 +9797,21 @@ Designed by Watterott electronic</text>
 <segment>
 <wire x1="78.74" y1="99.06" x2="81.28" y2="99.06" width="0.1524" layer="91"/>
 <label x="81.28" y="99.06" size="1.27" layer="95" xref="yes"/>
-<pinref part="IC7" gate="IC" pin="SDA"/>
+<pinref part="IC4" gate="IC" pin="SDA"/>
 </segment>
 </net>
 <net name="D9_SCL" class="0">
 <segment>
 <wire x1="78.74" y1="93.98" x2="81.28" y2="93.98" width="0.1524" layer="91"/>
 <label x="81.28" y="93.98" size="1.27" layer="95" xref="yes"/>
-<pinref part="IC7" gate="IC" pin="SCL"/>
+<pinref part="IC4" gate="IC" pin="SCL"/>
 </segment>
 </net>
 <net name="W4OUT" class="0">
 <segment>
 <pinref part="J5" gate="J" pin="3"/>
 <wire x1="214.63" y1="69.85" x2="217.17" y2="69.85" width="0.1524" layer="91"/>
-<pinref part="W4" gate="LED" pin="DO"/>
+<pinref part="D6" gate="LED" pin="DO"/>
 <wire x1="217.17" y1="80.01" x2="217.17" y2="69.85" width="0.1524" layer="91"/>
 </segment>
 </net>
@@ -9801,49 +9819,49 @@ Designed by Watterott electronic</text>
 <segment>
 <wire x1="106.68" y1="53.34" x2="101.6" y2="53.34" width="0.1524" layer="91"/>
 <label x="106.68" y="53.34" size="1.27" layer="95" xref="yes"/>
-<pinref part="IC3" gate="IC" pin="!CS"/>
+<pinref part="IC5" gate="IC" pin="!CS"/>
 </segment>
 </net>
 <net name="D19_WINC_TX" class="0">
 <segment>
 <wire x1="106.68" y1="38.1" x2="101.6" y2="38.1" width="0.1524" layer="91"/>
 <label x="106.68" y="38.1" size="1.27" layer="95" xref="yes"/>
-<pinref part="IC3" gate="IC" pin="RXD"/>
+<pinref part="IC5" gate="IC" pin="RXD"/>
 </segment>
 </net>
 <net name="D1_LIGHTSENS_PWR" class="0">
 <segment>
-<pinref part="IC33" gate="IC1" pin="C"/>
 <wire x1="21.59" y1="160.02" x2="21.59" y2="162.56" width="0.1524" layer="91"/>
 <wire x1="21.59" y1="162.56" x2="31.75" y2="162.56" width="0.1524" layer="91"/>
 <label x="31.75" y="162.56" size="1.27" layer="95" xref="yes"/>
+<pinref part="T1" gate="T" pin="C"/>
 </segment>
 </net>
 <net name="N$4" class="0">
 <segment>
-<pinref part="R8" gate="R" pin="1"/>
-<pinref part="W1" gate="LED" pin="DI"/>
+<pinref part="R11" gate="R" pin="1"/>
+<pinref part="D3" gate="LED" pin="DI"/>
 <wire x1="162.56" y1="78.74" x2="162.56" y2="80.01" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="W1OUT" class="0">
 <segment>
-<pinref part="W1" gate="LED" pin="DO"/>
-<pinref part="W2" gate="LED" pin="DI"/>
+<pinref part="D3" gate="LED" pin="DO"/>
+<pinref part="D4" gate="LED" pin="DI"/>
 <wire x1="167.64" y1="80.01" x2="179.07" y2="80.01" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="W2OUT" class="0">
 <segment>
-<pinref part="W2" gate="LED" pin="DO"/>
-<pinref part="W3" gate="LED" pin="DI"/>
+<pinref part="D4" gate="LED" pin="DO"/>
+<pinref part="D5" gate="LED" pin="DI"/>
 <wire x1="184.15" y1="80.01" x2="195.58" y2="80.01" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="W3OUT" class="0">
 <segment>
-<pinref part="W3" gate="LED" pin="DO"/>
-<pinref part="W4" gate="LED" pin="DI"/>
+<pinref part="D5" gate="LED" pin="DO"/>
+<pinref part="D6" gate="LED" pin="DI"/>
 <wire x1="200.66" y1="80.01" x2="212.09" y2="80.01" width="0.1524" layer="91"/>
 </segment>
 </net>
@@ -9851,7 +9869,7 @@ Designed by Watterott electronic</text>
 <segment>
 <wire x1="106.68" y1="58.42" x2="101.6" y2="58.42" width="0.1524" layer="91"/>
 <label x="106.68" y="58.42" size="1.27" layer="95" xref="yes"/>
-<pinref part="IC3" gate="IC" pin="!IRQ"/>
+<pinref part="IC5" gate="IC" pin="!IRQ"/>
 </segment>
 </net>
 </nets>

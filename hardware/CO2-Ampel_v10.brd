@@ -1653,27 +1653,11 @@ Samtech FTSH-105-01</description>
 <pad name="4" x="-8.48" y="-10.09" drill="0.9"/>
 <pad name="5" x="-5.94" y="-10.09" drill="0.9"/>
 <pad name="6" x="-3.4" y="-10.09" drill="0.9"/>
-<pad name="7" x="-0.86" y="-10.09" drill="0.9"/>
 <hole x="-15.7" y="-6.62" drill="2.5"/>
 <hole x="15.62" y="9.64" drill="2.5"/>
 <text x="0.06" y="2.135" size="0.8128" layer="25" font="vector" ratio="10" align="center">&gt;NAME</text>
 <text x="0.06" y="-1.675" size="0.8128" layer="27" font="vector" ratio="10" rot="R180" align="center">&gt;VALUE</text>
-</package>
-<package name="C0603">
-<wire x1="0.45" y1="0.85" x2="0.45" y2="0.45" width="0.127" layer="21"/>
-<wire x1="0.45" y1="0.45" x2="0.45" y2="-0.45" width="0.127" layer="21"/>
-<wire x1="0.45" y1="-0.45" x2="0.45" y2="-0.85" width="0.127" layer="21"/>
-<wire x1="-0.45" y1="0.85" x2="-0.45" y2="0.45" width="0.127" layer="21"/>
-<wire x1="-0.45" y1="0.45" x2="-0.45" y2="-0.45" width="0.127" layer="21"/>
-<wire x1="-0.45" y1="-0.45" x2="-0.45" y2="-0.85" width="0.127" layer="21"/>
-<wire x1="0.45" y1="-0.85" x2="-0.45" y2="-0.85" width="0.127" layer="21"/>
-<wire x1="0.45" y1="0.85" x2="-0.45" y2="0.85" width="0.127" layer="21"/>
-<wire x1="0.45" y1="0.45" x2="-0.45" y2="0.45" width="0.127" layer="21"/>
-<wire x1="0.45" y1="-0.45" x2="-0.45" y2="-0.45" width="0.127" layer="21"/>
-<text x="-1.27" y="0" size="0.8128" layer="25" font="vector" ratio="10" rot="R270" align="center">&gt;NAME</text>
-<text x="1.27" y="0" size="0.8128" layer="27" font="vector" ratio="10" rot="R270" align="center">&gt;VALUE</text>
-<smd name="1" x="0" y="0.8" dx="1" dy="0.95" layer="1" roundness="20"/>
-<smd name="2" x="0" y="-0.8" dx="1" dy="0.95" layer="1" roundness="20"/>
+<pad name="7" x="-0.86" y="-10.09" drill="0.9"/>
 </package>
 </packages>
 </library>
@@ -1722,6 +1706,33 @@ Samtech FTSH-105-01</description>
 <smd name="3" x="-1.9" y="1.75" dx="2.1" dy="1.7" layer="1"/>
 <smd name="2" x="1.9" y="-1.75" dx="2.1" dy="1.7" layer="1"/>
 <smd name="1" x="-1.9" y="-1.75" dx="2.1" dy="1.7" layer="1"/>
+</package>
+</packages>
+</library>
+<library name="we-opto@1">
+<description>Displays, LEDs, Photocoupler/Optocoupler, Photointerrupter...</description>
+<packages>
+<package name="C0603T">
+<wire x1="-0.3" y1="0.8" x2="0.3" y2="0.8" width="0.1016" layer="21" curve="170.055574"/>
+<wire x1="-0.275" y1="-0.825" x2="0.275" y2="-0.825" width="0.0508" layer="21" curve="-180"/>
+<wire x1="-0.4" y1="0.375" x2="-0.4" y2="-0.35" width="0.1016" layer="21"/>
+<wire x1="0.4" y1="0.35" x2="0.4" y2="-0.35" width="0.1016" layer="21"/>
+<circle x="-0.35" y="0.625" radius="0.075" width="0.0508" layer="21"/>
+<smd name="C" x="0" y="0.75" dx="0.9" dy="0.8" layer="1" roundness="20"/>
+<smd name="E" x="0" y="-0.75" dx="0.9" dy="0.8" layer="1" roundness="20"/>
+<text x="-1.27" y="0" size="0.8128" layer="25" font="vector" ratio="10" rot="R270" align="center">&gt;NAME</text>
+<text x="1.27" y="0" size="0.8128" layer="27" font="vector" ratio="10" rot="R270" align="center">&gt;VALUE</text>
+<rectangle x1="-0.45" y1="0.7" x2="-0.25" y2="0.85" layer="21"/>
+<rectangle x1="-0.275" y1="0.55" x2="-0.225" y2="0.6" layer="21"/>
+<rectangle x1="-0.45" y1="0.35" x2="-0.4" y2="0.725" layer="21"/>
+<rectangle x1="0.25" y1="0.55" x2="0.45" y2="0.85" layer="21"/>
+<rectangle x1="-0.45" y1="0.35" x2="0.45" y2="0.575" layer="21"/>
+<rectangle x1="-0.45" y1="-0.85" x2="-0.25" y2="-0.35" layer="21"/>
+<rectangle x1="0.25" y1="-0.85" x2="0.45" y2="-0.35" layer="21"/>
+<rectangle x1="-0.275" y1="-0.575" x2="0.275" y2="-0.35" layer="21"/>
+<rectangle x1="-0.275" y1="-0.65" x2="-0.175" y2="-0.55" layer="21"/>
+<rectangle x1="0.175" y1="-0.65" x2="0.275" y2="-0.55" layer="21"/>
+<rectangle x1="-0.125" y1="0" x2="0.125" y2="0.25" layer="21"/>
 </package>
 </packages>
 </library>
@@ -1906,27 +1917,27 @@ Samtech FTSH-105-01</description>
 </pass>
 </autorouter>
 <elements>
-<element name="X2" library="we-symbol" package="PASSER_07MM" value="PASSER-07" x="2" y="44" smashed="yes" rot="R90"/>
-<element name="X1" library="we-symbol" package="PASSER_07MM" value="PASSER-07" x="2" y="6" smashed="yes"/>
-<element name="X3" library="we-symbol" package="PASSER_07MM" value="PASSER-07" x="48" y="44" smashed="yes"/>
+<element name="X1" library="we-symbol" package="PASSER_07MM" value="PASSER-07" x="2" y="44" smashed="yes" rot="R90"/>
+<element name="X3" library="we-symbol" package="PASSER_07MM" value="PASSER-07" x="2" y="6" smashed="yes"/>
+<element name="X4" library="we-symbol" package="PASSER_07MM" value="PASSER-07" x="48" y="44" smashed="yes"/>
 <element name="LOGO3" library="we-symbol" package="OSHW_3MM" value="OSHW_LOGOX0070" x="9" y="48" smashed="yes"/>
-<element name="X4" library="we-symbol" package="PASSER_07MM" value="PASSER-07" x="48" y="6" smashed="yes"/>
-<element name="IC2" library="we-chip" package="QFN48-PAD" value="ATSAMD21G18A-MU" x="23.25" y="19.75" smashed="yes" rot="R180">
+<element name="X2" library="we-symbol" package="PASSER_07MM" value="PASSER-07" x="48" y="6" smashed="yes"/>
+<element name="IC1" library="we-chip" package="QFN48-PAD" value="ATSAMD21G18A-MU" x="23.25" y="19.75" smashed="yes" rot="R180">
 <attribute name="NAME" x="23.25" y="18.5" size="0.8128" layer="25" font="vector" ratio="10" rot="R180" align="center"/>
 <attribute name="VALUE" x="23.25" y="20" size="0.8128" layer="27" font="vector" ratio="10" rot="R180" align="center"/>
 </element>
-<element name="SW2" library="we-switch" package="PTS840P" value="PTS645SK50SMTR92-Red" x="13.5" y="1.6" smashed="yes">
+<element name="SW1" library="we-switch" package="PTS840P" value="PTS645SK50SMTR92-Red" x="13.5" y="1.6" smashed="yes">
 <attribute name="DIGIKEY" value="CKN10511DKR-ND" x="13.5" y="1.6" size="1.778" layer="27" display="off"/>
 <attribute name="NAME" x="11.125" y="1.6" size="0.8128" layer="25" font="vector" ratio="10" rot="R270" align="center"/>
 </element>
-<element name="SWD" library="we-board" package="SWD-2X5_SMD" value="SWD-2X5-SMD" x="40.242" y="17.373" smashed="yes">
+<element name="J2" library="we-board" package="SWD-2X5_SMD" value="SWD-2X5-SMD" x="40.242" y="17.373" smashed="yes">
 <attribute name="NAME" x="40.242" y="17.373" size="0.8128" layer="25" font="vector" ratio="10" rot="R90" align="center"/>
 </element>
-<element name="C27" library="we-rcl" package="C0402" value="100n" x="14.755" y="23.481" smashed="yes" rot="R180">
+<element name="C18" library="we-rcl" package="C0402" value="100n" x="14.755" y="23.481" smashed="yes" rot="R180">
 <attribute name="NAME" x="14.755" y="25.606" size="0.8128" layer="25" font="vector" ratio="10" rot="R90" align="center"/>
 <attribute name="VALUE" x="15.755" y="27.356" size="0.8128" layer="27" font="vector" ratio="10" rot="R90" align="center"/>
 </element>
-<element name="R1" library="we-rcl" package="C0603" value="0" x="18.415" y="3.429" smashed="yes" rot="R90">
+<element name="R5" library="we-rcl" package="C0603" value="0" x="18.415" y="3.429" smashed="yes" rot="R90">
 <attribute name="NAME" x="18.415" y="4.429" size="0.8128" layer="25" font="vector" ratio="10" align="center"/>
 <attribute name="VALUE" x="19.915" y="3.429" size="0.8128" layer="27" font="vector" ratio="10" align="center"/>
 </element>
@@ -1934,20 +1945,20 @@ Samtech FTSH-105-01</description>
 <attribute name="NAME" x="16.98" y="8.255" size="0.8128" layer="25" font="vector" ratio="10" rot="R180" align="center"/>
 <attribute name="VALUE" x="14.605" y="9.755" size="0.8128" layer="27" font="vector" ratio="10" rot="R180" align="center"/>
 </element>
-<element name="D5" library="we-rcl" package="SOT723" value="D_ESD5V3U2U-03F" x="25.5" y="8.875" smashed="yes" rot="R90">
+<element name="D1" library="we-rcl" package="SOT723" value="D_ESD5V3U2U-03F" x="25.5" y="8.875" smashed="yes" rot="R90">
 <attribute name="DIGIKEY" value="ESD5V3U2U-03F H6327DKR-ND" x="25.5" y="8.875" size="1.778" layer="27" rot="R90" display="off"/>
 <attribute name="NAME" x="25.5" y="7.375" size="0.8128" layer="25" font="vector" ratio="10" align="center"/>
 <attribute name="VALUE" x="25.5" y="6.375" size="0.8128" layer="27" font="vector" ratio="10" align="center"/>
 </element>
-<element name="IC1" library="we-power" package="SOT223" value="VREG-AP2111H-3V3" x="9.525" y="16.51" smashed="yes" rot="R90">
+<element name="IC2" library="we-power" package="SOT223" value="VREG-AP2111H-3V3" x="9.525" y="16.51" smashed="yes" rot="R90">
 <attribute name="NAME" x="9.525" y="15.635" size="0.8128" layer="25" font="vector" ratio="10" align="center"/>
 <attribute name="VALUE" x="9.525" y="11.635" size="0.8128" layer="27" font="vector" ratio="10" align="center"/>
 </element>
-<element name="C3" library="we-rcl" package="C0402" value="100n" x="14.224" y="12.065" smashed="yes" rot="R270">
+<element name="C10" library="we-rcl" package="C0402" value="100n" x="14.224" y="12.065" smashed="yes" rot="R270">
 <attribute name="NAME" x="16.099" y="12.065" size="0.8128" layer="25" font="vector" ratio="10" rot="R180" align="center"/>
 <attribute name="VALUE" x="16.099" y="11.19" size="0.8128" layer="27" font="vector" ratio="10" rot="R180" align="center"/>
 </element>
-<element name="C7" library="we-rcl" package="C0402" value="100n" x="13.589" y="16.51" smashed="yes">
+<element name="C11" library="we-rcl" package="C0402" value="100n" x="13.589" y="16.51" smashed="yes">
 <attribute name="NAME" x="13.589" y="18.385" size="0.8128" layer="25" font="vector" ratio="10" rot="R270" align="center"/>
 <attribute name="VALUE" x="12.589" y="16.51" size="0.8128" layer="27" font="vector" ratio="10" rot="R270" align="center"/>
 </element>
@@ -1955,59 +1966,59 @@ Samtech FTSH-105-01</description>
 <attribute name="NAME" x="5.25" y="1.375" size="0.8128" layer="25" font="vector" ratio="10" align="center"/>
 <attribute name="VALUE" x="5" y="2.25" size="0.8128" layer="27" font="vector" ratio="10" align="center"/>
 </element>
-<element name="R3" library="we-rcl" package="C0402" value="1k" x="14.351" y="6.096" smashed="yes" rot="R270">
+<element name="R7" library="we-rcl" package="C0402" value="1k" x="14.351" y="6.096" smashed="yes" rot="R270">
 <attribute name="NAME" x="16.101" y="6.096" size="0.8128" layer="25" font="vector" ratio="10" rot="R180" align="center"/>
 <attribute name="VALUE" x="16.101" y="6.971" size="0.8128" layer="27" font="vector" ratio="10" rot="R180" align="center"/>
 </element>
-<element name="C13" library="we-rcl" package="C0402" value="2u2" x="23.114" y="14.224" smashed="yes" rot="R180">
+<element name="C8" library="we-rcl" package="C0402" value="2u2" x="23.114" y="14.224" smashed="yes" rot="R180">
 <attribute name="NAME" x="21.989" y="14.224" size="0.8128" layer="25" font="vector" ratio="10" rot="R90" align="center"/>
 <attribute name="VALUE" x="20.989" y="14.224" size="0.8128" layer="27" font="vector" ratio="10" rot="R90" align="center"/>
 </element>
-<element name="C11" library="we-rcl" package="C0402" value="100n" x="29.244" y="19.885" smashed="yes" rot="R180">
+<element name="C7" library="we-rcl" package="C0402" value="100n" x="29.244" y="19.885" smashed="yes" rot="R180">
 <attribute name="NAME" x="29.244" y="22.135" size="0.8128" layer="25" font="vector" ratio="10" rot="R90" align="center"/>
 <attribute name="VALUE" x="29.244" y="24.885" size="0.8128" layer="27" font="vector" ratio="10" rot="R90" align="center"/>
 </element>
-<element name="C8" library="we-rcl" package="C0402" value="2u2" x="28.117" y="19.885" smashed="yes" rot="R180">
+<element name="C5" library="we-rcl" package="C0402" value="2u2" x="28.117" y="19.885" smashed="yes" rot="R180">
 <attribute name="NAME" x="28.117" y="22.01" size="0.8128" layer="25" font="vector" ratio="10" rot="R90" align="center"/>
 <attribute name="VALUE" x="28.117" y="24.885" size="0.8128" layer="27" font="vector" ratio="10" rot="R90" align="center"/>
 </element>
-<element name="C12" library="we-rcl" package="C0402" value="100n" x="18.288" y="4.826" smashed="yes" rot="R90">
+<element name="C1" library="we-rcl" package="C0402" value="100n" x="18.288" y="4.826" smashed="yes" rot="R90">
 <attribute name="NAME" x="19.788" y="4.576" size="0.8128" layer="25" font="vector" ratio="10" rot="R90" align="center"/>
 <attribute name="VALUE" x="20.788" y="4.326" size="0.8128" layer="27" font="vector" ratio="10" rot="R90" align="center"/>
 </element>
-<element name="R7" library="we-rcl" package="C0402" value="10k" x="41.402" y="12.954" smashed="yes" rot="R180">
+<element name="R1" library="we-rcl" package="C0402" value="10k" x="41.402" y="12.954" smashed="yes" rot="R180">
 <attribute name="NAME" x="41.402" y="11.454" size="0.8128" layer="25" font="vector" ratio="10" rot="R180" align="center"/>
 <attribute name="VALUE" x="41.777" y="10.454" size="0.8128" layer="27" font="vector" ratio="10" rot="R180" align="center"/>
 </element>
-<element name="R6" library="we-rcl" package="C0402" value="330" x="18.288" y="5.969" smashed="yes" rot="R270">
+<element name="R2" library="we-rcl" package="C0402" value="330" x="18.288" y="5.969" smashed="yes" rot="R270">
 <attribute name="NAME" x="20.288" y="5.969" size="0.8128" layer="25" font="vector" ratio="10" rot="R180" align="center"/>
 <attribute name="VALUE" x="18.288" y="4.969" size="0.8128" layer="27" font="vector" ratio="10" rot="R180" align="center"/>
 </element>
-<element name="R5" library="we-rcl" package="C0402" value="1k" x="26.162" y="13.462" smashed="yes" rot="R180">
+<element name="R6" library="we-rcl" package="C0402" value="1k" x="26.162" y="13.462" smashed="yes" rot="R180">
 <attribute name="NAME" x="26.182" y="15.212" size="0.8128" layer="25" font="vector" ratio="10" rot="R90" align="center"/>
 <attribute name="VALUE" x="26.142" y="11.587" size="0.8128" layer="27" font="vector" ratio="10" rot="R90" align="center"/>
 </element>
-<element name="C6" library="we-rcl" package="C0402" value="100n" x="24.257" y="14.224" smashed="yes" rot="R180">
+<element name="C4" library="we-rcl" package="C0402" value="100n" x="24.257" y="14.224" smashed="yes" rot="R180">
 <attribute name="NAME" x="25.257" y="14.224" size="0.8128" layer="25" font="vector" ratio="10" rot="R90" align="center"/>
 <attribute name="VALUE" x="26.257" y="14.224" size="0.8128" layer="27" font="vector" ratio="10" rot="R90" align="center"/>
 </element>
-<element name="C5" library="we-rcl" package="C0402" value="100n" x="24.135" y="24.75" smashed="yes" rot="R90">
+<element name="C3" library="we-rcl" package="C0402" value="100n" x="24.135" y="24.75" smashed="yes" rot="R90">
 <attribute name="NAME" x="24.135" y="23.625" size="0.8128" layer="25" font="vector" ratio="10" align="center"/>
 <attribute name="VALUE" x="24.135" y="22.625" size="0.8128" layer="27" font="vector" ratio="10" align="center"/>
 </element>
-<element name="C4" library="we-rcl" package="C0402" value="100n" x="18.901" y="15.467" smashed="yes" rot="R180">
+<element name="C2" library="we-rcl" package="C0402" value="100n" x="18.901" y="15.467" smashed="yes" rot="R180">
 <attribute name="NAME" x="19.943" y="15.399" size="0.8128" layer="25" font="vector" ratio="10" rot="R90" align="center"/>
 <attribute name="VALUE" x="20.943" y="15.399" size="0.8128" layer="27" font="vector" ratio="10" rot="R90" align="center"/>
 </element>
-<element name="C2" library="we-rcl" package="C0805" value="22u" x="14.605" y="10.414" smashed="yes" rot="R270">
+<element name="C9" library="we-rcl" package="C0805" value="22u" x="14.605" y="10.414" smashed="yes" rot="R270">
 <attribute name="NAME" x="17.145" y="10.39" size="0.8128" layer="25" font="vector" ratio="10" rot="R180" align="center"/>
 <attribute name="VALUE" x="14.605" y="12.914" size="0.8128" layer="27" font="vector" ratio="10" rot="R180" align="center"/>
 </element>
-<element name="C9" library="we-rcl" package="C0805" value="22u" x="15.113" y="16.637" smashed="yes">
+<element name="C12" library="we-rcl" package="C0805" value="22u" x="15.113" y="16.637" smashed="yes">
 <attribute name="NAME" x="16.488" y="16.637" size="0.8128" layer="25" font="vector" ratio="10" rot="R270" align="center"/>
 <attribute name="VALUE" x="17.488" y="16.637" size="0.8128" layer="27" font="vector" ratio="10" rot="R270" align="center"/>
 </element>
-<element name="SW1" library="we-switch" package="PTS840P" value="PTS645SH50SMTR92-Grey" x="36.5" y="1.6" smashed="yes">
+<element name="SW2" library="we-switch" package="PTS840P" value="PTS645SH50SMTR92-Grey" x="36.5" y="1.6" smashed="yes">
 <attribute name="DIGIKEY" value="CKN10511DKR-ND" x="36.5" y="1.6" size="1.778" layer="27" display="off"/>
 <attribute name="NAME" x="34.125" y="1.6" size="0.8128" layer="25" font="vector" ratio="10" rot="R90" align="center"/>
 </element>
@@ -2015,89 +2026,85 @@ Samtech FTSH-105-01</description>
 <attribute name="NAME" x="31.953" y="21.6" size="0.8128" layer="25" font="vector" ratio="10" align="center"/>
 <attribute name="VALUE" x="38.203" y="21.6" size="0.8128" layer="27" font="vector" ratio="10" align="center"/>
 </element>
-<element name="C10" library="we-rcl" package="C0402" value="2u2" x="30.371" y="19.885" smashed="yes" rot="R180">
+<element name="C6" library="we-rcl" package="C0402" value="2u2" x="30.371" y="19.885" smashed="yes" rot="R180">
 <attribute name="NAME" x="30.371" y="22.135" size="0.8128" layer="25" font="vector" ratio="10" rot="R90" align="center"/>
 <attribute name="VALUE" x="30.371" y="24.885" size="0.8128" layer="27" font="vector" ratio="10" rot="R90" align="center"/>
 </element>
-<element name="LOGO7" library="we-symbol" package="CE_4MM" value="LOGO_CE-4" x="11.538" y="7.905" smashed="yes" rot="MR0"/>
-<element name="LOGO5" library="we-symbol" package="ROHS_4MM" value="LOGO_ROHS-4" x="9.044" y="13.112" smashed="yes" rot="MR0"/>
-<element name="LOGO6" library="we-symbol" package="WEEE_4MM" value="LOGO_WEEE-4" x="5.348" y="7.778" smashed="yes" rot="MR0"/>
-<element name="LOGO4" library="we-symbol" package="SPARK_4MM" value="LOGO_SPARK-4" x="39.524" y="47.762" smashed="yes"/>
-<element name="IC7" library="we-chip" package="UDFN8" value="ATECC608A-MAHDA" x="16.376" y="22.59" smashed="yes" rot="R90">
+<element name="LOGO5" library="we-symbol" package="CE_4MM" value="LOGO_CE-4" x="11.538" y="7.905" smashed="yes" rot="MR0"/>
+<element name="LOGO4" library="we-symbol" package="ROHS_4MM" value="LOGO_ROHS-4" x="9.044" y="13.112" smashed="yes" rot="MR0"/>
+<element name="LOGO2" library="we-symbol" package="WEEE_4MM" value="LOGO_WEEE-4" x="5.348" y="7.778" smashed="yes" rot="MR0"/>
+<element name="LOGO1" library="we-symbol" package="SPARK_4MM" value="LOGO_SPARK-4" x="39.524" y="47.762" smashed="yes"/>
+<element name="IC4" library="we-chip" package="UDFN8" value="ATECC608A-MAHDA" x="16.376" y="22.59" smashed="yes" rot="R90">
 <attribute name="NAME" x="16.501" y="25.09" size="0.8128" layer="25" font="vector" ratio="10" rot="R180" align="center"/>
 <attribute name="VALUE" x="18.031" y="24.215" size="0.8128" layer="27" font="vector" ratio="10" rot="R90" align="center"/>
 </element>
 <element name="J1" library="we-con" package="USB-C-S" value="USB-C-S" x="25" y="5.5" smashed="yes" rot="R270">
 <attribute name="NAME" x="25" y="2.96" size="0.8128" layer="25" font="vector" ratio="10" rot="R180" align="center"/>
 </element>
-<element name="R47" library="we-rcl" package="C0402" value="5k1" x="27.305" y="8.763" smashed="yes" rot="R180">
+<element name="R3" library="we-rcl" package="C0402" value="5k1" x="27.305" y="8.763" smashed="yes" rot="R180">
 <attribute name="NAME" x="28.575" y="8.763" size="0.8128" layer="25" font="vector" ratio="10" rot="R90" align="center"/>
 <attribute name="VALUE" x="26.035" y="8.763" size="0.8128" layer="27" font="vector" ratio="10" rot="R90" align="center"/>
 </element>
-<element name="R46" library="we-rcl" package="C0402" value="5k1" x="23.368" y="8.763" smashed="yes" rot="R180">
+<element name="R4" library="we-rcl" package="C0402" value="5k1" x="23.368" y="8.763" smashed="yes" rot="R180">
 <attribute name="NAME" x="24.638" y="8.763" size="0.8128" layer="25" font="vector" ratio="10" rot="R90" align="center"/>
 <attribute name="VALUE" x="22.098" y="8.763" size="0.8128" layer="27" font="vector" ratio="10" rot="R90" align="center"/>
 </element>
-<element name="C17" library="we-rcl" package="C0402" value="100n" x="18.161" y="26.797" smashed="yes">
+<element name="C25" library="we-rcl" package="C0402" value="100n" x="18.161" y="26.797" smashed="yes">
 <attribute name="NAME" x="16.891" y="26.797" size="0.8128" layer="25" font="vector" ratio="10" rot="R270" align="center"/>
 <attribute name="VALUE" x="19.431" y="26.797" size="0.8128" layer="27" font="vector" ratio="10" rot="R270" align="center"/>
 </element>
-<element name="R9" library="we-rcl" package="C0402" value="100k" x="14.732" y="26.797" smashed="yes">
+<element name="R12" library="we-rcl" package="C0402" value="100k" x="14.732" y="26.797" smashed="yes">
 <attribute name="NAME" x="13.462" y="26.797" size="0.8128" layer="25" font="vector" ratio="10" rot="R270" align="center"/>
 <attribute name="VALUE" x="16.002" y="26.797" size="0.8128" layer="27" font="vector" ratio="10" rot="R270" align="center"/>
 </element>
-<element name="IC3" library="we-chip" package="ATWINC1500-MX210" value="ATWINC1500-MR210PB" x="25" y="39" smashed="yes">
+<element name="IC5" library="we-chip" package="ATWINC1500-MX210" value="ATWINC1500-MR210PB" x="25" y="39" smashed="yes">
 <attribute name="NAME" x="25" y="40.27" size="0.8128" layer="25" font="vector" ratio="10" align="center"/>
 <attribute name="VALUE" x="25" y="39.23" size="0.8128" layer="27" font="vector" ratio="10" align="center"/>
 </element>
-<element name="C19" library="we-rcl" package="C0402" value="2u2" x="17.018" y="26.797" smashed="yes">
+<element name="C24" library="we-rcl" package="C0402" value="2u2" x="17.018" y="26.797" smashed="yes">
 <attribute name="NAME" x="15.748" y="26.797" size="0.8128" layer="25" font="vector" ratio="10" rot="R270" align="center"/>
 <attribute name="VALUE" x="18.288" y="26.797" size="0.8128" layer="27" font="vector" ratio="10" rot="R270" align="center"/>
 </element>
-<element name="W4" library="we-opto" package="WS2812B" value="WS2812B" x="8" y="8" smashed="yes" rot="R270">
+<element name="D6" library="we-opto" package="WS2812B" value="WS2812B" x="8" y="8" smashed="yes" rot="R270">
 <attribute name="NAME" x="8" y="8" size="0.8128" layer="25" font="vector" ratio="10" rot="R270" align="center"/>
 </element>
-<element name="W3" library="we-opto" package="WS2812B" value="WS2812B" x="42" y="8" smashed="yes" rot="R270">
+<element name="D5" library="we-opto" package="WS2812B" value="WS2812B" x="42" y="8" smashed="yes" rot="R270">
 <attribute name="NAME" x="42" y="8" size="0.8128" layer="25" font="vector" ratio="10" rot="R270" align="center"/>
 </element>
-<element name="W2" library="we-opto" package="WS2812B" value="WS2812B" x="42" y="42" smashed="yes" rot="R90">
+<element name="D4" library="we-opto" package="WS2812B" value="WS2812B" x="42" y="42" smashed="yes" rot="R90">
 <attribute name="NAME" x="42" y="42" size="0.8128" layer="25" font="vector" ratio="10" rot="R90" align="center"/>
 </element>
-<element name="W1" library="we-opto" package="WS2812B" value="WS2812B" x="8" y="42" smashed="yes" rot="R90">
+<element name="D3" library="we-opto" package="WS2812B" value="WS2812B" x="8" y="42" smashed="yes" rot="R90">
 <attribute name="NAME" x="8" y="42" size="0.8128" layer="25" font="vector" ratio="10" rot="R90" align="center"/>
 </element>
-<element name="IC34" library="we-sensor" package="SCD30" value="SCD30" x="25" y="30" smashed="yes" rot="R90">
+<element name="IC3" library="we-sensor" package="SCD30" value="SCD30" x="25" y="30" smashed="yes" rot="R90">
 <attribute name="NAME" x="22.865" y="30.06" size="0.8128" layer="25" font="vector" ratio="10" rot="R90" align="center"/>
 <attribute name="VALUE" x="26.675" y="30.06" size="0.8128" layer="27" font="vector" ratio="10" rot="R270" align="center"/>
 </element>
-<element name="R8" library="we-rcl" package="C0402" value="330" x="16.51" y="19.304" smashed="yes" rot="R90">
+<element name="R11" library="we-rcl" package="C0402" value="330" x="16.51" y="19.304" smashed="yes" rot="R90">
 <attribute name="NAME" x="16.51" y="18.034" size="0.8128" layer="25" font="vector" ratio="10" align="center"/>
 <attribute name="VALUE" x="16.51" y="20.574" size="0.8128" layer="27" font="vector" ratio="10" align="center"/>
 </element>
-<element name="C21" library="we-rcl" package="C0402" value="100n" x="45.466" y="9.398" smashed="yes" rot="R180">
+<element name="C20" library="we-rcl" package="C0402" value="100n" x="45.466" y="9.398" smashed="yes" rot="R180">
 <attribute name="NAME" x="46.736" y="9.398" size="0.8128" layer="25" font="vector" ratio="10" rot="R90" align="center"/>
 <attribute name="VALUE" x="44.196" y="9.398" size="0.8128" layer="27" font="vector" ratio="10" rot="R90" align="center"/>
 </element>
-<element name="C22" library="we-rcl" package="C0402" value="100n" x="38.608" y="40.64" smashed="yes">
+<element name="C21" library="we-rcl" package="C0402" value="100n" x="38.608" y="40.64" smashed="yes">
 <attribute name="NAME" x="37.338" y="40.64" size="0.8128" layer="25" font="vector" ratio="10" rot="R270" align="center"/>
 <attribute name="VALUE" x="39.878" y="40.64" size="0.8128" layer="27" font="vector" ratio="10" rot="R270" align="center"/>
 </element>
-<element name="C23" library="we-rcl" package="C0402" value="100n" x="4.572" y="40.64" smashed="yes">
+<element name="C22" library="we-rcl" package="C0402" value="100n" x="4.572" y="40.64" smashed="yes">
 <attribute name="NAME" x="3.302" y="40.64" size="0.8128" layer="25" font="vector" ratio="10" rot="R270" align="center"/>
 <attribute name="VALUE" x="5.842" y="40.64" size="0.8128" layer="27" font="vector" ratio="10" rot="R270" align="center"/>
 </element>
-<element name="IC33" library="we-sensor" package="C0603" value="IN-S63DTLS" x="31.75" y="1.5" smashed="yes" rot="R270">
-<attribute name="NAME" x="31.75" y="2.77" size="0.8128" layer="25" font="vector" ratio="10" rot="R180" align="center"/>
-<attribute name="VALUE" x="31.75" y="0.23" size="0.8128" layer="27" font="vector" ratio="10" rot="R180" align="center"/>
-</element>
-<element name="R4" library="we-rcl" package="C0402" value="100k" x="31.369" y="3.048" smashed="yes" rot="R90">
+<element name="R8" library="we-rcl" package="C0402" value="100k" x="31.369" y="3.048" smashed="yes" rot="R90">
 <attribute name="NAME" x="31.369" y="1.778" size="0.8128" layer="25" font="vector" ratio="10" align="center"/>
 <attribute name="VALUE" x="31.369" y="4.318" size="0.8128" layer="27" font="vector" ratio="10" align="center"/>
 </element>
-<element name="J2" library="we-con" package="JST_SM04B-SRSS-TB" value="JST4" x="47" y="15" smashed="yes">
+<element name="J4" library="we-con" package="JST_SM04B-SRSS-TB" value="JST4" x="47" y="15" smashed="yes">
 <attribute name="NAME" x="49.54" y="15" size="0.8128" layer="25" font="vector" ratio="10" rot="R270" align="center"/>
 </element>
-<element name="T1" library="we-transistor" package="SOT23" value="N-Chn" x="31.75" y="18.034" smashed="yes" rot="R180">
+<element name="T2" library="we-transistor" package="SOT23" value="N-Chn" x="31.75" y="18.034" smashed="yes" rot="R180">
 <attribute name="NAME" x="34.29" y="18.034" size="0.8128" layer="25" font="vector" ratio="10" rot="R90" align="center"/>
 <attribute name="VALUE" x="29.21" y="18.034" size="0.8128" layer="27" font="vector" ratio="10" rot="R90" align="center"/>
 </element>
@@ -2105,7 +2112,7 @@ Samtech FTSH-105-01</description>
 <attribute name="NAME" x="34.29" y="20.701" size="0.8128" layer="25" font="vector" ratio="10" rot="R90" align="center"/>
 <attribute name="VALUE" x="31.75" y="20.701" size="0.8128" layer="27" font="vector" ratio="10" rot="R90" align="center"/>
 </element>
-<element name="R11" library="we-rcl" package="C0402" value="100" x="31.75" y="20.701" smashed="yes">
+<element name="R9" library="we-rcl" package="C0402" value="100" x="31.75" y="20.701" smashed="yes">
 <attribute name="NAME" x="30.48" y="20.701" size="0.8128" layer="25" font="vector" ratio="10" rot="R270" align="center"/>
 <attribute name="VALUE" x="33.02" y="20.701" size="0.8128" layer="27" font="vector" ratio="10" rot="R270" align="center"/>
 </element>
@@ -2126,75 +2133,79 @@ Samtech FTSH-105-01</description>
 <attribute name="NAME" x="31.369" y="3.048" size="0.8128" layer="25" font="vector" ratio="10" align="center"/>
 <attribute name="VALUE" x="31.369" y="5.588" size="0.8128" layer="27" font="vector" ratio="10" align="center"/>
 </element>
-<element name="C15" library="we-rcl" package="C0402" value="2u2" x="15.875" y="26.797" smashed="yes">
+<element name="C23" library="we-rcl" package="C0402" value="2u2" x="15.875" y="26.797" smashed="yes">
 <attribute name="NAME" x="14.605" y="26.797" size="0.8128" layer="25" font="vector" ratio="10" rot="R270" align="center"/>
 <attribute name="VALUE" x="17.145" y="26.797" size="0.8128" layer="27" font="vector" ratio="10" rot="R270" align="center"/>
 </element>
-<element name="C16" library="we-rcl" package="C0402" value="100n" x="37.338" y="12.954" smashed="yes">
+<element name="C17" library="we-rcl" package="C0402" value="100n" x="37.338" y="12.954" smashed="yes">
 <attribute name="NAME" x="36.068" y="12.954" size="0.8128" layer="25" font="vector" ratio="10" rot="R270" align="center"/>
 <attribute name="VALUE" x="38.608" y="12.954" size="0.8128" layer="27" font="vector" ratio="10" rot="R270" align="center"/>
 </element>
-<element name="C18" library="we-rcl" package="C0402" value="2u2" x="38.481" y="12.954" smashed="yes">
+<element name="C16" library="we-rcl" package="C0402" value="2u2" x="38.481" y="12.954" smashed="yes">
 <attribute name="NAME" x="37.211" y="12.954" size="0.8128" layer="25" font="vector" ratio="10" rot="R270" align="center"/>
 <attribute name="VALUE" x="39.751" y="12.954" size="0.8128" layer="27" font="vector" ratio="10" rot="R270" align="center"/>
 </element>
-<element name="C1" library="we-rcl" package="C0402" value="100n" x="11.43" y="9.398" smashed="yes" rot="R180">
+<element name="C19" library="we-rcl" package="C0402" value="100n" x="11.43" y="9.398" smashed="yes" rot="R180">
 <attribute name="NAME" x="12.7" y="9.398" size="0.8128" layer="25" font="vector" ratio="10" rot="R90" align="center"/>
 <attribute name="VALUE" x="10.16" y="9.398" size="0.8128" layer="27" font="vector" ratio="10" rot="R90" align="center"/>
 </element>
-<element name="C20" library="we-rcl" package="C0402" value="100n" x="43.434" y="12.954" smashed="yes" rot="R180">
+<element name="C15" library="we-rcl" package="C0402" value="100n" x="43.434" y="12.954" smashed="yes" rot="R180">
 <attribute name="NAME" x="44.704" y="12.954" size="0.8128" layer="25" font="vector" ratio="10" rot="R90" align="center"/>
 <attribute name="VALUE" x="42.164" y="12.954" size="0.8128" layer="27" font="vector" ratio="10" rot="R90" align="center"/>
 </element>
-<element name="SWD_TP" library="we-board" package="SWD-1X5_SMDNC" value="SWD-1X5-SMDNC" x="43.561" y="14.605" smashed="yes" rot="MR180">
+<element name="J3" library="we-board" package="SWD-1X5_SMDNC" value="SWD-1X5-SMDNC" x="43.561" y="14.605" smashed="yes" rot="MR180">
 <attribute name="NAME" x="41.021" y="14.605" size="0.8128" layer="26" font="vector" ratio="10" rot="MR270" align="center"/>
 </element>
-<element name="C24" library="we-rcl" package="C0402" value="100n" x="36.703" y="10.795" smashed="yes" rot="R90">
+<element name="C13" library="we-rcl" package="C0402" value="100n" x="36.703" y="10.795" smashed="yes" rot="R90">
 <attribute name="NAME" x="36.703" y="9.525" size="0.8128" layer="25" font="vector" ratio="10" align="center"/>
 <attribute name="VALUE" x="36.703" y="12.065" size="0.8128" layer="27" font="vector" ratio="10" align="center"/>
+</element>
+<element name="T1" library="we-opto@1" package="C0603T" value="PT-IN-S63DTLS" x="31.75" y="1.5" smashed="yes" rot="R270">
+<attribute name="NAME" x="31.75" y="2.77" size="0.8128" layer="25" font="vector" ratio="10" rot="R180" align="center"/>
+<attribute name="VALUE" x="31.75" y="0.23" size="0.8128" layer="27" font="vector" ratio="10" rot="R180" align="center"/>
 </element>
 </elements>
 <signals>
 <signal name="GND">
-<contactref element="IC2" pad="TP"/>
-<contactref element="IC2" pad="18"/>
-<contactref element="IC2" pad="42"/>
-<contactref element="IC2" pad="5"/>
-<contactref element="IC2" pad="35"/>
-<contactref element="SWD" pad="GND@2"/>
-<contactref element="SWD" pad="GND@1"/>
-<contactref element="SWD" pad="GND@3"/>
-<contactref element="C27" pad="1"/>
-<contactref element="R1" pad="1"/>
-<contactref element="D5" pad="3"/>
-<contactref element="IC1" pad="1"/>
-<contactref element="C7" pad="1"/>
-<contactref element="C3" pad="1"/>
-<contactref element="C13" pad="1"/>
+<contactref element="IC1" pad="TP"/>
+<contactref element="IC1" pad="18"/>
+<contactref element="IC1" pad="42"/>
+<contactref element="IC1" pad="5"/>
+<contactref element="IC1" pad="35"/>
+<contactref element="J2" pad="GND@2"/>
+<contactref element="J2" pad="GND@1"/>
+<contactref element="J2" pad="GND@3"/>
+<contactref element="C18" pad="1"/>
+<contactref element="R5" pad="1"/>
+<contactref element="D1" pad="3"/>
+<contactref element="IC2" pad="1"/>
 <contactref element="C11" pad="1"/>
-<contactref element="C8" pad="1"/>
-<contactref element="C12" pad="1"/>
-<contactref element="C6" pad="1"/>
-<contactref element="C4" pad="1"/>
-<contactref element="C5" pad="1"/>
-<contactref element="C2" pad="1"/>
-<contactref element="C9" pad="1"/>
-<contactref element="D2" pad="C"/>
-<contactref element="SW1" pad="4"/>
-<contactref element="SW1" pad="3"/>
 <contactref element="C10" pad="1"/>
-<contactref element="IC7" pad="4"/>
+<contactref element="C8" pad="1"/>
+<contactref element="C7" pad="1"/>
+<contactref element="C5" pad="1"/>
+<contactref element="C1" pad="1"/>
+<contactref element="C4" pad="1"/>
+<contactref element="C2" pad="1"/>
+<contactref element="C3" pad="1"/>
+<contactref element="C9" pad="1"/>
+<contactref element="C12" pad="1"/>
+<contactref element="D2" pad="C"/>
+<contactref element="SW2" pad="4"/>
+<contactref element="SW2" pad="3"/>
+<contactref element="C6" pad="1"/>
+<contactref element="IC4" pad="4"/>
 <contactref element="J1" pad="GND2"/>
 <contactref element="J1" pad="GND"/>
-<contactref element="R47" pad="2"/>
-<contactref element="R46" pad="2"/>
-<contactref element="IC3" pad="9"/>
-<contactref element="IC3" pad="12"/>
-<contactref element="IC3" pad="GND"/>
-<contactref element="IC3" pad="28"/>
-<contactref element="C17" pad="1"/>
-<contactref element="C19" pad="1"/>
-<contactref element="IC34" pad="2"/>
+<contactref element="R3" pad="2"/>
+<contactref element="R4" pad="2"/>
+<contactref element="IC5" pad="9"/>
+<contactref element="IC5" pad="12"/>
+<contactref element="IC5" pad="GND"/>
+<contactref element="IC5" pad="28"/>
+<contactref element="C25" pad="1"/>
+<contactref element="C24" pad="1"/>
+<contactref element="IC3" pad="2"/>
 <polygon width="0.1524" layer="1" isolate="0.2032">
 <vertex x="0" y="0"/>
 <vertex x="50" y="0"/>
@@ -2242,18 +2253,18 @@ Samtech FTSH-105-01</description>
 <via x="37.719" y="44.577" extent="1-16" drill="0.35"/>
 <via x="19.431" y="37.846" extent="1-16" drill="0.35"/>
 <via x="13.462" y="1.524" extent="1-16" drill="0.35"/>
-<contactref element="C23" pad="1"/>
 <contactref element="C22" pad="1"/>
 <contactref element="C21" pad="1"/>
+<contactref element="C20" pad="1"/>
 <via x="36.449" y="1.524" extent="1-16" drill="0.35"/>
-<contactref element="R4" pad="1"/>
+<contactref element="R8" pad="1"/>
 <via x="28.702" y="7.747" extent="1-16" drill="0.35"/>
 <via x="21.209" y="7.747" extent="1-16" drill="0.35"/>
-<contactref element="J2" pad="1"/>
+<contactref element="J4" pad="1"/>
 <via x="44.958" y="22.479" extent="1-16" drill="0.35"/>
 <via x="4.064" y="22.606" extent="1-16" drill="0.35"/>
 <via x="41.971" y="39.528" extent="1-16" drill="0.35"/>
-<contactref element="T1" pad="2"/>
+<contactref element="T2" pad="2"/>
 <contactref element="R10" pad="2"/>
 <contactref element="J5" pad="1"/>
 <via x="12.259" y="39.621" extent="1-16" drill="0.35"/>
@@ -2262,27 +2273,27 @@ Samtech FTSH-105-01</description>
 <via x="21.1" y="43.192" extent="1-16" drill="0.35"/>
 <via x="25.164" y="43.192" extent="1-16" drill="0.35"/>
 <via x="29.228" y="43.192" extent="1-16" drill="0.35"/>
-<contactref element="SW2" pad="3"/>
-<contactref element="SW2" pad="4"/>
+<contactref element="SW1" pad="3"/>
+<contactref element="SW1" pad="4"/>
 <contactref element="C14" pad="1"/>
-<contactref element="C15" pad="1"/>
+<contactref element="C23" pad="1"/>
+<contactref element="C17" pad="1"/>
 <contactref element="C16" pad="1"/>
-<contactref element="C18" pad="1"/>
-<contactref element="W4" pad="3"/>
-<contactref element="W3" pad="3"/>
-<contactref element="W2" pad="3"/>
-<contactref element="W1" pad="3"/>
-<contactref element="C1" pad="1"/>
+<contactref element="D6" pad="3"/>
+<contactref element="D5" pad="3"/>
+<contactref element="D4" pad="3"/>
+<contactref element="D3" pad="3"/>
+<contactref element="C19" pad="1"/>
 <via x="5.014" y="17.557" extent="1-16" drill="0.35"/>
 <via x="25.019" y="4.318" extent="1-16" drill="0.35"/>
 <wire x1="11.6" y1="0.85" x2="15.4" y2="0.85" width="0.4064" layer="1"/>
 <via x="18.542" y="1.651" extent="1-16" drill="0.35"/>
 <via x="25.019" y="1.016" extent="1-16" drill="0.35"/>
 <via x="5.715" y="1.778" extent="1-16" drill="0.35"/>
-<contactref element="C20" pad="1"/>
+<contactref element="C15" pad="1"/>
 <via x="18.669" y="17.272" extent="1-16" drill="0.35"/>
-<contactref element="SWD_TP" pad="2-GND"/>
-<contactref element="C24" pad="1"/>
+<contactref element="J3" pad="2-GND"/>
+<contactref element="C13" pad="1"/>
 <via x="25.164" y="39.636" extent="1-16" drill="0.35"/>
 <via x="29.228" y="39.636" extent="1-16" drill="0.35"/>
 <via x="21.1" y="39.636" extent="1-16" drill="0.35"/>
@@ -2328,27 +2339,27 @@ Samtech FTSH-105-01</description>
 <via x="23.622" y="25.781" extent="1-16" drill="0.35"/>
 </signal>
 <signal name="+3V3">
-<contactref element="C27" pad="2"/>
-<contactref element="SWD" pad="VCC"/>
-<contactref element="IC2" pad="36"/>
-<contactref element="IC2" pad="17"/>
-<contactref element="IC2" pad="44"/>
-<contactref element="R7" pad="1"/>
-<contactref element="R5" pad="1"/>
-<contactref element="C6" pad="2"/>
+<contactref element="C18" pad="2"/>
+<contactref element="J2" pad="VCC"/>
+<contactref element="IC1" pad="36"/>
+<contactref element="IC1" pad="17"/>
+<contactref element="IC1" pad="44"/>
+<contactref element="R1" pad="1"/>
+<contactref element="R6" pad="1"/>
 <contactref element="C4" pad="2"/>
-<contactref element="C5" pad="2"/>
-<contactref element="IC1" pad="4"/>
-<contactref element="IC1" pad="2"/>
-<contactref element="C7" pad="2"/>
-<contactref element="C9" pad="2"/>
+<contactref element="C2" pad="2"/>
+<contactref element="C3" pad="2"/>
+<contactref element="IC2" pad="4"/>
+<contactref element="IC2" pad="2"/>
+<contactref element="C11" pad="2"/>
+<contactref element="C12" pad="2"/>
 <contactref element="L1" pad="1"/>
-<contactref element="IC7" pad="8"/>
-<contactref element="C17" pad="2"/>
-<contactref element="IC3" pad="20"/>
-<contactref element="IC3" pad="23"/>
-<contactref element="C19" pad="2"/>
-<contactref element="R9" pad="2"/>
+<contactref element="IC4" pad="8"/>
+<contactref element="C25" pad="2"/>
+<contactref element="IC5" pad="20"/>
+<contactref element="IC5" pad="23"/>
+<contactref element="C24" pad="2"/>
+<contactref element="R12" pad="2"/>
 <wire x1="24" y1="16.35" x2="24" y2="14.981" width="0.2032" layer="1"/>
 <wire x1="24" y1="14.981" x2="24.257" y2="14.724" width="0.2032" layer="1"/>
 <via x="25.235" y="13.335" extent="1-16" drill="0.35"/>
@@ -2357,17 +2368,17 @@ Samtech FTSH-105-01</description>
 <wire x1="24.854" y1="13.208" x2="19.685" y2="13.208" width="0.4064" layer="16"/>
 <wire x1="25.235" y1="13.335" x2="25.235" y2="13.208" width="0.4064" layer="16"/>
 <wire x1="25.235" y1="14.135" x2="24.646" y2="14.724" width="0.3048" layer="1"/>
-<contactref element="IC34" pad="1"/>
+<contactref element="IC3" pad="1"/>
 <via x="19.685" y="13.335" extent="1-16" drill="0.35"/>
 <wire x1="19.685" y1="13.335" x2="19.685" y2="13.208" width="0.4064" layer="16"/>
 <wire x1="19.685" y1="13.208" x2="16.383" y2="13.208" width="0.4064" layer="16"/>
 <wire x1="16.383" y1="13.208" x2="15.113" y2="14.478" width="0.4064" layer="16"/>
 <via x="15.113" y="14.478" extent="1-16" drill="0.35"/>
-<contactref element="J2" pad="2"/>
-<contactref element="C15" pad="2"/>
+<contactref element="J4" pad="2"/>
+<contactref element="C23" pad="2"/>
+<contactref element="C17" pad="2"/>
 <contactref element="C16" pad="2"/>
-<contactref element="C18" pad="2"/>
-<contactref element="C20" pad="2"/>
+<contactref element="C15" pad="2"/>
 <wire x1="28.778" y1="21.6" x2="28.077" y2="21.6" width="0.3048" layer="1"/>
 <wire x1="28.077" y1="21.6" x2="27.813" y2="21.336" width="0.3048" layer="1"/>
 <via x="27.813" y="21.336" extent="1-16" drill="0.3"/>
@@ -2394,8 +2405,8 @@ Samtech FTSH-105-01</description>
 <wire x1="15.113" y1="15.687" x2="15.113" y2="14.478" width="0.4064" layer="1"/>
 <wire x1="26.162" y1="12.962" x2="25.608" y2="12.962" width="0.2032" layer="1"/>
 <wire x1="25.608" y1="12.962" x2="25.235" y2="13.335" width="0.2032" layer="1"/>
-<contactref element="SWD_TP" pad="1-VCC"/>
-<contactref element="C24" pad="2"/>
+<contactref element="J3" pad="1-VCC"/>
+<contactref element="C13" pad="2"/>
 <contactref element="LS1" pad="1"/>
 <wire x1="24" y1="23.15" x2="24" y2="23.746" width="0.2032" layer="1"/>
 <wire x1="24" y1="23.746" x2="24.511" y2="24.257" width="0.2032" layer="1"/>
@@ -2462,8 +2473,8 @@ Samtech FTSH-105-01</description>
 <wire x1="37.203" y1="9.494" x2="36.825" y2="9.116" width="0.2032" layer="1"/>
 </signal>
 <signal name="D15_WINC_MOSI">
-<contactref element="IC2" pad="25"/>
-<contactref element="IC3" pad="15"/>
+<contactref element="IC1" pad="25"/>
+<contactref element="IC5" pad="15"/>
 <wire x1="19.2405" y1="35.8775" x2="19.939" y2="35.179" width="0.2032" layer="16"/>
 <via x="19.2405" y="35.8775" extent="1-16" drill="0.35"/>
 <wire x1="19.2405" y1="35.8775" x2="17.6415" y2="35.8775" width="0.2032" layer="1"/>
@@ -2477,8 +2488,8 @@ Samtech FTSH-105-01</description>
 <wire x1="19.304" y1="31.75" x2="19.939" y2="32.385" width="0.2032" layer="16"/>
 </signal>
 <signal name="D16_WINC_SCK">
-<contactref element="IC2" pad="26"/>
-<contactref element="IC3" pad="18"/>
+<contactref element="IC1" pad="26"/>
+<contactref element="IC5" pad="18"/>
 <via x="18.677328125" y="22.216671875" extent="1-16" drill="0.35"/>
 <via x="19.177" y="32.766" extent="1-16" drill="0.35"/>
 <wire x1="19.177" y1="32.766" x2="19.107" y2="32.836" width="0.2032" layer="1"/>
@@ -2490,9 +2501,9 @@ Samtech FTSH-105-01</description>
 <wire x1="18.677328125" y1="32.266328125" x2="19.177" y2="32.766" width="0.2032" layer="16"/>
 </signal>
 <signal name="D6_SDA">
-<contactref element="IC2" pad="13"/>
-<contactref element="IC34" pad="4"/>
-<contactref element="J2" pad="3"/>
+<contactref element="IC1" pad="13"/>
+<contactref element="IC3" pad="4"/>
+<contactref element="J4" pad="3"/>
 <wire x1="26" y1="23.15" x2="26" y2="23.4346" width="0.2032" layer="1"/>
 <wire x1="26" y1="23.4346" x2="26.416" y2="23.8506" width="0.2032" layer="1"/>
 <wire x1="26.416" y1="23.8506" x2="32.7594" y2="23.8506" width="0.2032" layer="1"/>
@@ -2508,9 +2519,9 @@ Samtech FTSH-105-01</description>
 <wire x1="44.069" y1="15.748" x2="44.069" y2="20.447" width="0.2032" layer="1"/>
 </signal>
 <signal name="D7_SCL">
-<contactref element="IC2" pad="14"/>
-<contactref element="IC34" pad="3"/>
-<contactref element="J2" pad="4"/>
+<contactref element="IC1" pad="14"/>
+<contactref element="IC3" pad="3"/>
+<contactref element="J4" pad="4"/>
 <wire x1="25.5" y1="23.15" x2="25.5" y2="23.722" width="0.2032" layer="1"/>
 <wire x1="25.5" y1="23.722" x2="26.035" y2="24.257" width="0.2032" layer="1"/>
 <wire x1="26.035" y1="24.257" x2="33.02" y2="24.257" width="0.2032" layer="1"/>
@@ -2526,9 +2537,9 @@ Samtech FTSH-105-01</description>
 <wire x1="44.704" y1="16.51" x2="45.24" y2="16.51" width="0.2032" layer="1"/>
 </signal>
 <signal name="SWCLK">
-<contactref element="IC2" pad="45"/>
-<contactref element="SWD" pad="SWCLK"/>
-<contactref element="R5" pad="2"/>
+<contactref element="IC1" pad="45"/>
+<contactref element="J2" pad="SWCLK"/>
+<contactref element="R6" pad="2"/>
 <via x="26.162" y="14.859" extent="1-16" drill="0.35"/>
 <via x="41.521" y="18.256" extent="1-16" drill="0.35"/>
 <wire x1="30.22568125" y1="11.43" x2="26.79668125" y2="14.859" width="0.2032" layer="16"/>
@@ -2544,13 +2555,13 @@ Samtech FTSH-105-01</description>
 <wire x1="24.5" y1="16.35" x2="24.5" y2="15.759" width="0.2032" layer="1"/>
 <wire x1="25.4" y1="14.859" x2="26.162" y2="14.859" width="0.2032" layer="1"/>
 <wire x1="24.5" y1="15.759" x2="25.4" y2="14.859" width="0.2032" layer="1"/>
-<contactref element="SWD_TP" pad="4-SWDCLK"/>
+<contactref element="J3" pad="4-SWDCLK"/>
 <wire x1="26.162" y1="13.962" x2="26.162" y2="14.859" width="0.2032" layer="1"/>
 <wire x1="43.561" y1="17.145" x2="41.267" y2="17.145" width="0.2032" layer="16"/>
 </signal>
 <signal name="SWDIO">
-<contactref element="IC2" pad="46"/>
-<contactref element="SWD" pad="SWDIO"/>
+<contactref element="IC1" pad="46"/>
+<contactref element="J2" pad="SWDIO"/>
 <via x="26.797" y="15.621" extent="1-16" drill="0.35"/>
 <wire x1="30.4935" y1="11.9245" x2="36.0545" y2="11.9245" width="0.2032" layer="16"/>
 <via x="41.402" y="19.939" extent="1-16" drill="0.35"/>
@@ -2563,16 +2574,16 @@ Samtech FTSH-105-01</description>
 <wire x1="25" y1="16.35" x2="25" y2="15.894" width="0.2032" layer="1"/>
 <wire x1="25" y1="15.894" x2="25.273" y2="15.621" width="0.2032" layer="1"/>
 <wire x1="25.273" y1="15.621" x2="26.797" y2="15.621" width="0.2032" layer="1"/>
-<contactref element="SWD_TP" pad="5-SWDIO"/>
+<contactref element="J3" pad="5-SWDIO"/>
 <wire x1="41.402" y1="19.939" x2="43.307" y2="19.939" width="0.2032" layer="16"/>
 <wire x1="43.307" y1="19.939" x2="43.561" y2="19.685" width="0.2032" layer="16"/>
 </signal>
 <signal name="RST">
-<contactref element="IC2" pad="40"/>
-<contactref element="SWD" pad="RST"/>
-<contactref element="R7" pad="2"/>
-<contactref element="R6" pad="1"/>
-<contactref element="C12" pad="2"/>
+<contactref element="IC1" pad="40"/>
+<contactref element="J2" pad="RST"/>
+<contactref element="R1" pad="2"/>
+<contactref element="R2" pad="1"/>
+<contactref element="C1" pad="2"/>
 <via x="22.479" y="12.065" extent="1-16" drill="0.35"/>
 <wire x1="18.796" y1="8.382" x2="18.796" y2="6.985" width="0.2032" layer="16"/>
 <via x="18.796" y="6.985" extent="1-16" drill="0.35"/>
@@ -2585,7 +2596,7 @@ Samtech FTSH-105-01</description>
 <wire x1="18.788" y1="4.826" x2="18.788" y2="5.969" width="0.2032" layer="1"/>
 <wire x1="22" y1="16.35" x2="22" y2="12.544" width="0.2032" layer="1"/>
 <wire x1="22" y1="12.544" x2="22.479" y2="12.065" width="0.2032" layer="1"/>
-<contactref element="SWD_TP" pad="3-RST"/>
+<contactref element="J3" pad="3-RST"/>
 <wire x1="18.796" y1="6.985" x2="18.796" y2="5.977" width="0.2032" layer="1"/>
 <wire x1="18.796" y1="5.977" x2="18.788" y2="5.969" width="0.2032" layer="1"/>
 <wire x1="43.561" y1="14.605" x2="41.402" y2="14.605" width="0.2032" layer="16"/>
@@ -2594,8 +2605,8 @@ Samtech FTSH-105-01</description>
 <wire x1="41.402" y1="14.605" x2="41.402" y2="13.454" width="0.2032" layer="1"/>
 </signal>
 <signal name="D17_WINC_MISO">
-<contactref element="IC2" pad="28"/>
-<contactref element="IC3" pad="17"/>
+<contactref element="IC1" pad="28"/>
+<contactref element="IC5" pad="17"/>
 <wire x1="17.399" y1="21.844" x2="18.034" y2="22.479" width="0.2032" layer="16"/>
 <wire x1="18.034" y1="22.479" x2="18.034" y2="32.639" width="0.2032" layer="16"/>
 <wire x1="18.034" y1="32.639" x2="19.177" y2="33.782" width="0.2032" layer="16"/>
@@ -2612,12 +2623,12 @@ Samtech FTSH-105-01</description>
 </signal>
 <signal name="+5V">
 <contactref element="F1" pad="2"/>
-<contactref element="IC1" pad="3"/>
-<contactref element="C3" pad="2"/>
-<contactref element="C2" pad="2"/>
+<contactref element="IC2" pad="3"/>
+<contactref element="C10" pad="2"/>
+<contactref element="C9" pad="2"/>
+<contactref element="C20" pad="2"/>
 <contactref element="C21" pad="2"/>
 <contactref element="C22" pad="2"/>
-<contactref element="C23" pad="2"/>
 <via x="12.446" y="10.414" extent="1-16" drill="0.35"/>
 <wire x1="12.446" y1="10.414" x2="4.699" y2="10.414" width="0.4064" layer="16"/>
 <wire x1="44.577" y1="40.894" x2="37.719" y2="40.894" width="0.4064" layer="16"/>
@@ -2627,11 +2638,11 @@ Samtech FTSH-105-01</description>
 <via x="47.117" y="10.414" extent="1-16" drill="0.35"/>
 <wire x1="2.159" y1="38.608" x2="2.159" y2="15.494" width="0.4064" layer="16"/>
 <contactref element="J5" pad="2"/>
-<contactref element="W1" pad="1"/>
-<contactref element="W2" pad="1"/>
-<contactref element="W3" pad="1"/>
-<contactref element="W4" pad="1"/>
-<contactref element="C1" pad="2"/>
+<contactref element="D3" pad="1"/>
+<contactref element="D4" pad="1"/>
+<contactref element="D5" pad="1"/>
+<contactref element="D6" pad="1"/>
+<contactref element="C19" pad="2"/>
 <wire x1="2.159" y1="15.494" x2="2.159" y2="12.954" width="0.4064" layer="16"/>
 <wire x1="4.572" y1="40.14" x2="5.112" y2="39.6" width="0.2032" layer="1"/>
 <wire x1="5.112" y1="39.6" x2="6.4" y2="39.6" width="0.2032" layer="1"/>
@@ -2687,8 +2698,8 @@ Samtech FTSH-105-01</description>
 <wire x1="26.39903125" y1="5.08" x2="23.60096875" y2="5.08" width="0.2032" layer="1"/>
 </signal>
 <signal name="USB_N" class="1">
-<contactref element="D5" pad="1"/>
-<contactref element="IC2" pad="33"/>
+<contactref element="D1" pad="1"/>
+<contactref element="IC1" pad="33"/>
 <contactref element="J1" pad="B7"/>
 <contactref element="J1" pad="A7"/>
 <wire x1="25.25" y1="6.605" x2="25.25" y2="7.62" width="0.2032" layer="1"/>
@@ -2709,8 +2720,8 @@ Samtech FTSH-105-01</description>
 <wire x1="25.1" y1="8.7455" x2="24.892" y2="8.9535" width="0.2032" layer="1"/>
 </signal>
 <signal name="USB_P" class="1">
-<contactref element="D5" pad="2"/>
-<contactref element="IC2" pad="34"/>
+<contactref element="D1" pad="2"/>
+<contactref element="IC1" pad="34"/>
 <contactref element="J1" pad="A6"/>
 <contactref element="J1" pad="B6"/>
 <wire x1="25.75" y1="6.605" x2="25.75" y2="8.044" width="0.2032" layer="1"/>
@@ -2732,8 +2743,8 @@ Samtech FTSH-105-01</description>
 <wire x1="26.0604" y1="8.9154" x2="25.9" y2="8.755" width="0.2032" layer="1"/>
 </signal>
 <signal name="D18_WINC_RX">
-<contactref element="IC2" pad="38"/>
-<contactref element="IC3" pad="14"/>
+<contactref element="IC1" pad="38"/>
+<contactref element="IC5" pad="14"/>
 <via x="16.002" y="36.703" extent="1-16" drill="0.35"/>
 <wire x1="17.635" y1="36.9" x2="16.199" y2="36.9" width="0.2032" layer="1"/>
 <wire x1="16.199" y1="36.9" x2="16.002" y2="36.703" width="0.2032" layer="1"/>
@@ -2752,17 +2763,17 @@ Samtech FTSH-105-01</description>
 <wire x1="16.764" y1="14.986" x2="15.8448" y2="15.9052" width="0.2032" layer="16"/>
 </signal>
 <signal name="VCCCORE">
-<contactref element="IC2" pad="43"/>
-<contactref element="C13" pad="2"/>
+<contactref element="IC1" pad="43"/>
+<contactref element="C8" pad="2"/>
 <wire x1="23.5" y1="16.35" x2="23.5" y2="15.11" width="0.2032" layer="1"/>
 <wire x1="23.5" y1="15.11" x2="23.114" y2="14.724" width="0.2032" layer="1"/>
 </signal>
 <signal name="VCCANA">
-<contactref element="IC2" pad="6"/>
-<contactref element="C8" pad="2"/>
-<contactref element="C11" pad="2"/>
+<contactref element="IC1" pad="6"/>
+<contactref element="C5" pad="2"/>
+<contactref element="C7" pad="2"/>
 <contactref element="L1" pad="2"/>
-<contactref element="C10" pad="2"/>
+<contactref element="C6" pad="2"/>
 <wire x1="29.244" y1="20.385" x2="28.117" y2="20.385" width="0.3048" layer="1"/>
 <wire x1="30.371" y1="20.385" x2="29.244" y2="20.385" width="0.3048" layer="1"/>
 <wire x1="30.378" y1="21.6" x2="30.378" y2="20.392" width="0.3048" layer="1"/>
@@ -2772,8 +2783,8 @@ Samtech FTSH-105-01</description>
 <wire x1="28.00195" y1="20.385" x2="28.117" y2="20.385" width="0.2032" layer="1"/>
 </signal>
 <signal name="D8_SDA">
-<contactref element="IC2" pad="21"/>
-<contactref element="IC7" pad="5"/>
+<contactref element="IC1" pad="21"/>
+<contactref element="IC4" pad="5"/>
 <wire x1="22" y1="23.15" x2="22" y2="23.847" width="0.2032" layer="1"/>
 <wire x1="22" y1="23.847" x2="21.082" y2="24.765" width="0.2032" layer="1"/>
 <wire x1="17.126" y1="24.065" x2="17.126" y2="24.238" width="0.2032" layer="1"/>
@@ -2783,8 +2794,8 @@ Samtech FTSH-105-01</description>
 <wire x1="20.447" y1="24.765" x2="21.082" y2="24.765" width="0.2032" layer="1"/>
 </signal>
 <signal name="D9_SCL">
-<contactref element="IC2" pad="22"/>
-<contactref element="IC7" pad="6"/>
+<contactref element="IC1" pad="22"/>
+<contactref element="IC4" pad="6"/>
 <wire x1="16.626" y1="24.065" x2="16.626" y2="24.5" width="0.2032" layer="1"/>
 <wire x1="16.626" y1="24.5" x2="16.891" y2="24.765" width="0.2032" layer="1"/>
 <wire x1="21.23340625" y1="23.8548" x2="21.2302" y2="23.8548" width="0.2032" layer="1"/>
@@ -2801,15 +2812,15 @@ Samtech FTSH-105-01</description>
 <wire x1="19.7915375" y1="24.765" x2="16.891" y2="24.765" width="0.2032" layer="1"/>
 </signal>
 <signal name="D5_WS2812">
-<contactref element="R8" pad="2"/>
-<contactref element="IC2" pad="31"/>
+<contactref element="R11" pad="2"/>
+<contactref element="IC1" pad="31"/>
 <wire x1="18.80701875" y1="19.2992" x2="19.00781875" y2="19.5" width="0.2032" layer="1"/>
 <wire x1="18.80701875" y1="19.2992" x2="17.0148" y2="19.2992" width="0.2032" layer="1"/>
 <wire x1="17.01" y1="19.304" x2="17.0148" y2="19.2992" width="0.2032" layer="1"/>
 <wire x1="19.00781875" y1="19.5" x2="19.85" y2="19.5" width="0.2032" layer="1"/>
 </signal>
 <signal name="N$3">
-<contactref element="R3" pad="2"/>
+<contactref element="R7" pad="2"/>
 <contactref element="D2" pad="A"/>
 <wire x1="8.75" y1="1.5" x2="8.763" y2="1.513" width="0.2032" layer="1"/>
 <wire x1="8.763" y1="1.513" x2="8.763" y2="2.159" width="0.2032" layer="1"/>
@@ -2817,8 +2828,8 @@ Samtech FTSH-105-01</description>
 <wire x1="12.7" y1="6.096" x2="13.851" y2="6.096" width="0.2032" layer="1"/>
 </signal>
 <signal name="D4_BUZZER">
-<contactref element="IC2" pad="10"/>
-<contactref element="R11" pad="1"/>
+<contactref element="IC1" pad="10"/>
+<contactref element="R9" pad="1"/>
 <wire x1="26.65" y1="21.5" x2="27.088" y2="21.5" width="0.2032" layer="1"/>
 <wire x1="28.1305" y1="22.5425" x2="31.0515" y2="22.5425" width="0.2032" layer="1"/>
 <wire x1="31.0515" y1="22.5425" x2="31.75" y2="21.844" width="0.2032" layer="1"/>
@@ -2826,12 +2837,12 @@ Samtech FTSH-105-01</description>
 <wire x1="27.088" y1="21.5" x2="28.1305" y2="22.5425" width="0.2032" layer="1"/>
 </signal>
 <signal name="D2_SWITCH">
-<contactref element="SW1" pad="2"/>
-<contactref element="SW1" pad="1"/>
+<contactref element="SW2" pad="2"/>
+<contactref element="SW2" pad="1"/>
 <wire x1="34.6" y1="2.35" x2="38.4" y2="2.35" width="0.2032" layer="1"/>
 <wire x1="34.29" y1="5.715" x2="34.29" y2="2.66" width="0.2032" layer="1"/>
 <wire x1="34.6" y1="2.35" x2="34.29" y2="2.66" width="0.2032" layer="1"/>
-<contactref element="IC2" pad="48"/>
+<contactref element="IC1" pad="48"/>
 <wire x1="27.12701875" y1="16.2608" x2="27.13181875" y2="16.256" width="0.2032" layer="1"/>
 <wire x1="27.13181875" y1="16.256" x2="27.178" y2="16.256" width="0.2032" layer="1"/>
 <wire x1="26" y1="16.35" x2="26.0892" y2="16.2608" width="0.2032" layer="1"/>
@@ -2854,7 +2865,7 @@ Samtech FTSH-105-01</description>
 <contactref element="J1" pad="S@4"/>
 <contactref element="J1" pad="S@3"/>
 <contactref element="J1" pad="S@1"/>
-<contactref element="R1" pad="2"/>
+<contactref element="R5" pad="2"/>
 <wire x1="20.68" y1="6.03" x2="20.68" y2="3.429" width="0.2032" layer="1"/>
 <wire x1="20.68" y1="3.429" x2="20.68" y2="1.85" width="0.2032" layer="1"/>
 <wire x1="29.32" y1="6.03" x2="29.32" y2="1.85" width="0.2032" layer="1"/>
@@ -2867,21 +2878,21 @@ Samtech FTSH-105-01</description>
 </signal>
 <signal name="CC2">
 <contactref element="J1" pad="B5"/>
-<contactref element="R47" pad="1"/>
+<contactref element="R3" pad="1"/>
 <wire x1="26.75" y1="6.605" x2="26.75" y2="7.327" width="0.2032" layer="1"/>
 <wire x1="27.305" y1="7.882" x2="27.305" y2="8.263" width="0.2032" layer="1"/>
 <wire x1="27.305" y1="7.882" x2="26.75" y2="7.327" width="0.2032" layer="1"/>
 </signal>
 <signal name="CC1">
 <contactref element="J1" pad="A5" route="any" routetag="J1.CC1"/>
-<contactref element="R46" pad="1"/>
+<contactref element="R4" pad="1"/>
 <wire x1="23.75" y1="6.605" x2="23.75" y2="7.373" width="0.2032" layer="1"/>
 <wire x1="23.75" y1="7.373" x2="23.368" y2="7.755" width="0.2032" layer="1"/>
 <wire x1="23.368" y1="7.755" x2="23.368" y2="8.263" width="0.2032" layer="1"/>
 </signal>
 <signal name="CFG">
-<contactref element="R9" pad="1"/>
-<contactref element="IC3" pad="10"/>
+<contactref element="R12" pad="1"/>
+<contactref element="IC5" pad="10"/>
 <wire x1="17.635" y1="40.964" x2="16.453" y2="40.964" width="0.2032" layer="1"/>
 <via x="14.478" y="38.989" extent="1-16" drill="0.3"/>
 <wire x1="14.478" y1="38.989" x2="14.351" y2="38.862" width="0.2032" layer="16"/>
@@ -2892,8 +2903,8 @@ Samtech FTSH-105-01</description>
 <wire x1="16.453" y1="40.964" x2="14.478" y2="38.989" width="0.2032" layer="1"/>
 </signal>
 <signal name="D10_WINC_EN">
-<contactref element="IC3" pad="22"/>
-<contactref element="IC2" pad="19"/>
+<contactref element="IC5" pad="22"/>
+<contactref element="IC1" pad="19"/>
 <wire x1="23" y1="23.15" x2="23" y2="24.117" width="0.2032" layer="1"/>
 <wire x1="22.8532" y1="24.2638" x2="22.8532" y2="26.0282" width="0.2032" layer="1"/>
 <wire x1="23" y1="24.117" x2="22.8532" y2="24.2638" width="0.2032" layer="1"/>
@@ -2901,12 +2912,12 @@ Samtech FTSH-105-01</description>
 <wire x1="23.599" y1="26.774" x2="22.8532" y2="26.0282" width="0.2032" layer="1"/>
 </signal>
 <signal name="D11_WINC_WAKE">
-<contactref element="IC3" pad="11"/>
+<contactref element="IC5" pad="11"/>
 <wire x1="21.844" y1="36.957" x2="19.431" y2="39.37" width="0.2032" layer="16"/>
 <via x="19.431" y="39.37" extent="1-16" drill="0.35"/>
 <wire x1="19.431" y1="39.37" x2="18.853" y2="39.948" width="0.2032" layer="1"/>
 <wire x1="18.853" y1="39.948" x2="17.635" y2="39.948" width="0.2032" layer="1"/>
-<contactref element="IC2" pad="20"/>
+<contactref element="IC1" pad="20"/>
 <wire x1="22.5" y1="23.15" x2="22.5" y2="23.982" width="0.2032" layer="1"/>
 <wire x1="22.5" y1="23.982" x2="22.225" y2="24.257" width="0.2032" layer="1"/>
 <wire x1="22.225" y1="24.257" x2="22.225" y2="24.765" width="0.2032" layer="1"/>
@@ -2915,11 +2926,11 @@ Samtech FTSH-105-01</description>
 <wire x1="21.844" y1="25.146" x2="21.844" y2="36.957" width="0.2032" layer="16"/>
 </signal>
 <signal name="D12_WINC_RST">
-<contactref element="IC3" pad="4"/>
+<contactref element="IC5" pad="4"/>
 <via x="30.734" y="33.782" extent="1-16" drill="0.35"/>
 <wire x1="30.734" y1="33.782" x2="30.81" y2="33.858" width="0.2032" layer="1"/>
 <wire x1="30.81" y1="33.858" x2="32.365" y2="33.858" width="0.2032" layer="1"/>
-<contactref element="IC2" pad="15"/>
+<contactref element="IC1" pad="15"/>
 <via x="30.988" y="26.543" extent="1-16" drill="0.3"/>
 <wire x1="30.988" y1="26.543" x2="30.988" y2="33.528" width="0.2032" layer="16"/>
 <wire x1="30.988" y1="33.528" x2="30.734" y2="33.782" width="0.2032" layer="16"/>
@@ -2929,15 +2940,15 @@ Samtech FTSH-105-01</description>
 <wire x1="25" y1="23.857" x2="25.908" y2="24.765" width="0.2032" layer="1"/>
 </signal>
 <signal name="N$2">
-<contactref element="T1" pad="1"/>
+<contactref element="T2" pad="1"/>
 <contactref element="R10" pad="1"/>
-<contactref element="R11" pad="2"/>
+<contactref element="R9" pad="2"/>
 <wire x1="32.85" y1="17.084" x2="31.75" y2="18.184" width="0.2032" layer="1"/>
 <wire x1="31.75" y1="18.184" x2="31.75" y2="20.201" width="0.2032" layer="1"/>
 <wire x1="31.75" y1="20.201" x2="33.02" y2="20.201" width="0.2032" layer="1"/>
 </signal>
 <signal name="N$1">
-<contactref element="T1" pad="3"/>
+<contactref element="T2" pad="3"/>
 <contactref element="LS1" pad="2"/>
 <wire x1="30.65" y1="18.034" x2="30.48" y2="18.034" width="0.2032" layer="1"/>
 <wire x1="30.48" y1="18.034" x2="29.464" y2="17.018" width="0.2032" layer="1"/>
@@ -2946,7 +2957,7 @@ Samtech FTSH-105-01</description>
 </signal>
 <signal name="W4OUT">
 <contactref element="J5" pad="3"/>
-<contactref element="W4" pad="2"/>
+<contactref element="D6" pad="2"/>
 <wire x1="6.4" y1="10.4" x2="6.386" y2="10.414" width="0.2032" layer="1"/>
 <wire x1="6.386" y1="10.414" x2="5.08" y2="10.414" width="0.2032" layer="1"/>
 <wire x1="5.08" y1="10.414" x2="3.429" y2="12.065" width="0.2032" layer="1"/>
@@ -2955,8 +2966,8 @@ Samtech FTSH-105-01</description>
 <wire x1="3.429" y1="14.097" x2="3.832" y2="14.5" width="0.2032" layer="1"/>
 </signal>
 <signal name="D14_WINC_CS">
-<contactref element="IC3" pad="16"/>
-<contactref element="IC2" pad="27"/>
+<contactref element="IC5" pad="16"/>
+<contactref element="IC1" pad="27"/>
 <wire x1="19.107" y1="34.868" x2="19.177" y2="34.798" width="0.2032" layer="1"/>
 <via x="19.177" y="34.798" extent="1-16" drill="0.35"/>
 <wire x1="17.635" y1="34.868" x2="19.107" y2="34.868" width="0.2032" layer="1"/>
@@ -2975,8 +2986,8 @@ Samtech FTSH-105-01</description>
 <wire x1="19.939" y1="22.479" x2="19.939" y2="31.496" width="0.2032" layer="16"/>
 </signal>
 <signal name="D19_WINC_TX">
-<contactref element="IC3" pad="19"/>
-<contactref element="IC2" pad="37"/>
+<contactref element="IC5" pad="19"/>
+<contactref element="IC1" pad="37"/>
 <via x="16.002" y="31.623" extent="1-16" drill="0.35"/>
 <wire x1="16.002" y1="31.623" x2="16.256" y2="31.877" width="0.2032" layer="1"/>
 <wire x1="17.578" y1="31.877" x2="17.635" y2="31.82" width="0.2032" layer="1"/>
@@ -2993,34 +3004,35 @@ Samtech FTSH-105-01</description>
 <wire x1="16.256" y1="18.43081875" x2="16.256" y2="31.369" width="0.2032" layer="16"/>
 </signal>
 <signal name="N$8">
-<contactref element="R6" pad="2"/>
-<contactref element="SW2" pad="2"/>
-<contactref element="SW2" pad="1"/>
+<contactref element="R2" pad="2"/>
+<contactref element="SW1" pad="2"/>
+<contactref element="SW1" pad="1"/>
 <wire x1="11.6" y1="2.35" x2="15.4" y2="2.35" width="0.2032" layer="1"/>
 <wire x1="15.4" y1="2.35" x2="15.4" y2="4.097" width="0.2032" layer="1"/>
 <wire x1="15.4" y1="4.097" x2="17.272" y2="5.969" width="0.2032" layer="1"/>
 <wire x1="17.272" y1="5.969" x2="17.788" y2="5.969" width="0.2032" layer="1"/>
 </signal>
 <signal name="D1_LIGHTSENS_PWR">
-<contactref element="IC2" pad="4"/>
-<contactref element="IC33" pad="1"/>
-<wire x1="32.55" y1="1.5" x2="32.574" y2="1.524" width="0.2032" layer="1"/>
+<contactref element="IC1" pad="4"/>
 <wire x1="32.574" y1="1.524" x2="32.766" y2="1.524" width="0.2032" layer="1"/>
-<wire x1="32.766" y1="4.699" x2="32.766" y2="1.524" width="0.2032" layer="1"/>
+<wire x1="32.766" y1="4.699" x2="32.766" y2="1.778" width="0.2032" layer="1"/>
+<wire x1="32.766" y1="1.778" x2="32.766" y2="1.524" width="0.2032" layer="1"/>
 <wire x1="28.4734" y1="11.0903375" x2="31.1404" y2="8.4233375" width="0.2032" layer="1"/>
 <wire x1="31.1404" y1="6.3246" x2="32.766" y2="4.699" width="0.2032" layer="1"/>
 <wire x1="28.4734" y1="17.3133375" x2="28.4734" y2="11.0903375" width="0.2032" layer="1"/>
 <wire x1="31.1404" y1="8.4233375" x2="31.1404" y2="6.3246" width="0.2032" layer="1"/>
 <wire x1="26.65" y1="18.5" x2="27.2867375" y2="18.5" width="0.2032" layer="1"/>
 <wire x1="27.2867375" y1="18.5" x2="28.4734" y2="17.3133375" width="0.2032" layer="1"/>
+<contactref element="T1" pad="C"/>
+<wire x1="32.5" y1="1.5" x2="32.766" y2="1.766" width="0.1524" layer="1"/>
+<wire x1="32.766" y1="1.766" x2="32.766" y2="1.778" width="0.1524" layer="1"/>
 </signal>
 <signal name="D0_LIGHTSENS">
-<contactref element="IC2" pad="3"/>
-<contactref element="IC33" pad="2"/>
-<contactref element="R4" pad="2"/>
+<contactref element="IC1" pad="3"/>
+<contactref element="R8" pad="2"/>
 <contactref element="C14" pad="2"/>
-<wire x1="30.95" y1="1.5" x2="30.95" y2="1.613" width="0.2032" layer="1"/>
-<wire x1="30.95" y1="1.613" x2="31.877" y2="2.54" width="0.2032" layer="1"/>
+<wire x1="30.95" y1="1.613" x2="31.0515" y2="1.7145" width="0.2032" layer="1"/>
+<wire x1="31.0515" y1="1.7145" x2="31.877" y2="2.54" width="0.2032" layer="1"/>
 <wire x1="31.877" y1="2.54" x2="31.877" y2="3.04" width="0.2032" layer="1"/>
 <wire x1="31.877" y1="3.04" x2="31.869" y2="3.048" width="0.2032" layer="1"/>
 <wire x1="31.869" y1="3.048" x2="31.869" y2="4.318" width="0.2032" layer="1"/>
@@ -3033,10 +3045,13 @@ Samtech FTSH-105-01</description>
 <wire x1="26.65" y1="18" x2="27.212" y2="18" width="0.2032" layer="1"/>
 <wire x1="27.212" y1="18" x2="28.067" y2="17.145" width="0.2032" layer="1"/>
 <wire x1="28.067" y1="17.145" x2="28.067" y2="10.922" width="0.2032" layer="1"/>
+<contactref element="T1" pad="E"/>
+<wire x1="31" y1="1.5" x2="31" y2="1.663" width="0.1524" layer="1"/>
+<wire x1="31" y1="1.663" x2="31.0515" y2="1.7145" width="0.1524" layer="1"/>
 </signal>
 <signal name="D3_STATUSLED">
-<contactref element="IC2" pad="39"/>
-<contactref element="R3" pad="1"/>
+<contactref element="IC1" pad="39"/>
+<contactref element="R7" pad="1"/>
 <wire x1="14.851" y1="6.096" x2="15.621" y2="6.096" width="0.2032" layer="1"/>
 <via x="15.621" y="6.096" extent="1-16" drill="0.3"/>
 <wire x1="21.463" y1="12.065" x2="21.463" y2="11.684" width="0.2032" layer="16"/>
@@ -3047,8 +3062,8 @@ Samtech FTSH-105-01</description>
 <wire x1="21.463" y1="12.065" x2="21.5" y2="12.102" width="0.2032" layer="1"/>
 </signal>
 <signal name="N$4">
-<contactref element="R8" pad="1"/>
-<contactref element="W1" pad="4"/>
+<contactref element="R11" pad="1"/>
+<contactref element="D3" pad="4"/>
 <wire x1="16.01" y1="19.304" x2="15.113" y2="19.304" width="0.2032" layer="1"/>
 <wire x1="15.113" y1="19.304" x2="12.827" y2="21.59" width="0.2032" layer="1"/>
 <wire x1="12.827" y1="21.59" x2="12.7" y2="21.59" width="0.2032" layer="1"/>
@@ -3062,8 +3077,8 @@ Samtech FTSH-105-01</description>
 <wire x1="6.4" y1="43.257" x2="8.001" y2="41.656" width="0.2032" layer="1"/>
 </signal>
 <signal name="W1OUT">
-<contactref element="W1" pad="2"/>
-<contactref element="W2" pad="4"/>
+<contactref element="D3" pad="2"/>
+<contactref element="D4" pad="4"/>
 <wire x1="9.6" y1="39.6" x2="9.6" y2="40.715" width="0.2032" layer="1"/>
 <wire x1="9.6" y1="40.715" x2="10.922" y2="42.037" width="0.2032" layer="1"/>
 <via x="10.922" y="42.037" extent="1-16" drill="0.3"/>
@@ -3074,8 +3089,8 @@ Samtech FTSH-105-01</description>
 <wire x1="10.922" y1="42.037" x2="37.465" y2="42.037" width="0.2032" layer="16"/>
 </signal>
 <signal name="W2OUT">
-<contactref element="W2" pad="2"/>
-<contactref element="W3" pad="4"/>
+<contactref element="D4" pad="2"/>
+<contactref element="D5" pad="4"/>
 <wire x1="43.6" y1="39.6" x2="44.093" y2="39.6" width="0.2032" layer="1"/>
 <wire x1="44.093" y1="39.6" x2="44.704" y2="38.989" width="0.2032" layer="1"/>
 <via x="44.704" y="38.989" extent="1-16" drill="0.3"/>
@@ -3089,8 +3104,8 @@ Samtech FTSH-105-01</description>
 <wire x1="44.208" y1="5.6" x2="43.6" y2="5.6" width="0.2032" layer="1"/>
 </signal>
 <signal name="W3OUT">
-<contactref element="W3" pad="2"/>
-<contactref element="W4" pad="4"/>
+<contactref element="D5" pad="2"/>
+<contactref element="D6" pad="4"/>
 <wire x1="40.4" y1="10.4" x2="40.4" y2="8.65" width="0.2032" layer="1"/>
 <wire x1="40.4" y1="8.65" x2="39.497" y2="7.747" width="0.2032" layer="1"/>
 <via x="39.497" y="7.747" extent="1-16" drill="0.3"/>
@@ -3105,7 +3120,7 @@ Samtech FTSH-105-01</description>
 <wire x1="9.6" y1="5.663" x2="9.6" y2="5.6" width="0.2032" layer="1"/>
 </signal>
 <signal name="D13_WINC_IRQ">
-<contactref element="IC3" pad="13"/>
+<contactref element="IC5" pad="13"/>
 <via x="18.034" y="19.939" extent="1-16" drill="0.35"/>
 <wire x1="18.034" y1="19.939" x2="17.99170625" y2="19.939" width="0.2032" layer="16"/>
 <wire x1="17.99170625" y1="19.939" x2="16.891" y2="21.03970625" width="0.2032" layer="16"/>
@@ -3113,7 +3128,7 @@ Samtech FTSH-105-01</description>
 <via x="16.002" y="37.846" extent="1-16" drill="0.35"/>
 <wire x1="16.072" y1="37.916" x2="16.002" y2="37.846" width="0.2032" layer="1"/>
 <wire x1="16.891" y1="21.03970625" x2="16.891" y2="36.957" width="0.2032" layer="16"/>
-<contactref element="IC2" pad="29"/>
+<contactref element="IC1" pad="29"/>
 <wire x1="19.85" y1="20.5" x2="19.23" y2="20.5" width="0.2032" layer="1"/>
 <wire x1="18.669" y1="19.939" x2="18.034" y2="19.939" width="0.2032" layer="1"/>
 <wire x1="19.23" y1="20.5" x2="18.669" y2="19.939" width="0.2032" layer="1"/>
