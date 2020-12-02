@@ -10,7 +10,7 @@ The CO2-Ampel is a traffic light to show the carbon dioxide concentration in a r
 * Acoustic Buzzer
 * Plus Version:
   * [Microchip ATWINC1500B](http://www.microchip.com/wwwproducts/en/ATWINC1500) WiFi/WLAN Network Controller
-  * [Microchip ATECC608A](http://www.microchip.com/wwwproducts/en/ATECC608A) Cryptographic Co-Processor
+  * [Microchip ATECC608](http://www.microchip.com/wwwproducts/en/ATECC608A) Cryptographic Co-Processor
 * USB-C connector for power and data/programming
 * USB CDC+MSC Bootloader (Arduino compatible)
 * Open-Source and released under the [Creative Commons Attribution Share-Alike License](https://creativecommons.org/licenses/by-sa/4.0/).
