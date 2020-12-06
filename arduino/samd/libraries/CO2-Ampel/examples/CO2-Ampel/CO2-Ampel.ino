@@ -5,8 +5,8 @@
     9600 Baud 8N1
 
   Serielle Befehle
-    R=0      - Fernsteuerung aus
-    R=1      - Fernsteuerung an
+    R=0      - Remote/Fernsteuerung aus
+    R=1      - Remote/Fernsteuerung an
     S=1      - Save/speichern
     L=RRGGBB - LED-Farbe (000000-FFFFFF)
     H=7F     - LED-Helligkeit (0-FF)
@@ -14,6 +14,10 @@
     A=X      - Altitude/Hoehe ueber dem Meeresspiegel (0-3000)
     P=X      - Pressure/Luftdruck in hPa (0 oder 700-1400)
     C=1      - Calibration/Kalibrierung auf 400ppm (mind. 2min Betrieb an Frischluft vor Befehl)
+    1=X      - Range/Bereich 1 (400-40000)
+    2=X      - Range/Bereich 2 (400-40000)
+    3=X      - Range/Bereich 3 (400-40000)
+    4=X      - Range/Bereich 4 (400-40000)
 
   Testmodus
     1. Den Switch-Taster beim Einschalten gedrueckt halten.
@@ -30,7 +34,7 @@
     5. Nach erfolgreicher Kalibrierung leuchten die LEDs kurz blau und der Buzzer ertoent.
 */
 
-#define VERSION "6"
+#define VERSION "7"
 
 //--- CO2-Werte ---
 //Covid Praevention: https://www.umwelt-campus.de/forschung/projekte/iot-werkstatt/ideen-zur-corona-krise
@@ -90,6 +94,7 @@ typedef struct
   boolean valid;
   unsigned int brightness;
   unsigned int altitude;
+  unsigned int range[4];
 } SETTINGS;
 
 FlashStorage(flash_settings, SETTINGS);
@@ -183,121 +188,159 @@ void serial_service(void)
   {
     return;
   }
-  if(Serial.read() != '=') //=
+
+  val = Serial.read(); //schreiben/lesen
+  if(val == '=') //=
   {
-    return;
+    switch(toupper(cmd))
+    {
+      case 'R': //Fernsteuerung
+        cmd = Serial.read();
+        if(cmd == '1')
+        {
+          remote_on = 1;
+          analogWrite(PIN_BUZZER, 0); //Buzzer aus
+          ws2812.setBrightness(30); //0...255
+          ws2812.fill(ws2812.Color(255,0,255), 0, 4); //LEDs violet
+          ws2812.show();
+        }
+        else
+        {
+          remote_on = 0;
+          ws2812.setBrightness(settings.brightness);
+        }
+        Serial.println("OK");
+        break;
+
+      case 'S': //Save/speichern
+        cmd = Serial.read();
+        if(cmd == '1')
+        {
+          settings.valid = true;
+          flash_settings.write(settings); //Einstellungen speichern
+          Serial.println("OK");
+        }
+        break;
+
+      case 'H': //LED Helligkeit
+        i = Serial.readBytesUntil('\n', tmp, sizeof(tmp));
+        if(i > 0)
+        {
+          tmp[i] = 0;
+          sscanf(tmp, "%X", &val);
+          if(val < 10)
+          {
+            val = 10;
+          }
+          else if(val > 255)
+          {
+            val = 255;
+          }
+          settings.brightness = val;
+          ws2812.setBrightness(val);
+          ws2812.show();
+          Serial.println("OK");
+        }
+        break;
+
+      case 'L': //LED Farbe
+        i = Serial.readBytesUntil('\n', tmp, sizeof(tmp));
+        if(i > 0)
+        {
+          tmp[i] = 0;
+          sscanf(tmp, "%X", &val);
+          ws2812.fill(val, 0, 4);
+          ws2812.show();
+          Serial.println("OK");
+        }
+        break;
+
+      case 'B': //Buzzer
+        cmd = Serial.read();
+        if(cmd == '1')
+        {
+          analogWrite(PIN_BUZZER, 255/2); //Buzzer an
+          delay(500); //500ms warten
+          analogWrite(PIN_BUZZER, 0); //Buzzer aus
+          Serial.println("OK");
+        }
+        break;
+
+      case 'A': //Altitude/Hoehe ueber dem Meeresspiegel
+        i = Serial.readBytesUntil('\n', tmp, sizeof(tmp));
+        if(i > 0)
+        {
+          tmp[i] = 0;
+          sscanf(tmp, "%d", &val);
+          if((val >= 0) && (val <= 3000))
+          {
+            settings.altitude = val;
+            sensor.setAltitudeCompensation(val); //Meter ueber dem Meeresspiegel
+            Serial.println("OK");
+          }
+        }
+        break;
+
+      case 'P': //Pressure/Luftdruck in hPa
+        i = Serial.readBytesUntil('\n', tmp, sizeof(tmp));
+        if(i > 0)
+        {
+          tmp[i] = 0;
+          sscanf(tmp, "%d", &val);
+          if((val == 0) || ((val >= 700) && (val <= 1400)))
+          {
+            sensor.setAmbientPressure(val); //0 oder 700-1400, Luftdruck in hPa
+            Serial.println("OK");
+          }
+        }
+        break;
+        
+      case 'C': //Calibration/Kalibrierung
+        cmd = Serial.read();
+        if(cmd == '1')
+        {
+          sensor.setForcedRecalibrationFactor(400); //400ppm = Frischluft
+          Serial.println("OK");
+        }
+        break;
+
+      case '1': //Range/Bereich 1
+      case '2': //Range/Bereich 2
+      case '3': //Range/Bereich 3
+      case '4': //Range/Bereich 4
+        i = Serial.readBytesUntil('\n', tmp, sizeof(tmp));
+        if(i > 0)
+        {
+          tmp[i] = 0;
+          sscanf(tmp, "%d", &val);
+          if((val >= 400) && (val <= 40000))
+          {
+            settings.range[cmd-'1'] = val;
+            Serial.println("OK");
+          }
+        }
+        break;
+    }
   }
-  
-  switch(toupper(cmd))
+  else if(val == '?') //?
   {
-    case 'R': //Fernsteuerung
-      cmd = Serial.read();
-      if(cmd == '1')
-      {
-        remote_on = 1;
-        analogWrite(PIN_BUZZER, 0); //Buzzer aus
-        ws2812.setBrightness(30); //0...255
-        ws2812.fill(ws2812.Color(255,0,255), 0, 4); //LEDs violet
-        ws2812.show();
-      }
-      else
-      {
-        remote_on = 0;
-        ws2812.setBrightness(settings.brightness);
-      }
-      Serial.println("OK");
-      break;
+    switch(toupper(cmd))
+    {
+      case 'H': //LED Helligkeit
+        Serial.println(settings.brightness, HEX);
+        break;
 
-    case 'S': //Save/speichern
-      cmd = Serial.read();
-      if(cmd == '1')
-      {
-        flash_settings.write(settings); //Einstellungen speichern
-        Serial.println("OK");
-      }
-      break;
+      case 'A': //Altitude/Hoehe ueber dem Meeresspiegel
+        Serial.println(settings.altitude, DEC);
+        break;
 
-    case 'H': //LED Helligkeit
-      i = Serial.readBytesUntil('\n', tmp, sizeof(tmp));
-      if(i > 0)
-      {
-        tmp[i] = 0;
-        sscanf(tmp, "%X", &val);
-        if(val < 10)
-        {
-          val = 10;
-        }
-        else if(val > 255)
-        {
-          val = 255;
-        }
-        settings.brightness = val;
-        ws2812.setBrightness(val);
-        ws2812.show();
-        Serial.println("OK");
-      }
-      break;
-
-    case 'L': //LED Farbe
-      i = Serial.readBytesUntil('\n', tmp, sizeof(tmp));
-      if(i > 0)
-      {
-        tmp[i] = 0;
-        sscanf(tmp, "%X", &val);
-        ws2812.fill(val, 0, 4);
-        ws2812.show();
-        Serial.println("OK");
-      }
-      break;
-
-    case 'B': //Buzzer
-      cmd = Serial.read();
-      if(cmd == '1')
-      {
-        analogWrite(PIN_BUZZER, 255/2); //Buzzer an
-        delay(500); //500ms warten
-        analogWrite(PIN_BUZZER, 0); //Buzzer aus
-        Serial.println("OK");
-      }
-      break;
-      
-    case 'A': //Altitude/Hoehe ueber dem Meeresspiegel
-      i = Serial.readBytesUntil('\n', tmp, sizeof(tmp));
-      if(i > 0)
-      {
-        tmp[i] = 0;
-        sscanf(tmp, "%d", &val);
-        if((val >= 0) && (val <= 3000))
-        {
-          settings.altitude = val;
-          sensor.setAltitudeCompensation(val); //Meter ueber dem Meeresspiegel
-          Serial.println("OK");
-        }
-      }
-      break;
-
-    case 'P': //Pressure/Luftdruck in hPa
-      i = Serial.readBytesUntil('\n', tmp, sizeof(tmp));
-      if(i > 0)
-      {
-        tmp[i] = 0;
-        sscanf(tmp, "%d", &val);
-        if((val == 0) || ((val >= 700) && (val <= 1400)))
-        {
-          sensor.setAmbientPressure(val); //0 oder 700-1400, Luftdruck in hPa
-          Serial.println("OK");
-        }
-      }
-      break;
-      
-    case 'C': //Calibration/Kalibrierung
-      cmd = Serial.read();
-      if(cmd == '1')
-      {
-        sensor.setForcedRecalibrationFactor(400); //400ppm = Frischluft
-        Serial.println("OK");
-      }
-      break;
+      case '1': //Range/Bereich 1
+      case '2': //Range/Bereich 2
+      case '3': //Range/Bereich 3
+      case '4': //Range/Bereich 4
+        Serial.println(settings.range[cmd-'1'], DEC);
+        break;
+    }
   }
 
   return;
@@ -662,11 +705,15 @@ void setup()
 
   //Einstellungen
   settings = flash_settings.read(); //Einstellungen lesen
-  if((settings.valid == false) || (settings.brightness > 255))
+  if((settings.valid == false) || (settings.brightness > 255) || (settings.range[0] < 400))
   {
     settings.brightness = HELLIGKEIT;
-    settings.altitude = ALTITUDE;
-    settings.valid = true;
+    settings.altitude   = ALTITUDE;
+    settings.range[0]   = START_GELB;
+    settings.range[1]   = START_ROT;
+    settings.range[2]   = START_ROT_BLINKEN;
+    settings.range[3]   = START_BUZZER;
+    settings.valid      = true;
     flash_settings.write(settings);
   }
 
@@ -808,17 +855,17 @@ void ampel(unsigned int co2)
   static unsigned int blinken=0;
 
   //LEDs
-  if(co2 < START_GELB) //gruen
+  if(co2 < settings.range[0]) //gruen
   {
     blinken = 0;
     ws2812.fill(ws2812.Color(FARBE_GRUEN), 0, 4);
   }
-  else if(co2 < START_ROT) //gelb
+  else if(co2 < settings.range[1]) //gelb
   {
     blinken = 0;
     ws2812.fill(ws2812.Color(FARBE_GELB), 0, 4);
   }
-  else if(co2 < START_ROT_BLINKEN) //rot
+  else if(co2 < settings.range[2]) //rot
   {
     blinken = 0;
     ws2812.fill(ws2812.Color(FARBE_ROT), 0, 4);
@@ -838,7 +885,7 @@ void ampel(unsigned int co2)
   ws2812.show(); //zeige Farbe
 
   //Buzzer
-  if(co2 < START_BUZZER)
+  if(co2 < settings.range[3])
   {
     analogWrite(PIN_BUZZER, 0); //Buzzer aus
   }
