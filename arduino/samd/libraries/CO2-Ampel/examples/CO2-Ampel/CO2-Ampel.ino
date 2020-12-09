@@ -7,10 +7,11 @@
   Serielle Befehle
     R=0      - Remote/Fernsteuerung aus
     R=1      - Remote/Fernsteuerung an
-    S=1      - Save/speichern
+    S=1      - Save/Speichern
     L=RRGGBB - LED-Farbe (000000-FFFFFF)
-    H=7F     - LED-Helligkeit (0-FF)
+    H=X      - LED-Helligkeit (0-FF)
     B=1      - Buzzer an 500ms
+    T=X      - Temperaturoffset in °C (0-20)
     A=X      - Altitude/Hoehe ueber dem Meeresspiegel (0-3000)
     P=X      - Pressure/Luftdruck in hPa (0 oder 700-1400)
     C=1      - Calibration/Kalibrierung auf 400ppm (mind. 2min Betrieb an Frischluft vor Befehl)
@@ -34,7 +35,7 @@
     5. Nach erfolgreicher Kalibrierung leuchten die LEDs kurz blau und der Buzzer ertoent.
 */
 
-#define VERSION "7"
+#define VERSION "8"
 
 //--- CO2-Werte ---
 //Covid Praevention: https://www.umwelt-campus.de/forschung/projekte/iot-werkstatt/ideen-zur-corona-krise
@@ -63,8 +64,14 @@
 #define LICHT_DUNKEL       20   //<20 -> dunkel
 #define LICHT_INTERVALL    3600 //1-60000s (Sensorpruefung)
 
+//--- WiFi/WLAN ---
+#define WIFI_SSID          "" //WiFi SSID
+#define WIFI_CODE          "" //WiFi Passwort
+
 //--- Allgemein ---
-#define ALTITUDE           0 //0 Meter ueber dem Meeresspiegel
+#define ALTITUDE           0  //Meter ueber dem Meeresspiegel
+#define TEMP_OFFSET        4  //Temperaturoffset in °C (0-20)
+#define TEMP_OFFSET_WIFI   10 //Temperaturoffset in °C (0-20)
 #define AMPEL_DURCHSCHNITT 1 //1 = CO2 Durchschnitt fuer Ampel verwenden
 #define AUTO_KALIBRIERUNG  0 //1 = automatische Kalibrierung an (erfordert 7 Tage Dauerbetrieb mit 1h Frischluft pro Tag)
 #define DISPLAY_AUSGABE    0 //1 = Ausgabe auf Display aktivieren
@@ -94,12 +101,14 @@ typedef struct
   boolean valid;
   unsigned int brightness;
   unsigned int altitude;
+  unsigned int temp_offset;
   unsigned int range[4];
+  char wifi_ssid[40];
+  char wifi_code[40];
 } SETTINGS;
 
-FlashStorage(flash_settings, SETTINGS);
 SETTINGS settings;
-
+FlashStorage(flash_settings, SETTINGS);
 SCD30 sensor;
 Adafruit_NeoPixel ws2812 = Adafruit_NeoPixel(4, PIN_WS2812, NEO_GRB + NEO_KHZ800);
 #if DISPLAY_AUSGABE > 0
@@ -171,7 +180,7 @@ void show_data(void) //Daten anzeigen
 void serial_service(void)
 {
   int i, cmd, val;
-  char tmp[16];
+  char tmp[32];
 
   if(!Serial)
   {
@@ -212,7 +221,7 @@ void serial_service(void)
         Serial.println("OK");
         break;
 
-      case 'S': //Save/speichern
+      case 'S': //Save/Speichern
         cmd = Serial.read();
         if(cmd == '1')
         {
@@ -266,6 +275,22 @@ void serial_service(void)
         }
         break;
 
+      case 'T': //Temperaturoffset
+        i = Serial.readBytesUntil('\n', tmp, sizeof(tmp));
+        if(i > 0)
+        {
+          tmp[i] = 0;
+          sscanf(tmp, "%d", &val);
+          if((val >= 0) && (val <= 20))
+          {
+            settings.temp_offset = val;
+            sensor.setTemperatureOffset(settings.temp_offset); //Temperaturoffset
+            flash_settings.write(settings); //Einstellungen speichern
+            Serial.println("OK");
+          }
+        }
+        break;
+
       case 'A': //Altitude/Hoehe ueber dem Meeresspiegel
         i = Serial.readBytesUntil('\n', tmp, sizeof(tmp));
         if(i > 0)
@@ -275,7 +300,8 @@ void serial_service(void)
           if((val >= 0) && (val <= 3000))
           {
             settings.altitude = val;
-            sensor.setAltitudeCompensation(val); //Meter ueber dem Meeresspiegel
+            sensor.setAltitudeCompensation(settings.altitude); //Meter ueber dem Meeresspiegel
+            flash_settings.write(settings); //Einstellungen speichern
             Serial.println("OK");
           }
         }
@@ -329,11 +355,13 @@ void serial_service(void)
       case 'H': //LED Helligkeit
         Serial.println(settings.brightness, HEX);
         break;
-
+      case 'T': //Temperaturoffset
+        val = sensor.getTemperatureOffset(); //settings.temp_offset
+        Serial.println(val, DEC);
+        break;
       case 'A': //Altitude/Hoehe ueber dem Meeresspiegel
         Serial.println(settings.altitude, DEC);
         break;
-
       case '1': //Range/Bereich 1
       case '2': //Range/Bereich 2
       case '3': //Range/Bereich 3
@@ -347,8 +375,69 @@ void serial_service(void)
 }
 
 
+void urldecode(char *src) //URL Parameter dekodieren
+{
+  char a, b, *dst = src;
+
+  while(*src) 
+  {
+    if((*src == '%') && ((a = src[1]) && (b = src[2])) && (isxdigit((uint8_t)a) && isxdigit((uint8_t)b))) 
+    {
+      if (a >= 'a')
+        a -= 'a'-'A';
+
+      if (a >= 'A')
+        a -= ('A' - 10);
+      else
+        a -= '0';
+
+      if (b >= 'a')
+        b -= 'a'-'A';
+
+      if (b >= 'A')
+        b -= ('A' - 10);
+      else
+        b -= '0';
+
+      *dst++ = 16 * a + b;
+      src += 3;
+    } 
+    else if (*src == '+') 
+    {
+      *dst++ = ' ';
+      src++;
+    } 
+    else 
+    {
+      *dst++ = *src++;
+    }
+  }
+  *dst++ = '\0';
+
+  return;
+}
+
+
 void webserver_service(void)
 {
+  if(!plus_version)
+  {
+    return;
+  }
+  
+  if(WiFi.status() == WL_IDLE_STATUS)
+  {
+    return;
+  }
+
+  if((WiFi.status() == WL_CONNECT_FAILED) ||
+     (WiFi.status() == WL_CONNECTION_LOST) || 
+     (WiFi.status() == WL_DISCONNECTED))
+  {
+    wifi_start();
+    return;
+  }
+
   WiFiClient client = server.available();
   if(client) //Client verbunden
   {
@@ -360,6 +449,44 @@ void webserver_service(void)
         char c = client.read();
         if(c == '\n' && currentLineIsBlank)
         {
+          //HTTP Post Daten verarbeiten
+          if(client.available())
+          {
+            unsigned int req_data=0;
+            char req[2][40];
+            req[0][0] = 0; //SSID
+            req[1][0] = 0; //Code
+            for(unsigned int r=0, i=0, last_c=0; client.available();)
+            {
+              c = client.read();
+              if(c == '&') //Aufbau: 1=xxx&2=yyy
+              {
+                r = 0;
+              }
+              else if((c == '=') && isdigit(last_c)) //1=xxx
+              {
+                r = last_c-'0';
+                i = 0;
+              }
+              else if((r > 0) && (r < 3)) //1 bis 2
+              {
+                req[r-1][i++] = c;
+                req[r-1][i] = 0;
+                req_data = 1;
+              }
+              last_c = c;
+            }
+            if(req_data)
+            {
+              urldecode(req[0]);
+              //Serial.println(req[0]);
+              strcpy(settings.wifi_ssid, req[0]);
+              urldecode(req[1]);
+              //Serial.println(req[1]);
+              strcpy(settings.wifi_code, req[1]);
+              flash_settings.write(settings); //Einstellungen speichern
+            }
+          }
           //HTTP Header
           client.println("HTTP/1.1 200 OK");
           client.println("Content-Type: text/html");
@@ -367,15 +494,26 @@ void webserver_service(void)
           client.println();
           //HTML Daten
           client.println("<!DOCTYPE html>");
-          client.println("<html><head></head>");
-          client.println("<body style='font-size:3em'>");
-          client.println("<b>CO2-Ampel</b><br>");
-          client.print("<br>CO2 (ppm): ");
+          client.println("<html><head><title>CO2-Ampel</title></head>");
+          client.println("<body>");
+          client.println("<br><span style='font-size:3em'>");
+          client.print("CO2 (ppm): ");
           client.println(co2);
           client.print("<br>Temperatur (C): ");
           client.println(temp, 1);
           client.print("<br>Luftfeuchte (%): ");
           client.println(humi, 1);
+          client.println("<br></span><br><hr><br>");
+          client.print("<br><b>WiFi Login</b>");
+          client.println("<form method=post>");
+          client.print("SSID <input name=1 size=20 maxlength=32 placeholder=SSID value='");
+          client.print(settings.wifi_ssid);
+          client.println("'><br>");
+          client.print("Code <input name=2 size=20 maxlength=32 placeholder=Password value='");
+          client.print(settings.wifi_code);
+          client.println("'><br>");
+          client.println("<input type=submit value=Speichern> (Neustart erforderlich)");
+          client.println("</form>");
           client.println("</body></html>");
           break;
         }
@@ -392,6 +530,8 @@ void webserver_service(void)
     delay(2); //2ms warten zum Senden
     client.stop();
   }
+
+  return;
 }
 
 
@@ -469,7 +609,7 @@ void self_test(void) //Testprogramm
   ws2812.fill(ws2812.Color(0,0,0), 0, 4); //LEDs aus
   for(okay=0; okay < 15;)
   {
-    if(digitalRead(PIN_SWITCH) == 0) //Taster gedrueckt?
+    if(digitalRead(PIN_SWITCH) == LOW) //Taster gedrueckt?
     {
       calibration = 1; //Kalibrierung ausfuehren
       analogWrite(PIN_BUZZER, 255/2); //Buzzer an
@@ -619,9 +759,13 @@ void self_test(void) //Testprogramm
         temp = sensor.getTemperature();
         humi = sensor.getHumidity();
 
-        if((co2 >= 30) && (co2 <= 1500) && 
-           (co2 >= (co2_last-30)) &&
-           (co2 <= (co2_last+30))) //+/-30ppm Toleranz zum vorherigen Wert
+        if(co2 < 200) //Sensor falsch kalibriert
+        {
+          okay++;
+        }
+        else if((co2 >= 200) && (co2 <= 1500) && 
+                (co2 >= (co2_last-30)) &&
+                (co2 <= (co2_last+30))) //+/-30ppm Toleranz zum vorherigen Wert
         {
           okay++;
         }
@@ -682,6 +826,77 @@ void self_test(void) //Testprogramm
 }
 
 
+unsigned int wifi_start_ap(void)
+{
+  byte mac[6];
+  char ssid[32];
+
+  WiFi.macAddress(mac); //MAC-Adresse abfragen
+  sprintf(ssid, "CO2AMPEL-%X-%X", mac[1], mac[0]);
+
+  if((WiFi.status() == WL_CONNECTED) ||
+     (WiFi.status() == WL_AP_CONNECTED))
+  {
+    WiFi.end(); //WiFi.disconnect();
+  }
+
+  WiFi.hostname(ssid); //Hostname setzen
+  if(WiFi.beginAP(ssid) != WL_AP_LISTENING)
+  {
+    WiFi.end();
+    return 1;
+  }
+
+  delay(5000);  //5s warten
+
+  server.begin(); //starte Webserver
+
+  return 0;
+}
+
+
+unsigned int wifi_start(void)
+{
+  byte mac[6];
+  char name[32];
+
+  if(settings.wifi_ssid[0] == 0) //keine Logindaten
+  {
+    return 1;
+  }
+
+  WiFi.macAddress(mac); //MAC-Adresse abfragen
+  sprintf(name, "CO2AMPEL-%X-%X", mac[1], mac[0]);
+
+  if((WiFi.status() == WL_CONNECTED) ||
+     (WiFi.status() == WL_AP_CONNECTED))
+  {
+    WiFi.end(); //WiFi.disconnect();
+  }
+
+  WiFi.hostname(name); //Hostname setzen
+  //WiFi.config(ip, dns, gateway, subnet);  //IP setzen
+  WiFi.begin(settings.wifi_ssid, settings.wifi_code); //verbinde WiFi Netzwerk
+
+  //auf Verbindung warten
+  for(unsigned int t=0; WiFi.status() == WL_IDLE_STATUS; t++)
+  {
+    if(t >= 5) //5s
+    {
+      break;
+    }
+    digitalWrite(PIN_LED, HIGH); //Status-LED an
+    delay(500); //500ms warten
+    digitalWrite(PIN_LED, LOW); //Status-LED aus
+    delay(500); //500ms warten
+  }
+
+  server.begin(); //starte Webserver
+
+  return 0;
+}
+
+
 void setup()
 {
   int run_test=0;
@@ -703,23 +918,9 @@ void setup()
     run_test = 1;
   }
 
-  //Einstellungen
-  settings = flash_settings.read(); //Einstellungen lesen
-  if((settings.valid == false) || (settings.brightness > 255) || (settings.range[0] < 400))
-  {
-    settings.brightness = HELLIGKEIT;
-    settings.altitude   = ALTITUDE;
-    settings.range[0]   = START_GELB;
-    settings.range[1]   = START_ROT;
-    settings.range[2]   = START_ROT_BLINKEN;
-    settings.range[3]   = START_BUZZER;
-    settings.valid      = true;
-    flash_settings.write(settings);
-  }
-
   //WS2812
   ws2812.begin();
-  ws2812.setBrightness(settings.brightness); //0...255
+  ws2812.setBrightness(HELLIGKEIT); //0...255
   ws2812.fill(ws2812.Color(20,20,20), 0, 4); //LEDs weiss
   ws2812.show();
 
@@ -738,11 +939,6 @@ void setup()
   if(Serial)
   {
     Serial.println("\nCO2 Ampel v" VERSION);
-    if(settings.altitude > 0)
-    {
-      Serial.print("Altitude: ");
-      Serial.println(settings.altitude, DEC);
-    }
   }
 
   //ATECC608+ATWINC1500
@@ -784,8 +980,42 @@ void setup()
       Serial.println("Error: CO2 sensor not found");
     }
   }
-  sensor.setAltitudeCompensation(settings.altitude); //Meter ueber dem Meeresspiegel
+
+  //Einstellungen
+  settings = flash_settings.read(); //Einstellungen lesen
+  if((settings.valid == false) || (settings.brightness > 255) || (settings.range[0] < 400))
+  {
+    settings.brightness   = HELLIGKEIT;
+    settings.altitude     = ALTITUDE;
+    if(plus_version)
+    {
+      settings.temp_offset = TEMP_OFFSET_WIFI;
+    }
+    else
+    {
+      settings.temp_offset = TEMP_OFFSET;
+    }
+    settings.range[0]     = START_GELB;
+    settings.range[1]     = START_ROT;
+    settings.range[2]     = START_ROT_BLINKEN;
+    settings.range[3]     = START_BUZZER;
+    settings.wifi_ssid[0] = 0;
+    strcpy(settings.wifi_ssid, WIFI_SSID);
+    settings.wifi_code[0] = 0;
+    strcpy(settings.wifi_code, WIFI_CODE);
+    settings.valid        = true;
+    flash_settings.write(settings);
+    sensor.setAltitudeCompensation(settings.altitude); //Meter ueber dem Meeresspiegel
+    sensor.setTemperatureOffset(settings.temp_offset); //Temperaturoffset
+  }
   //sensor.setAmbientPressure(1000); //0 oder 700-1400, Luftdruck in hPa
+  ws2812.setBrightness(settings.brightness); //0...255
+
+  if(Serial && (settings.altitude > 0))
+  {
+    Serial.print("Altitude: ");
+    Serial.println(settings.altitude, DEC);
+  }
 
   #if DISPLAY_AUSGABE > 0
     display.clearDisplay();
@@ -812,33 +1042,29 @@ void setup()
   //Plus-Version
   if(plus_version)
   {
-    //starte AP
-    byte mac[6];
-    char ssid[32];
-    WiFi.macAddress(mac);
-    sprintf(ssid, "CO2-Ampel %X %X", mac[1], mac[0]);
-    if(WiFi.beginAP(ssid) == WL_AP_FAILED)
+    if(wifi_start() != 0) //verbinde WiFi Netzwerk
     {
-      WiFi.end();
-      plus_version = 0;
-    }
-    else
-    {
-      server.begin(); //starte Webserver
-      if(Serial)
+      if(wifi_start_ap() != 0) //starte AP
       {
-        Serial.print("MAC: ");
-        Serial.print(mac[5], HEX); Serial.print(":"); Serial.print(mac[4], HEX); Serial.print(":"); Serial.print(mac[3], HEX); Serial.print(":");
-        Serial.print(mac[2], HEX); Serial.print(":"); Serial.print(mac[1], HEX); Serial.print(":"); Serial.print(mac[0], HEX); Serial.println("");
-        IPAddress ip;
-        ip = WiFi.localIP();
-        Serial.print("IP: "); Serial.println(ip);
-        ip = WiFi.subnetMask();
-        Serial.print("NM: "); Serial.println(ip);
-        ip = WiFi.gatewayIP();
-        Serial.print("GW: "); Serial.println(ip);
-        Serial.println("");
+        plus_version = 0;
       }
+    }
+    delay(2000); //2s warten
+    if(Serial)
+    {
+      byte mac[6];
+      WiFi.macAddress(mac);
+      Serial.print("MAC: ");
+      Serial.print(mac[5], HEX); Serial.print(":"); Serial.print(mac[4], HEX); Serial.print(":"); Serial.print(mac[3], HEX); Serial.print(":");
+      Serial.print(mac[2], HEX); Serial.print(":"); Serial.print(mac[1], HEX); Serial.print(":"); Serial.print(mac[0], HEX); Serial.println("");
+      IPAddress ip;
+      ip = WiFi.localIP();
+      Serial.print("IP: "); Serial.println(ip);
+      ip = WiFi.subnetMask();
+      Serial.print("NM: "); Serial.println(ip);
+      ip = WiFi.gatewayIP();
+      Serial.print("GW: "); Serial.println(ip);
+      Serial.println("");
     }
   }
 
@@ -907,8 +1133,9 @@ void ampel(unsigned int co2)
 
 void loop()
 {
-  static unsigned int dunkel=0, sw=HIGH;
-  static long long t_ampel=0, t_light=0;
+  static unsigned int dunkel=0, sw=0;
+  static long long t_ampel=0, t_light=0, t_switch=0;
+  unsigned int overwrite=0;
 
   //serielle Befehle verarbeiten
   serial_service();
@@ -919,25 +1146,37 @@ void loop()
   //Taster pruefen
   if(digitalRead(PIN_SWITCH) == LOW) //Taster gedrueckt
   {
-    sw = sw<<1; //1x nach links (MSB) schieben
-    delay(4);   //4ms warten
+    if(sw == 0)
+    {
+      sw = 1;
+      t_switch = millis(); //Zeit speichern
+    }
   }
-  else
-  {
-    sw = 1; //0x0001
-  }
-
-  if(sw & 0x8000) //hoechstes Bit gesetzt = Taster gedrueckt
+  else if(sw != 0) //Taster losgelassen
   {
     sw = 0;
-    settings.brightness = settings.brightness/2; //Helligkeit halbieren
-    if(settings.brightness < HELLIGKEIT_DUNKEL)
+    if((millis()-t_switch) > 3000) //3s Tastendruck
     {
-      settings.brightness = HELLIGKEIT;
+      if(plus_version)
+      {
+        ws2812.fill(ws2812.Color(255,0,255), 0, 4); //LEDs violet
+        ws2812.show();
+        wifi_start_ap();
+      }
     }
-    ws2812.setBrightness(settings.brightness);
+    else if((millis()-t_switch) > 100) //100ms Tastendruck
+    {
+      settings.brightness = settings.brightness/2; //Helligkeit halbieren
+      if(settings.brightness < HELLIGKEIT_DUNKEL)
+      {
+        settings.brightness = HELLIGKEIT;
+      }
+      ws2812.setBrightness(settings.brightness);
+      overwrite = 1;
+    }
   }
-  else if((millis()-t_ampel) > 1000) //Ampelfunktion nur jede Sekunde ausfuehren
+
+  if((millis()-t_ampel) > 1000) //Ampelfunktion nur jede Sekunde ausfuehren
   {
     t_ampel = millis(); //Zeit speichern
 
@@ -947,7 +1186,7 @@ void loop()
     delay(1); //1ms warten
     digitalWrite(PIN_LED, LOW); //Status-LED aus
   }
-  else
+  else if(overwrite == 0)
   {
     return;
   }
