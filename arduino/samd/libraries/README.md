@@ -8,4 +8,6 @@
 * [Arduino BearSSL](https://github.com/arduino-libraries/ArduinoBearSSL)
 * [Arduino MQTT-Client](https://github.com/arduino-libraries/ArduinoMqttClient)
 * [Cristian Maglie FlashStorage](https://github.com/cmaglie/FlashStorage)
+* [Jack Christensen JC_Button](https://github.com/JChristensen/JC_Button)
+* [Nicholas O'Leary PubSubClient](https://github.com/knolleary/pubsubclient)
 * [SparkFun SCD30](https://github.com/sparkfun/SparkFun_SCD30_Arduino_Library)
