@@ -59,6 +59,7 @@
 //--- Ampelhelligkeit (LEDs) ---
 #define HELLIGKEIT         180 //1-255 (255=100%, 179=70%)
 #define HELLIGKEIT_DUNKEL  20  //1-255 (255=100%, 25=10%)
+#define NUM_LEDS           4   //Anzahl der LEDs
 
 //--- Lichtsensor ---
 #define LICHT_DUNKEL       20   //<20 -> dunkel
@@ -110,7 +111,7 @@ typedef struct
 SETTINGS settings;
 FlashStorage(flash_settings, SETTINGS);
 SCD30 sensor;
-Adafruit_NeoPixel ws2812 = Adafruit_NeoPixel(4, PIN_WS2812, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel ws2812 = Adafruit_NeoPixel(NUM_LEDS, PIN_WS2812, NEO_GRB + NEO_KHZ800);
 #if DISPLAY_AUSGABE > 0
   Adafruit_SSD1306 display(128, 64); //128x64 Pixel
 #endif
@@ -140,7 +141,7 @@ unsigned int light_sensor(void) //Auslesen des Lichtsensors
   digitalWrite(PIN_LSENSOR_PWR, LOW); //Lichtsensor aus
 
   //ws2812.setPixelColor(2, color); //LED 3 an
-  ws2812.fill(color, 0, 4); //alle LEDs an
+  ws2812.fill(color, 0, NUM_LEDS); //alle LEDs an
   ws2812.show();
 
   return i;
@@ -210,7 +211,7 @@ void serial_service(void)
           remote_on = 1;
           analogWrite(PIN_BUZZER, 0); //Buzzer aus
           ws2812.setBrightness(30); //0...255
-          ws2812.fill(ws2812.Color(255,0,255), 0, 4); //LEDs violet
+          ws2812.fill(ws2812.Color(255,0,255), 0, NUM_LEDS); //LEDs violet
           ws2812.show();
         }
         else
@@ -258,7 +259,7 @@ void serial_service(void)
         {
           tmp[i] = 0;
           sscanf(tmp, "%X", &val);
-          ws2812.fill(val, 0, 4);
+          ws2812.fill(val, 0, NUM_LEDS);
           ws2812.show();
           Serial.println("OK");
         }
@@ -549,15 +550,16 @@ void self_test(void) //Testprogramm
 
   //LED-Test
   ws2812.setBrightness(20); //0...255
-  ws2812.fill(ws2812.Color(255,0,0), 0, 4); //LEDs rot
+  ws2812.fill(ws2812.Color(255,0,0), 0, NUM_LEDS); //LEDs rot
   ws2812.show();
   delay(1000); //1s warten
-  ws2812.fill(ws2812.Color(0,255,0), 0, 4); //LEDs gruen
+  ws2812.fill(ws2812.Color(0,255,0), 0, NUM_LEDS); //LEDs gruen
   ws2812.show();
   delay(1000); //1s warten
-  ws2812.fill(ws2812.Color(0,0,255), 0, 4); //LEDs blau
+  ws2812.fill(ws2812.Color(0,0,255), 0, NUM_LEDS); //LEDs blau
   ws2812.show();
   delay(1000); //1s warten
+  ws2812.fill(ws2812.Color(0,0,0), 0, NUM_LEDS); //LEDs aus
 
   //ATECC608+ATWINC1500 Test
   Wire1.beginTransmission(0x60); //Dummy Test
@@ -816,7 +818,7 @@ void self_test(void) //Testprogramm
   }
 
   ws2812.setBrightness(settings.brightness); //0...255
-  ws2812.fill(ws2812.Color(20,20,20), 0, 4); //LEDs weiss
+  ws2812.fill(ws2812.Color(20,20,20), 0, NUM_LEDS); //LEDs weiss
   ws2812.show();
   co2 = STARTWERT;
   co2_average = STARTWERT;
@@ -921,7 +923,7 @@ void setup()
   //WS2812
   ws2812.begin();
   ws2812.setBrightness(HELLIGKEIT); //0...255
-  ws2812.fill(ws2812.Color(20,20,20), 0, 4); //LEDs weiss
+  ws2812.fill(ws2812.Color(20,20,20), 0, NUM_LEDS); //LEDs weiss
   ws2812.show();
 
   //Wire/I2C
@@ -1084,27 +1086,27 @@ void ampel(unsigned int co2)
   if(co2 < settings.range[0]) //gruen
   {
     blinken = 0;
-    ws2812.fill(ws2812.Color(FARBE_GRUEN), 0, 4);
+    ws2812.fill(ws2812.Color(FARBE_GRUEN), 0, NUM_LEDS);
   }
   else if(co2 < settings.range[1]) //gelb
   {
     blinken = 0;
-    ws2812.fill(ws2812.Color(FARBE_GELB), 0, 4);
+    ws2812.fill(ws2812.Color(FARBE_GELB), 0, NUM_LEDS);
   }
   else if(co2 < settings.range[2]) //rot
   {
     blinken = 0;
-    ws2812.fill(ws2812.Color(FARBE_ROT), 0, 4);
+    ws2812.fill(ws2812.Color(FARBE_ROT), 0, NUM_LEDS);
   }
   else //rot blinken
   {
     if(blinken == 0)
     {
-      ws2812.fill(ws2812.Color(10,0,0), 0, 4);  //rot schwache Helligkeit
+      ws2812.fill(ws2812.Color(10,0,0), 0, NUM_LEDS);  //rot schwache Helligkeit
     }
     else
     {
-      ws2812.fill(ws2812.Color(FARBE_ROT), 0, 4); //rot
+      ws2812.fill(ws2812.Color(FARBE_ROT), 0, NUM_LEDS); //rot
     }
     blinken = 1-blinken; //invertieren
   }
