@@ -1326,17 +1326,22 @@ void ampel(unsigned int co2)
   // we map the CO2 settings to Hue values linear:
   //
   //     hue |
-  // 65536/2 |\
-  //         | \
-  //         |  \
+  // 65536/3 |--+
   //         |   \
   //         |    \
-  //       0 +-----+--> CO2
-  //         0    1000ppm
+  //         |     \
+  //         |      \
+  //       0 +--+----+-----> CO2
+  //         0 300  1000ppm
   //
-  if (co2 < START_ROT)
+  if (co2 < START_GRUEN)
   {
-    uint32_t hue = -(65536 / 2) / (START_ROT)*co2 + (65536 / 2);
+    ws2812.fill(FARBE_GRUEN, 0, NUM_LEDS);
+    blinken = 0;
+  }
+  else if (co2 < START_ROT)
+  {
+    uint32_t hue = -(65536 / 3) / (START_ROT)*co2 + (65536 / 3);
     uint32_t rgbcolor = ws2812.ColorHSV(hue);
 
     ws2812.fill(rgbcolor, 0, NUM_LEDS);
