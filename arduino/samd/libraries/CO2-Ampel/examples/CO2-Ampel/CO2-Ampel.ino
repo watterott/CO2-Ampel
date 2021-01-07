@@ -23,7 +23,7 @@
     5=X      - Range/Bereich 5 Start (400-40000) - rot + Buzzer
 */
 
-#define VERSION "9"
+#define VERSION "9.1"
 
 //--- CO2-Werte ---
 //Covid Praevention: https://www.umwelt-campus.de/forschung/projekte/iot-werkstatt/ideen-zur-corona-krise
@@ -112,6 +112,7 @@ unsigned int plus_version = 0, remote_on = 0;
 unsigned int co2 = STARTWERT, co2_average = STARTWERT;
 unsigned int light = 1024;
 float temp = 0, humi = 0;
+uint16_t hue = 0;
 
 void leds(uint32_t color)
 {
@@ -1316,35 +1317,32 @@ void ampel(unsigned int co2)
   // We use Hue to visualize the RGB color
   // see https://learn.adafruit.com/adafruit-neopixel-uberguide/arduino-library-use
   // hue is expressed as a 16-bit number.
-  // Starting from 0 for red,
-  // this increments first toward yellow (around 65536/6, or 10922 give or take a bit),
-  // and on through green, cyan (at the halfway point of 32768), blue, magenta and back to red.
+  // Starting from 0 for red, this increments first toward yellow
+  // (around 65536/6, or 10922 give or take a bit),  and on through green,
+  // cyan (at the halfway point of 32768), blue, magenta and back to red.
   // In your own code, you can allow any hue-related variables to overflow
   // or underflow and they’ll “wrap around” and do the correct and expected thing,
   // it’s really nice.
 
-  // we map the CO2 settings to Hue values linear:
+  // we map the CO2 settings to Hue values:
   //
   //      hue |
-  //  65536/3 |--
-  //  (green) |   \
-  //          |    \
-  // (yellow) |     \
-  //          |      \
-  //  0 (red) +--+----+-----> CO2
-  //          0 300  1000ppm
+  //  65536/2 |
+  //          |\
+  //          | \
+  //  (green) |  \
+  //          |   \
+  // (yellow) |    \
+  //          |     \
+  //  0 (red) +------+-----> CO2
+  //          0    1000ppm
   //
-  if (co2 < START_GRUEN)
+  if (co2 < START_ROT)
   {
-    ws2812.fill(FARBE_GRUEN, 0, NUM_LEDS);
-    blinken = 0;
-  }
-  else if (co2 < START_ROT)
-  {
-    uint32_t hue = -(65536 / 3) / (START_ROT)*co2 + (65536 / 3);
-    uint32_t rgbcolor = ws2812.ColorHSV(hue);
+    // co2 von 0ppm = hellblau, 333ppm = grün, 1000ppm = rot
+    hue = -(65536 / 2) / (START_ROT)*co2 + (65536 / 2);
+    ws2812.fill(ws2812.ColorHSV(hue), 0, NUM_LEDS);
 
-    ws2812.fill(rgbcolor, 0, NUM_LEDS);
     blinken = 0;
   }
   else if (co2 < START_ROT_BLINKEN)
