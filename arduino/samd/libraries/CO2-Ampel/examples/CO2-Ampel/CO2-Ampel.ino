@@ -1325,14 +1325,14 @@ void ampel(unsigned int co2)
 
   // we map the CO2 settings to Hue values linear:
   //
-  //     hue |
-  // 65536/3 |--+
-  //         |   \
-  //         |    \
-  //         |     \
-  //         |      \
-  //       0 +--+----+-----> CO2
-  //         0 300  1000ppm
+  //      hue |
+  //  65536/3 |--
+  //  (green) |   \
+  //          |    \
+  // (yellow) |     \
+  //          |      \
+  //  0 (red) +--+----+-----> CO2
+  //          0 300  1000ppm
   //
   if (co2 < START_GRUEN)
   {
