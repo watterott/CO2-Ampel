@@ -1331,7 +1331,7 @@ void ampel(unsigned int co2)
   //         |  \
   //         |   \
   //         |    \
-  //         +-----+--> CO2
+  //       0 +-----+--> CO2
   //         0    1000ppm
   //
   if (co2 < START_ROT)
@@ -1340,6 +1340,11 @@ void ampel(unsigned int co2)
     uint32_t rgbcolor = ws2812.ColorHSV(hue);
 
     ws2812.fill(rgbcolor, 0, NUM_LEDS);
+    blinken = 0;
+  }
+  else if (co2 < START_ROT_BLINKEN)
+  {
+    ws2812.fill(FARBE_ROT, 0, NUM_LEDS);
     blinken = 0;
   }
   else //rot blinken
@@ -1356,23 +1361,7 @@ void ampel(unsigned int co2)
   }
   ws2812.show(); //zeige Farbe
 
-  //Buzzer
-  if (co2 < START_ROT_BLINKEN)
-  {
-    buzzer(0); //Buzzer aus
-  }
-  else
-  {
-    if (blinken == 0)
-    {
-      buzzer(1); //Buzzer an
-    }
-    else
-    {
-      buzzer(0); //Buzzer aus
-    }
-  }
-
+  // Kein Buzzer mehr, das nervt im Büro
   return;
 }
 
