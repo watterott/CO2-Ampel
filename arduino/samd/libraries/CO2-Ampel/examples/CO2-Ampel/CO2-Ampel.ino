@@ -23,11 +23,11 @@
     5=X      - Range/Bereich 5 Start (400-40000) - rot + Buzzer
 */
 
-#define VERSION "9"
+#define VERSION "10"
 
 //--- CO2-Werte ---
 //Covid Praevention: https://www.umwelt-campus.de/forschung/projekte/iot-werkstatt/ideen-zur-corona-krise
-#define START_GRUEN         300 //>= 300ppm
+#define START_GRUEN         600 //>= 600ppm
 #define START_GELB          800 //>= 800ppm
 #define START_ROT          1000 //>=1000ppm
 #define START_ROT_BLINKEN  1200 //>=1200ppm
@@ -35,7 +35,7 @@
 
 //Ermuedung
 /*
-#define START_GRUEN         300 //>= 300ppm
+#define START_GRUEN         600 //>= 600ppm
 #define START_GELB         1000 //>=1000ppm
 #define START_ROT          1200 //>=1200ppm
 #define START_ROT_BLINKEN  1400 //>=1400ppm
@@ -69,13 +69,13 @@
 
 #define STARTWERT          500 //500ppm, CO2-Startwert
 
-#define FARBE_BLAU         0x0000FF //  0,  0,255
-#define FARBE_GRUEN        0x00FF00 //  0,255,  0
-#define FARBE_GELB         0xFF7F00 //255,127,  0
-#define FARBE_ROT          0xFF0000 //255,  0,  0
-#define FARBE_VIOLETT      0xFF00FF //255,  0,255
-#define FARBE_WEISS        0xFFFFFF //255,255,255
-#define FARBE_AUS          0x000000 //  0,  0,  0
+#define FARBE_BLAU         0x007CB0 //0x0000FF, Himmelblau: 0x007CB0
+#define FARBE_GRUEN        0x00FF00 //0x00FF00
+#define FARBE_GELB         0xFF7F00 //0xFF7F00
+#define FARBE_ROT          0xFF0000 //0xFF0000
+#define FARBE_VIOLETT      0xFF00FF //0xFF00FF
+#define FARBE_WEISS        0xFFFFFF //0xFFFFFF
+#define FARBE_AUS          0x000000 //0x000000
 
 
 #include <Wire.h>
@@ -88,6 +88,9 @@
   #include <Adafruit_GFX.h>
   #include <Adafruit_SSD1306.h>
 #endif
+
+
+extern USBDeviceClass USBDevice; //USBCore.cpp
 
 
 typedef struct
@@ -108,7 +111,7 @@ Adafruit_NeoPixel ws2812 = Adafruit_NeoPixel(NUM_LEDS, PIN_WS2812, NEO_GRB + NEO
 #endif
 WiFiServer server(80); //Webserver Port 80 (Plus Version)
 
-unsigned int plus_version=0, remote_on=0;
+unsigned int plus_version=0, remote_on=0, serialport=0;
 unsigned int co2=STARTWERT, co2_average=STARTWERT;
 unsigned int light=1024;
 float temp=0, humi=0;
@@ -191,7 +194,7 @@ unsigned int light_sensor(void) //Auslesen des Lichtsensors
 
 void show_data(void) //Daten anzeigen
 {
-  if(Serial)
+  if(serialport)
   {
     Serial.print("c: ");     //CO2
     Serial.println(co2);     //Wert in ppm
@@ -225,7 +228,7 @@ void serial_service(void)
   int i, cmd, val;
   char tmp[32];
 
-  if(!Serial)
+  if(!serialport)
   {
     return;
   }
@@ -386,8 +389,8 @@ void serial_service(void)
             scd30.setForcedRecalibrationFactor(400); //400ppm = Frischluft
             Serial.println("OK");
           }
-        }
         break;
+        }
 
       case '1': //Range/Bereich 1
       case '2': //Range/Bereich 2
@@ -610,11 +613,11 @@ void self_test(void) //Testprogramm
   buzzer(1000); //1s Buzzer an
 
   //LED-Test
-  leds(FARBE_ROT); //LEDs rot
+  leds(0xFF0000); //LEDs rot
   delay(1000); //1s warten
-  leds(FARBE_GRUEN); //LEDs gruen
+  leds(0x00FF00); //LEDs gruen
   delay(1000); //1s warten
-  leds(FARBE_BLAU); //LEDs blau
+  leds(0x0000FF); //LEDs blau
   delay(1000); //1s warten
   leds(FARBE_AUS); //LEDs aus
 
@@ -631,7 +634,7 @@ void self_test(void) //Testprogramm
     delay(1000); //1s warten
     if(atecc != 0) //ATECC608 Fehler
     {
-      if(Serial)
+      if(serialport)
       {
         Serial.println("Error: ATECC608");
       }
@@ -645,7 +648,7 @@ void self_test(void) //Testprogramm
     }
     if(atwinc == WL_NO_SHIELD) //ATWINC1500 Fehler
     {
-      if(Serial)
+      if(serialport)
       {
         Serial.println("Error: ATWINC1500");
       }
@@ -839,7 +842,7 @@ void altitude_toffset(void) //Altitude und Temperaturoffset
   leds(FARBE_AUS); //LEDs aus
   value = value * 250;
   scd30.setAltitudeCompensation(value); //Meter ueber dem Meeresspiegel
-  if(Serial)
+  if(serialport)
   {
     Serial.print("Altitude: ");
     Serial.println(value, DEC);
@@ -898,7 +901,7 @@ void altitude_toffset(void) //Altitude und Temperaturoffset
   value = value * 2;
   scd30.setTemperatureOffset(value); //Temperaturoffset
   flash_settings.write(settings); //Einstellungen speichern
-  if(Serial)
+  if(serialport)
   {
     Serial.print("Temperature: ");
     Serial.println(value, DEC);
@@ -939,7 +942,7 @@ void calibration(void) //Kalibrierung
       {
         okay++;
       }
-      else if((co2 >= 300) && (co2 <= 1500) && 
+      else if((co2 >= 300) && (co2 <= 2000) && 
               (co2 >= (co2_last-30)) &&
               (co2 <= (co2_last+30))) //+/-30ppm Toleranz zum vorherigen Wert
       {
@@ -969,7 +972,7 @@ void calibration(void) //Kalibrierung
       }
       ws2812.show();
 
-      if(Serial)
+      if(serialport)
       {
         Serial.print("ok: ");
         Serial.println(okay);
@@ -983,7 +986,7 @@ void calibration(void) //Kalibrierung
     scd30.setForcedRecalibrationFactor(400); //400ppm = Frischluft
     leds(FARBE_BLAU);//LEDs blau
     buzzer(500); //500ms Buzzer an
-    if(Serial)
+    if(serialport)
     {
       Serial.println("Calibration OK");
     }
@@ -1165,16 +1168,12 @@ void setup()
   Wire1.begin();
   Wire1.setClock(100000); //100kHz ATECC
 
-  delay(250); //250ms warten
-
   //serielle Schnittstelle (USB)
   Serial.begin(BAUDRATE); //seriellen Port starten
   Serial.setTimeout(500); //500ms Timeout beim Lesen
   //while(!Serial); //warten auf USB-Verbindung
-  if(Serial)
-  {
-    Serial.println("\nCO2 Ampel v" VERSION);
-  }
+
+  delay(250); //250ms warten
 
   //ATECC608+ATWINC1500
   Wire1.beginTransmission(0x60); //Dummy Test
@@ -1186,10 +1185,6 @@ void setup()
     if(WiFi.status() != WL_NO_SHIELD) //ATWINC1500 gefunden
     {
       plus_version = 1;
-      if(Serial)
-      {
-        Serial.println("Plus Version");
-      }
     }
     else
     {
@@ -1207,10 +1202,6 @@ void setup()
   while(scd30.begin(Wire, AUTO_KALIBRIERUNG) == false)
   {
     status_led(1000); //Status-LED
-    if(Serial)
-    {
-      Serial.println("Error: CO2 sensor not found");
-    }
   }
 
   //Einstellungen
@@ -1260,6 +1251,17 @@ void setup()
     display.display();
   #endif
 
+  //USB-Verbindung
+  if(USBDevice.connected()) //(Serial) nutzt Flow-Control zur Erkennung
+  {
+    serialport = 1;
+    Serial.println("\nCO2 Ampel v" VERSION);
+    if(plus_version)
+    {
+      Serial.println("Plus Version");
+    }
+  }
+
   //Service-Menue
   if(run_menu)
   {
@@ -1277,7 +1279,7 @@ void setup()
       }
     }
     delay(2000); //2s warten
-    if(Serial)
+    if(serialport)
     {
       byte mac[6];
       WiFi.macAddress(mac);
@@ -1412,23 +1414,32 @@ void loop()
   {
     t_ampel = millis(); //Zeit speichern
 
+    //USB-Verbindung
+    if(USBDevice.connected()) //(Serial) nutzt Flow-Control zur Erkennung
+    {
+      serialport = 1;
+    }
+    else
+    {
+      serialport = 0;
+    }
+
+    //Sensordaten auslesen
+    if(scd30.dataAvailable())
+    {
+      co2  = scd30.getCO2();
+      temp = scd30.getTemperature();
+      humi = scd30.getHumidity();
+      show_data();
+    }
+
     co2_average = (co2_average + co2) / 2; //Berechnung jede Sekunde
-    
+
     status_led(2); //Status-LED
   }
   else if(overwrite == 0)
   {
     return;
-  }
-
-  //Sensordaten auslesen
-  if(scd30.dataAvailable())
-  {
-    co2  = scd30.getCO2();
-    temp = scd30.getTemperature();
-    humi = scd30.getHumidity();
-    
-    show_data();
   }
 
   //Ampel
