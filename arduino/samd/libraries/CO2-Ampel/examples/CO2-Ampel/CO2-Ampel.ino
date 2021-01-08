@@ -1327,27 +1327,23 @@ void ampel(unsigned int co2)
   // we map the CO2 settings to Hue values:
   //
   //      hue |
-  //  65536/2 |
-  //          |\
-  //          | \
-  //  (green) |  \
+  //  65536/3 |--+ (green)
   //          |   \
   // (yellow) |    \
   //          |     \
-  //  0 (red) +------+-----> CO2
-  //          0    1000ppm
+  //  0 (red) +--+---+-----> CO2
+  //          0 800 1200ppm
   //
-  if (co2 < START_ROT)
+  if (co2 < START_GELB)
   {
-    // co2 von 0ppm = hellblau, 333ppm = grün, 1000ppm = rot
-    hue = -(65536 / 2) / (START_ROT)*co2 + (65536 / 2);
+    hue = (65536 / 3); // grün
     ws2812.fill(ws2812.ColorHSV(hue), 0, NUM_LEDS);
-
-    blinken = 0;
   }
   else if (co2 < START_ROT_BLINKEN)
   {
-    ws2812.fill(FARBE_ROT, 0, NUM_LEDS);
+    hue = -(65536 / 3) / (START_ROT_BLINKEN - START_GELB) * co2 + 65536;
+    ws2812.fill(ws2812.ColorHSV(hue), 0, NUM_LEDS);
+
     blinken = 0;
   }
   else //rot blinken
@@ -1362,6 +1358,7 @@ void ampel(unsigned int co2)
     }
     blinken = 1 - blinken; //invertieren
   }
+
   ws2812.show(); //zeige Farbe
 
   // Kein Buzzer mehr, das nervt im Büro
