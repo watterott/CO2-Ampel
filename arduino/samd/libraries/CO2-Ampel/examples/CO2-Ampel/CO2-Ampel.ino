@@ -254,6 +254,7 @@ void serial_service(void)
         if(cmd == '1') //ein
         {
           remote_on = 1;
+          scd30.setMeasurementInterval(2); //2s (kleinster Intervall)
           buzzer(0); //Buzzer aus
           ws2812.setBrightness(30); //0...255
           leds(FARBE_VIOLETT); //LEDs violett
@@ -263,6 +264,7 @@ void serial_service(void)
         {
           remote_on = 0;
           calibration_done = 0;
+          scd30.setMeasurementInterval(INTERVALL); //setze Messinterval 
           ws2812.setBrightness(settings.brightness);
           Serial.println("OK");
         }
@@ -1418,10 +1420,6 @@ void loop()
     if(USBDevice.connected()) //(Serial) nutzt Flow-Control zur Erkennung
     {
       serialport = 1;
-    }
-    else
-    {
-      serialport = 0;
     }
 
     //Sensordaten auslesen
