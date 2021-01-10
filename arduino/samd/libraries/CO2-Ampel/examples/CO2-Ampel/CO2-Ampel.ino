@@ -391,8 +391,8 @@ void serial_service(void)
             scd30.setForcedRecalibrationFactor(400); //400ppm = Frischluft
             Serial.println("OK");
           }
-        break;
         }
+        break;
 
       case '1': //Range/Bereich 1
       case '2': //Range/Bereich 2
