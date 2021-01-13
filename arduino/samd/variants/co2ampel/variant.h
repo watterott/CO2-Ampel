@@ -127,7 +127,7 @@ static const uint8_t SCL1 = PIN_WIRE1_SCL;
 // ---
 #define PIN_USB_DM          (20u)
 #define PIN_USB_DP          (21u)
-#define PIN_USB_HOST_ENABLE (-1u)
+//#define PIN_USB_HOST_ENABLE (-1u)
 
 // Needed for WINC1501B (WiFi101) library
 // --------------------------------------
