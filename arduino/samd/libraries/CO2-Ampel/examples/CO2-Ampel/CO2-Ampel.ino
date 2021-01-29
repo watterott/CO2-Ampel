@@ -605,9 +605,41 @@ void webserver_service(void)
 }
 
 
+int check_i2c(Sercom *sercom, byte addr)
+{
+  int res = 1;
+  unsigned long t_start;
+
+  for(uint8_t t=3; t!=0; t--) //try 3 times
+  {
+    t_start = millis();
+    sercom->I2CM.ADDR.bit.ADDR = (addr<<1) | 0x00; //start transfer
+    while(!sercom->I2CM.INTFLAG.bit.MB)
+    {
+      if((millis()-t_start) > 30) //timeout after 30ms
+      {
+        break;
+      }
+    }
+    if(sercom->I2CM.STATUS.bit.RXNACK) //ack received
+    {
+      res = 0; //ok
+      break;
+    }
+    else
+    {
+      sercom->I2CM.CTRLA.bit.SWRST = 1; //reset
+      delay(10); //wait 10ms
+    }
+  }
+
+  return res;
+}
+
+
 void self_test(void) //Testprogramm
 {
-  unsigned int atecc=0, atwinc=0;
+  unsigned int atecc, atwinc;
 
   scd30.setMeasurementInterval(2); //2s (kleinster Intervall)
 
@@ -624,14 +656,7 @@ void self_test(void) //Testprogramm
   leds(FARBE_AUS); //LEDs aus
 
   //ATECC608+ATWINC1500 Test
-  if(digitalRead(8) && digitalRead(9)) //SDA2 + SCL2 high
-  {
-    Wire1.beginTransmission(0x60); //Dummy Test
-    Wire1.endTransmission();
-    Wire1.beginTransmission(0x60); //0x60 = ATECC608
-    delay(1); //1ms warten
-    atecc  = Wire1.endTransmission(); //0 = ok
-  }
+  atecc  = check_i2c(SERCOM2, 0x60); //0 = ok (Wire1 = SERCOM2)
   atwinc = WiFi.status(); //ATWINC1500
   if((atecc == 0) || (atwinc != WL_NO_SHIELD))
   {
@@ -1185,23 +1210,16 @@ void setup()
   delay(250); //250ms warten
 
   //ATECC608+ATWINC1500
-  if(digitalRead(8) && digitalRead(9)) //SDA2 + SCL2 high
+  if(check_i2c(SERCOM2, 0x60) == 0) //ATECC608 gefunden (Wire1 = SERCOM2)
   {
-    Wire1.beginTransmission(0x60); //Dummy Test
-    Wire1.endTransmission();
-    Wire1.beginTransmission(0x60); //0x60 = ATECC608
-    delay(1); //1ms warten
-    if(Wire1.endTransmission() == 0) //ATECC608 gefunden
+    if(WiFi.status() != WL_NO_SHIELD) //ATWINC1500 gefunden
     {
-      if(WiFi.status() != WL_NO_SHIELD) //ATWINC1500 gefunden
-      {
-        plus_version = 1;
-      }
-      else
-      {
-        plus_version = 0;
-        WiFi.end();
-      }
+      plus_version = 1;
+    }
+    else
+    {
+      plus_version = 0;
+      WiFi.end();
     }
   }
 
@@ -1380,7 +1398,7 @@ void ampel(unsigned int co2)
 void loop()
 {
   static unsigned int dunkel=0, sw=0;
-  static long long t_ampel=0, t_light=0, t_switch=0;
+  static unsigned long t_ampel=0, t_light=0, t_switch=0;
   unsigned int overwrite=0;
 
   //serielle Befehle verarbeiten
