@@ -150,4 +150,17 @@ void initVariant()
   
   PORT->Group[0].DIRSET.reg = PORT_PA10; // WINC Rst
   PORT->Group[0].OUTCLR.reg = PORT_PA10; // low
+  
+  // I2C pins
+  PORT->Group[0].PINCFG[PIN_PA08].reg |= PORT_PINCFG_PULLEN; // PA08 SDA1
+  PORT->Group[0].OUTSET.reg = PORT_PA08; // pull-up
+
+  PORT->Group[0].PINCFG[PIN_PA09].reg |= PORT_PINCFG_PULLEN; // PA09 SDA1
+  PORT->Group[0].OUTSET.reg = PORT_PA09; // pull-up
+
+  PORT->Group[0].PINCFG[PIN_PA12].reg |= PORT_PINCFG_PULLEN; // PA12 SDA2
+  PORT->Group[0].OUTSET.reg = PORT_PA12; // pull-up
+
+  PORT->Group[0].PINCFG[PIN_PA13].reg |= PORT_PINCFG_PULLEN; // PA13 SDA2
+  PORT->Group[0].OUTSET.reg = PORT_PA13; // pull-up
 }
