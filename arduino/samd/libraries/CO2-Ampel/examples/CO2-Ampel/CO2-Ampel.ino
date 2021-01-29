@@ -23,7 +23,7 @@
     5=X      - Range/Bereich 5 Start (400-40000) - rot + Buzzer
 */
 
-#define VERSION "10"
+#define VERSION "11"
 
 //--- CO2-Werte ---
 //Covid Praevention: https://www.umwelt-campus.de/forschung/projekte/iot-werkstatt/ideen-zur-corona-krise
@@ -607,7 +607,7 @@ void webserver_service(void)
 
 void self_test(void) //Testprogramm
 {
-  unsigned int atecc, atwinc;
+  unsigned int atecc=0, atwinc=0;
 
   scd30.setMeasurementInterval(2); //2s (kleinster Intervall)
 
@@ -624,11 +624,14 @@ void self_test(void) //Testprogramm
   leds(FARBE_AUS); //LEDs aus
 
   //ATECC608+ATWINC1500 Test
-  Wire1.beginTransmission(0x60); //Dummy Test
-  Wire1.endTransmission();
-  Wire1.beginTransmission(0x60); //0x60 = ATECC608
-  delay(1); //1ms warten
-  atecc  = Wire1.endTransmission(); //0 = ok
+  if(digitalRead(8) && digitalRead(9)) //SDA2 + SCL2 high
+  {
+    Wire1.beginTransmission(0x60); //Dummy Test
+    Wire1.endTransmission();
+    Wire1.beginTransmission(0x60); //0x60 = ATECC608
+    delay(1); //1ms warten
+    atecc  = Wire1.endTransmission(); //0 = ok
+  }
   atwinc = WiFi.status(); //ATWINC1500
   if((atecc == 0) || (atwinc != WL_NO_SHIELD))
   {
@@ -1141,6 +1144,10 @@ void setup()
   int run_menu=0;
 
   //setze Pins
+  pinMode(6, INPUT_PULLUP); //PA08 SDA1
+  pinMode(7, INPUT_PULLUP); //PA09 SCL1
+  pinMode(8, INPUT_PULLUP); //PA12 SDA2
+  pinMode(9, INPUT_PULLUP); //PA13 SCL2
   pinMode(PIN_LED, OUTPUT);
   digitalWrite(PIN_LED, LOW); //LED aus
   pinMode(PIN_BUZZER, OUTPUT);
@@ -1178,20 +1185,23 @@ void setup()
   delay(250); //250ms warten
 
   //ATECC608+ATWINC1500
-  Wire1.beginTransmission(0x60); //Dummy Test
-  Wire1.endTransmission();
-  Wire1.beginTransmission(0x60); //0x60 = ATECC608
-  delay(1); //1ms warten
-  if(Wire1.endTransmission() == 0) //ATECC608 gefunden
+  if(digitalRead(8) && digitalRead(9)) //SDA2 + SCL2 high
   {
-    if(WiFi.status() != WL_NO_SHIELD) //ATWINC1500 gefunden
+    Wire1.beginTransmission(0x60); //Dummy Test
+    Wire1.endTransmission();
+    Wire1.beginTransmission(0x60); //0x60 = ATECC608
+    delay(1); //1ms warten
+    if(Wire1.endTransmission() == 0) //ATECC608 gefunden
     {
-      plus_version = 1;
-    }
-    else
-    {
-      plus_version = 0;
-      WiFi.end();
+      if(WiFi.status() != WL_NO_SHIELD) //ATWINC1500 gefunden
+      {
+        plus_version = 1;
+      }
+      else
+      {
+        plus_version = 0;
+        WiFi.end();
+      }
     }
   }
 
