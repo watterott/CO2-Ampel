@@ -1,5 +1,7 @@
 # Third-Party Libraries
 * [Adafruit BusIO](https://github.com/adafruit/Adafruit_BusIO)
+* [Adafruit Sensor](https://github.com/adafruit/Adafruit_Sensor)
+* [Adafruit BMP280](https://github.com/adafruit/Adafruit_BMP280_Library)
 * [Adafruit GFX](https://github.com/adafruit/Adafruit-GFX-Library)
 * [Adafruit SSD1306](https://github.com/adafruit/Adafruit_SSD1306)
 * [Adafruit NeoPixel](https://github.com/adafruit/Adafruit_NeoPixel)
@@ -9,5 +11,6 @@
 * [Arduino MQTT-Client](https://github.com/arduino-libraries/ArduinoMqttClient)
 * [Cristian Maglie FlashStorage](https://github.com/cmaglie/FlashStorage)
 * [Jack Christensen JC_Button](https://github.com/JChristensen/JC_Button)
+* [Matthijs Kooijman LMIC (RFM9X)](https://github.com/matthijskooijman/arduino-lmic)
 * [Nicholas O'Leary PubSubClient](https://github.com/knolleary/pubsubclient)
 * [SparkFun SCD30](https://github.com/sparkfun/SparkFun_SCD30_Arduino_Library)
