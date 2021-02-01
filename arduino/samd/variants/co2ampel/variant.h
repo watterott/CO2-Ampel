@@ -37,8 +37,8 @@
 // ----
 
 // Number of pins defined in PinDescription array
-#define PINS_COUNT           (24u) // 24
-#define NUM_DIGITAL_PINS     (20u) // 20
+#define PINS_COUNT           (27u) // 27
+#define NUM_DIGITAL_PINS     (23u) // 23
 #define NUM_ANALOG_INPUTS    (2u)  // 2
 #define NUM_ANALOG_OUTPUTS   (0u)  // 0
 #define analogInputToDigitalPin(p)  ((p < 2u) ? (p) : -1)
@@ -73,7 +73,7 @@
 
 // LEDs
 // ----
-#define PIN_LED      (3u) // D7/PA27 (red)
+#define PIN_LED      (3u) // PA27 (red)
 #define LED_BUILTIN  PIN_LED
 
 // Analog pins
@@ -125,8 +125,8 @@ static const uint8_t SCL1 = PIN_WIRE1_SCL;
 
 // USB
 // ---
-#define PIN_USB_DM          (20u)
-#define PIN_USB_DP          (21u)
+#define PIN_USB_DM          (23u)
+#define PIN_USB_DP          (24u)
 //#define PIN_USB_HOST_ENABLE (-1u)
 
 // Needed for WINC1501B (WiFi101) library

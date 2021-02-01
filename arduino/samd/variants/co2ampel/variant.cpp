@@ -50,6 +50,9 @@ const PinDescription g_APinDescription[] = {
  | 17         | WINC MISO        |  PA19  |                 |   03   |     |     | X07 |     |  *1/03  |   3/03  |* TC3/1 | TCC0/3 | I2S/SD0  | AC/CMP1  |
  | 18         | WINC RX          |  PB23  |                 |   07   |     |     |     |     |         |  *5/03  |        |        |          | GCLK_IO1 |
  | 19         | WINC TX          |  PB22  |                 |   06   |     |     |     |     |         |  *5/02  |        |        |          | GCLK_IO0 |
+ | 20         | RFM9X CS         |  PA21  |                 |  *05   |     |     | X09 |     |   5/03  |   3/03  |        |*TCC0/7 | I2S/FS0  | GCLK_IO5 |
+ | 21         | RFM9X DIO0       |  PA14  |                 |   14   |     |     |     |     |   2/02  |   4/02  |  TC3/0 | TCC0/4 |          | GCLK_IO0 |
+ | 22         | RFM9X DIO1       |  PA15  |                 |   15   |     |     |     |     |  *2/03  |   4/03  |  TC3/1 | TCC0/5 |          | GCLK_IO1 |
  +------------+------------------+--------+-----------------+--------+-----+-----+-----+-----+---------+---------+--------+--------+----------+----------+
  */
   { PORTA,  2, PIO_ANALOG,  (PIN_ATTR_DIGITAL|PIN_ATTR_ANALOG /*DAC*/        ), ADC_Channel0,   NOT_ON_PWM, NOT_ON_TIMER, EXTERNAL_INT_2    }, // Light
@@ -77,6 +80,10 @@ const PinDescription g_APinDescription[] = {
                                                                                                                                                // RXPO=3 TXPO=1
   { PORTB, 23, PIO_SERCOM_ALT, (PIN_ATTR_DIGITAL                             ), No_ADC_Channel, NOT_ON_PWM, NOT_ON_TIMER, EXTERNAL_INT_NONE }, // RX XB1: SERCOM5/PAD[3]
   { PORTB, 22, PIO_SERCOM_ALT, (PIN_ATTR_DIGITAL                             ), No_ADC_Channel, NOT_ON_PWM, NOT_ON_TIMER, EXTERNAL_INT_NONE }, // TX XB1: SERCOM5/PAD[2]
+  
+  { PORTA, 21, PIO_DIGITAL, (PIN_ATTR_DIGITAL                                ), No_ADC_Channel, NOT_ON_PWM, NOT_ON_TIMER, EXTERNAL_INT_5    }, // RFM9X CS
+  { PORTA, 14, PIO_DIGITAL, (PIN_ATTR_DIGITAL                                ), No_ADC_Channel, NOT_ON_PWM, NOT_ON_TIMER, EXTERNAL_INT_NONE }, // RFM9X DIO0
+  { PORTA, 15, PIO_DIGITAL, (PIN_ATTR_DIGITAL                                ), No_ADC_Channel, NOT_ON_PWM, NOT_ON_TIMER, EXTERNAL_INT_NONE }, // RFM9X DIO1
 /*
  +------------+------------------+--------+-----------------+--------+-----------------------+---------+---------+--------+--------+----------+----------+
  | Pin number | Board pin        |  PIN   | Notes           | Peri.A |     Peripheral B      | Perip.C | Perip.D | Peri.E | Peri.F | Periph.G | Periph.H |
@@ -84,12 +91,12 @@ const PinDescription g_APinDescription[] = {
  |            |                  |        |                 |(EXTINT)|(AIN)|(AIN)|     |     | (x/PAD) | (x/PAD) | (x/WO) | (x/WO) |          |          |
  +------------+------------------+--------+-----------------+--------+-----+-----+-----+-----+---------+---------+--------+--------+----------+----------+
  |            |       USB        |        |                 |        |     |     |     |     |         |         |        |        |          |          |
- | 20         |                  |  PA24  | USB N           |   12   |     |     |     |     |   3/02  |   5/02  |  TC5/0 | TCC1/2 | USB/DM   |          |
- | 21         |                  |  PA25  | USB P           |   13   |     |     |     |     |   3/03  |   5/03  |  TC5/1 | TCC1/3 | USB/DP   |          |
+ | 23         |                  |  PA24  | USB N           |   12   |     |     |     |     |   3/02  |   5/02  |  TC5/0 | TCC1/2 | USB/DM   |          |
+ | 24         |                  |  PA25  | USB P           |   13   |     |     |     |     |   3/03  |   5/03  |  TC5/1 | TCC1/3 | USB/DP   |          |
  +------------+------------------+--------+-----------------+--------+-----+-----+-----+-----+---------+---------+--------+--------+----------+----------+
  |            | 32768Hz Crystal  |        |                 |        |     |     |     |     |         |         |        |        |          |          |
- | 22         |                  |  PA00  | XIN32           |   00   |     |     |     |     |         |   1/00  | TCC2/0 |        |          |          |
- | 23         |                  |  PA01  | XOUT32          |   01   |     |     |     |     |         |   1/01  | TCC2/1 |        |          |          |
+ | 25         |                  |  PA00  | XIN32           |   00   |     |     |     |     |         |   1/00  | TCC2/0 |        |          |          |
+ | 26         |                  |  PA01  | XOUT32          |   01   |     |     |     |     |         |   1/01  | TCC2/1 |        |          |          |
  +------------+------------------+--------+-----------------+--------+-----+-----+-----+-----+---------+---------+--------+--------+----------+----------+
  */
   { PORTA, 24, PIO_COM,     (PIN_ATTR_NONE                                   ), No_ADC_Channel, NOT_ON_PWM, NOT_ON_TIMER, EXTERNAL_INT_NONE }, // USB/DM
@@ -144,13 +151,19 @@ void initVariant()
   
   PORT->Group[1].DIRSET.reg = PORT_PB10; // WINC En
   PORT->Group[1].OUTCLR.reg = PORT_PB10; // low/off
-  
-  PORT->Group[1].DIRSET.reg = PORT_PB11; // WINC Wake
-  PORT->Group[1].OUTSET.reg = PORT_PB11; // high
-  
+
   PORT->Group[0].DIRSET.reg = PORT_PA10; // WINC Rst
   PORT->Group[0].OUTCLR.reg = PORT_PA10; // low
-  
+
+  PORT->Group[0].DIRSET.reg = PORT_PA18; // WINC CS
+  PORT->Group[0].OUTSET.reg = PORT_PA18; // high
+
+  PORT->Group[1].DIRSET.reg = PORT_PB11; // WINC Wake
+  PORT->Group[1].OUTSET.reg = PORT_PB11; // high
+
+  PORT->Group[0].DIRSET.reg = PORT_PA21; // RFM9X CS
+  PORT->Group[0].OUTSET.reg = PORT_PA21; // high
+
   // I2C pins
   PORT->Group[0].PINCFG[PIN_PA08].reg |= PORT_PINCFG_PULLEN; // PA08 SDA1
   PORT->Group[0].OUTSET.reg = PORT_PA08; // pull-up
