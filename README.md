@@ -14,4 +14,4 @@ The CO2-Ampel is a traffic light to show the carbon dioxide concentration in a r
 * USB-C connector for power and data/programming
 * USB CDC+MSC Bootloader (Arduino compatible)
 * Open-Source and released under the [Creative Commons Attribution Share-Alike License](https://creativecommons.org/licenses/by-sa/4.0/).
-* **[Documentation on learn.watterott.com](https://learn.watterott.com)**
+* **[Documentation on learn.watterott.com](https://learn.watterott.com/breakouts/co2-ampel/)**
