@@ -1,6 +1,7 @@
 ---
 name: Bug report
-about: Create a report to help us improve
+about: Create a bug report. For documentation issues or improvements please contact
+  us via mail.
 title: ''
 labels: ''
 assignees: ''
