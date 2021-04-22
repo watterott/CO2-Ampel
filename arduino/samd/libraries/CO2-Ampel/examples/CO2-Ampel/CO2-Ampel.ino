@@ -23,7 +23,7 @@
     5=X      - Range/Bereich 5 Start (400-40000) - rot + Buzzer
 */
 
-#define VERSION "11"
+#define VERSION "12"
 
 //--- CO2-Werte ---
 //Covid Praevention: https://www.umwelt-campus.de/forschung/projekte/iot-werkstatt/ideen-zur-corona-krise
@@ -43,8 +43,7 @@
 */
 
 //--- Messintervall ---
-#define INTERVALL            3 //2-1800s (normal)
-#define INTERVALL_DUNKEL    30 //2-1800s (bei Dunkelheit)
+#define INTERVALL          2 //2-1800s (normal)
 
 //--- Ampelhelligkeit (LEDs) ---
 #define HELLIGKEIT         180 //1-255 (255=100%, 179=70%)
@@ -254,7 +253,6 @@ void serial_service(void)
         if(cmd == '1') //ein
         {
           remote_on = 1;
-          scd30.setMeasurementInterval(2); //2s (kleinster Intervall)
           buzzer(0); //Buzzer aus
           ws2812.setBrightness(30); //0...255
           leds(FARBE_VIOLETT); //LEDs violett
@@ -264,7 +262,6 @@ void serial_service(void)
         {
           remote_on = 0;
           calibration_done = 0;
-          scd30.setMeasurementInterval(INTERVALL); //setze Messinterval 
           ws2812.setBrightness(settings.brightness);
           Serial.println("OK");
         }
@@ -641,8 +638,6 @@ void self_test(void) //Testprogramm
 {
   unsigned int atecc, atwinc;
 
-  scd30.setMeasurementInterval(2); //2s (kleinster Intervall)
-
   //Buzzer-Test
   buzzer(1000); //1s Buzzer an
 
@@ -769,8 +764,6 @@ void self_test(void) //Testprogramm
 
 void air_test(void) //Frischluft-Test
 {
-  scd30.setMeasurementInterval(2); //2s (kleinster Intervall)
-
   ws2812.fill(FARBE_WEISS, 0, 4); //LEDs weiss
   ws2812.show();
 
@@ -945,7 +938,9 @@ void calibration(void) //Kalibrierung
 {
   unsigned int abort=0, okay, co2_last;
 
-  scd30.setMeasurementInterval(2); //2s (kleinster Intervall)
+  //Der Messintervall während der Kalibrierung und im Betrieb sollte gleich sein.
+  //Unterschiedliche Intervalle können zu Abweichungen und schwankenden Messwerten führen.
+  //scd30.setMeasurementInterval(INTERVALL); //setze Messintervall
 
   ws2812.fill(FARBE_WEISS, 0, 4); //LEDs weiss
   ws2812.show();
@@ -1262,6 +1257,7 @@ void setup()
       }
     }
   }
+  scd30.setMeasurementInterval(INTERVALL); //setze Messintervall
   //scd30.setAmbientPressure(1000); //0 oder 700-1400, Luftdruck in hPa
   ws2812.setBrightness(settings.brightness); //0...255
 
@@ -1328,7 +1324,7 @@ void setup()
   }
 
   //Messung starten
-  scd30.setMeasurementInterval(INTERVALL); //setze Messinterval 
+  scd30.setMeasurementInterval(INTERVALL); //setze Messintervall
   delay(INTERVALL*1000UL); //Intervallsekunden warten
 
   return;
@@ -1491,7 +1487,6 @@ void loop()
         if(dunkel == 0)
         {
           dunkel = 1;
-          scd30.setMeasurementInterval(INTERVALL_DUNKEL); 
           ws2812.setBrightness(HELLIGKEIT_DUNKEL); //0...255
         }
       }
@@ -1500,7 +1495,6 @@ void loop()
         if(dunkel == 1)
         {
           dunkel = 0;
-          scd30.setMeasurementInterval(INTERVALL); 
           ws2812.setBrightness(settings.brightness); //0...255
         }
       }
