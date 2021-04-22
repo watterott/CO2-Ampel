@@ -97,8 +97,8 @@ typedef struct
   boolean valid;
   unsigned int brightness;
   unsigned int range[5];
-  char wifi_ssid[40];
-  char wifi_code[40];
+  char wifi_ssid[64+1];
+  char wifi_code[64+1];
 } SETTINGS;
 
 SETTINGS settings;
@@ -520,7 +520,7 @@ void webserver_service(void)
           if(client.available())
           {
             unsigned int req_data=0;
-            char req[2][40];
+            char req[2][64+1];
             req[0][0] = 0; //SSID
             req[1][0] = 0; //Code
             for(unsigned int r=0, i=0, last_c=0; client.available();)
@@ -573,10 +573,10 @@ void webserver_service(void)
           client.println("<br></span><br><hr><br>");
           client.print("<br><b>WiFi Login</b>");
           client.println("<form method=post>");
-          client.print("SSID <input name=1 size=20 maxlength=32 placeholder=SSID value='");
+          client.print("SSID <input name=1 size=20 maxlength=64 placeholder=SSID value='");
           client.print(settings.wifi_ssid); //SSID
           client.println("'><br>");
-          client.print("Code <input name=2 size=20 maxlength=32 placeholder=Password value='");
+          client.print("Code <input name=2 size=20 maxlength=64 placeholder=Password value='");
           //client.print(settings.wifi_code); //Passwort
           client.println("'><br>");
           client.println("<input type=submit value=Speichern> (Neustart erforderlich)");
