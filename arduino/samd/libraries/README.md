@@ -15,5 +15,6 @@
 * [Jack Christensen JC_Button](https://github.com/JChristensen/JC_Button)
 * [Matthijs Kooijman LMIC (RFM9X)](https://github.com/matthijskooijman/arduino-lmic)
 * [Nicholas O'Leary PubSubClient](https://github.com/knolleary/pubsubclient)
+* [Sensirion Arduino Core Library](https://github.com/Sensirion/arduino-core)
 * [Sensirion SCD4x](https://github.com/Sensirion/arduino-i2c-scd4x)
 * [SparkFun SCD30](https://github.com/sparkfun/SparkFun_SCD30_Arduino_Library)
