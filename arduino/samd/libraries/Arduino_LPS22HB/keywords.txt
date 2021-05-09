@@ -1,0 +1,26 @@
+##########################################
+# Syntax Coloring Map For Arduino_LPS22HB
+##########################################
+# Class
+#######################################
+
+Arduino_LPS22HB	KEYWORD1
+LPS22HB	KEYWORD1
+BARO	KEYWORD1
+
+#######################################
+# Methods and Functions 
+#######################################	
+
+begin	KEYWORD2
+end	KEYWORD2
+
+readPressure	KEYWORD2
+
+#######################################
+# Constants
+#######################################
+
+PSI	LITERAL1
+MILLIBAR	LITERAL1
+KILOPASCAL	LITERAL1

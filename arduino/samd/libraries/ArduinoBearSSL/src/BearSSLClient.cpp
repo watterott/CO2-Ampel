@@ -22,9 +22,12 @@
  * SOFTWARE.
  */
 
-#include <ArduinoECCX08.h>
-
 #include "ArduinoBearSSL.h"
+
+#ifndef ARDUINO_DISABLE_ECCX08
+#include <ArduinoECCX08.h>
+#endif
+
 #include "BearSSLTrustAnchors.h"
 #include "utility/eccX08_asn1.h"
 
@@ -44,25 +47,33 @@ BearSSLClient::BearSSLClient(Client* client, const br_x509_trust_anchor* myTAs, 
   _client(client),
   _TAs(myTAs),
   _numTAs(myNumTAs),
-  _noSNI(false)
+  _noSNI(false),
+  _ecChainLen(0)
 {
+#ifndef ARDUINO_DISABLE_ECCX08
+  _ecVrfy = eccX08_vrfy_asn1;
+  _ecSign = eccX08_sign_asn1;
+#else
   _ecVrfy = br_ecdsa_vrfy_asn1_get_default();
   _ecSign = br_ecdsa_sign_asn1_get_default();
+#endif
 
   _ecKey.curve = 0;
   _ecKey.x = NULL;
   _ecKey.xlen = 0;
 
-  _ecCert.data = NULL;
-  _ecCert.data_len = 0;
+  for (size_t i = 0; i < BEAR_SSL_CLIENT_CHAIN_SIZE; i++) {
+    _ecCert[i].data = NULL;
+    _ecCert[i].data_len = 0;
+  }
   _ecCertDynamic = false;
 }
 
 BearSSLClient::~BearSSLClient()
 {
-  if (_ecCertDynamic && _ecCert.data) {
-    free(_ecCert.data);
-    _ecCert.data = NULL;
+  if (_ecCertDynamic && _ecCert[0].data) {
+    free(_ecCert[0].data);
+    _ecCert[0].data = NULL;
   }
 }
 
@@ -207,7 +218,19 @@ void BearSSLClient::setEccSign(br_ecdsa_sign sign)
 
 void BearSSLClient::setEccCert(br_x509_certificate cert)
 {
-  _ecCert = cert;
+  _ecCert[0] = cert;
+  _ecChainLen = 1;
+}
+
+void BearSSLClient::setEccChain(br_x509_certificate* chain, size_t chainLen)
+{
+  if (chainLen > BEAR_SSL_CLIENT_CHAIN_SIZE)
+    return;
+
+  for (size_t i = 0; i < chainLen; i++) {
+    _ecCert[i] = chain[i];
+  }
+  _ecChainLen = chainLen;
 }
 
 void BearSSLClient::setEccSlot(int ecc508KeySlot, const byte cert[], int certLength)
@@ -217,12 +240,18 @@ void BearSSLClient::setEccSlot(int ecc508KeySlot, const byte cert[], int certLen
   _ecKey.x = (unsigned char*)ecc508KeySlot;
   _ecKey.xlen = 32;
 
-  _ecCert.data = (unsigned char*)cert;
-  _ecCert.data_len = certLength;
+  _ecCert[0].data = (unsigned char*)cert;
+  _ecCert[0].data_len = certLength;
+  _ecChainLen = 1;
   _ecCertDynamic = false;
 
+#ifndef ARDUINO_DISABLE_ECCX08
   _ecVrfy = eccX08_vrfy_asn1;
   _ecSign = eccX08_sign_asn1;
+#else
+  _ecVrfy = br_ecdsa_vrfy_asn1_get_default();
+  _ecSign = br_ecdsa_sign_asn1_get_default();
+#endif
 }
 
 void BearSSLClient::setEccSlot(int ecc508KeySlot, const char cert[])
@@ -233,14 +262,15 @@ void BearSSLClient::setEccSlot(int ecc508KeySlot, const char cert[])
   size_t certLen = strlen(cert);
 
   // free old data
-  if (_ecCertDynamic && _ecCert.data) {
-    free(_ecCert.data);
-    _ecCert.data = NULL;
+  if (_ecCertDynamic && _ecCert[0].data) {
+    free(_ecCert[0].data);
+    _ecCert[0].data = NULL;
   }
 
   // assume the decoded cert is 3/4 the length of the input
-  _ecCert.data = (unsigned char*)malloc(((certLen * 3) + 3) / 4);
-  _ecCert.data_len = 0;
+  _ecCert[0].data = (unsigned char*)malloc(((certLen * 3) + 3) / 4);
+  _ecCert[0].data_len = 0;
+  _ecChainLen = 1;
 
   br_pem_decoder_init(&pemDecoder);
 
@@ -256,9 +286,9 @@ void BearSSLClient::setEccSlot(int ecc508KeySlot, const char cert[])
         break;
 
       case BR_PEM_END_OBJ:
-        if (_ecCert.data_len) {
+        if (_ecCert[0].data_len) {
           // done
-          setEccSlot(ecc508KeySlot, _ecCert.data, _ecCert.data_len);
+          setEccSlot(ecc508KeySlot, _ecCert[0].data, _ecCert[0].data_len);
           _ecCertDynamic = true;
           return;
         }
@@ -266,8 +296,55 @@ void BearSSLClient::setEccSlot(int ecc508KeySlot, const char cert[])
 
       case BR_PEM_ERROR:
         // failure
-        free(_ecCert.data);
+        free(_ecCert[0].data);
         setEccSlot(ecc508KeySlot, NULL, 0);
+        return;
+    }
+  }
+}
+
+void BearSSLClient::setEccCertParent(const char cert[])
+{
+  // try to decode the cert
+  br_pem_decoder_context pemDecoder;
+
+  size_t certLen = strlen(cert);
+
+  // free old data
+  if (_ecCertDynamic && _ecCert[1].data) {
+    free(_ecCert[1].data);
+    _ecCert[1].data = NULL;
+  }
+
+  // assume the decoded cert is 3/4 the length of the input
+  _ecCert[1].data = (unsigned char*)malloc(((certLen * 3) + 3) / 4);
+  _ecCert[1].data_len = 0;
+  _ecChainLen = 2;
+
+  br_pem_decoder_init(&pemDecoder);
+
+  while (certLen) {
+    size_t len = br_pem_decoder_push(&pemDecoder, cert, certLen);
+
+    cert += len;
+    certLen -= len;
+
+    switch (br_pem_decoder_event(&pemDecoder)) {
+      case BR_PEM_BEGIN_OBJ:
+        br_pem_decoder_setdest(&pemDecoder, BearSSLClient::parentAppendCert, this);
+        break;
+
+      case BR_PEM_END_OBJ:
+        if (_ecCert[1].data_len) {
+          // done
+          _ecCertDynamic = true;
+          return;
+        }
+        break;
+
+      case BR_PEM_ERROR:
+        // failure
+        free(_ecCert[1].data);
         return;
     }
   }
@@ -288,12 +365,16 @@ int BearSSLClient::connectSSL(const char* host)
   // inject entropy in engine
   unsigned char entropy[32];
 
+#ifndef ARDUINO_DISABLE_ECCX08
   if (!ECCX08.begin() || !ECCX08.locked() || !ECCX08.random(entropy, sizeof(entropy))) {
+#endif
     // no ECCX08 or random failed, fallback to pseudo random
     for (size_t i = 0; i < sizeof(entropy); i++) {
       entropy[i] = random(0, 255);
     }
+#ifndef ARDUINO_DISABLE_ECCX08
   }
+#endif
   br_ssl_engine_inject_entropy(&_sc.eng, entropy, sizeof(entropy));
 
   // add custom ECDSA vfry and EC sign
@@ -301,8 +382,8 @@ int BearSSLClient::connectSSL(const char* host)
   br_x509_minimal_set_ecdsa(&_xc, br_ssl_engine_get_ec(&_sc.eng), br_ssl_engine_get_ecdsa(&_sc.eng));
 
   // enable client auth
-  if (_ecCert.data_len) {
-    br_ssl_client_set_single_ec(&_sc, &_ecCert, 1, &_ecKey, BR_KEYTYPE_KEYX | BR_KEYTYPE_SIGN, BR_KEYTYPE_EC, br_ec_get_default(), _ecSign);
+  if (_ecCert[0].data_len) {
+    br_ssl_client_set_single_ec(&_sc, _ecCert, _ecChainLen, &_ecKey, BR_KEYTYPE_KEYX | BR_KEYTYPE_SIGN, BR_KEYTYPE_EC, br_ec_get_default(), _ecSign);
   }
 
   // set the hostname used for SNI
@@ -401,6 +482,15 @@ void BearSSLClient::clientAppendCert(void *ctx, const void *data, size_t len)
 {
   BearSSLClient* c = (BearSSLClient*)ctx;
 
-  memcpy(&c->_ecCert.data[c->_ecCert.data_len], data, len);
-  c->_ecCert.data_len += len;
+  memcpy(&c->_ecCert[0].data[c->_ecCert[0].data_len], data, len);
+  c->_ecCert[0].data_len += len;
 }
+
+void BearSSLClient::parentAppendCert(void *ctx, const void *data, size_t len)
+{
+  BearSSLClient* c = (BearSSLClient*)ctx;
+
+  memcpy(&c->_ecCert[1].data[c->_ecCert[1].data_len], data, len);
+  c->_ecCert[1].data_len += len;
+}
+
