@@ -15,11 +15,11 @@
     T=X      - Temperaturoffset in °C (0-20)
     A=X      - Altitude/Hoehe ueber dem Meeresspiegel (0-3000)
     C=1      - Calibration/Kalibrierung auf 400ppm (mind. 2min Betrieb an Frischluft vor Befehl)
-    1=X      - Range/Bereich 1 Start (400-40000) - gruen
-    2=X      - Range/Bereich 2 Start (400-40000) - gelb
-    3=X      - Range/Bereich 3 Start (400-40000) - rot
-    4=X      - Range/Bereich 4 Start (400-40000) - rot blinken
-    5=X      - Range/Bereich 5 Start (400-40000) - rot + Buzzer
+    1=X      - Range/Bereich 1 Start (400-10000) - gruen
+    2=X      - Range/Bereich 2 Start (400-10000) - gelb
+    3=X      - Range/Bereich 3 Start (400-10000) - rot
+    4=X      - Range/Bereich 4 Start (400-10000) - rot blinken
+    5=X      - Range/Bereich 5 Start (400-10000) - rot + Buzzer
 */
 
 #define VERSION "13"
@@ -135,7 +135,7 @@ WiFiServer server(80); //Webserver Port 80
 unsigned int features=0, remote_on=0;
 unsigned int co2=STARTWERT, co2_average=STARTWERT;
 unsigned int light=1024;
-float temp=0, humi=0, pres=0;
+float temp=20, humi=50, pres=1000;
 
 
 void leds(uint32_t color)
@@ -228,7 +228,7 @@ void show_data(void) //Daten anzeigen
     if(features & (FEATURE_LPS22HB|FEATURE_BMP280))
     {
       Serial.print("p: ");     //Druck
-      Serial.println(pres);    //Wert in Pa
+      Serial.println(pres);    //Wert in hPa
     }
     Serial.println();
   }
@@ -439,7 +439,7 @@ void serial_service(void)
         {
           tmp[i] = 0;
           sscanf(tmp, "%d", &val);
-          if((val >= 400) && (val <= 40000))
+          if((val >= 400) && (val <= 10000))
           {
             settings.range[cmd-'1'] = val;
             Serial.println("OK");
@@ -628,7 +628,7 @@ void webserver_service(void)
           client.println(humi, 1);
           if(features & (FEATURE_LPS22HB|FEATURE_BMP280))
           {
-            client.print("<br>Druck (Pa): ");
+            client.print("<br>Druck (hPa): ");
             client.println(pres, 1);
           }
           client.println("<br></span><br><hr><br>");
@@ -783,7 +783,7 @@ void self_test(void) //Testprogramm
         new_data = 1;
       }
     }
-    else if(features & FEATURE_SCD4X)
+    if(features & FEATURE_SCD4X)
     {
       uint16_t v_co2;
       float v_temp;
@@ -795,6 +795,16 @@ void self_test(void) //Testprogramm
         humi = v_humi;
         new_data = 1;
       }
+    }
+    if(features & FEATURE_LPS22HB)
+    {
+      pres = lps22.readPressure()*10; //kPa -> hPa
+      temp = lps22.readTemperature();
+    }
+    if(features & FEATURE_BMP280)
+    {
+      pres = bmp280.readPressure()/100; //Pa -> hPa
+      temp = bmp280.readTemperature();
     }
 
     if(new_data)
@@ -812,7 +822,8 @@ void self_test(void) //Testprogramm
         ws2812.setPixelColor(1, FARBE_AUS);
       }
 
-      if((temp >= 5) && (temp <= 35)) //5-35°C
+      if(((temp >=   5) && (temp <=   35)) && //5-35°C
+         ((pres >= 700) && (pres <= 1400)))   //700-1400 hPa
       {
         okay |= (1<<2);
         ws2812.setPixelColor(2, FARBE_GRUEN);
@@ -1750,12 +1761,12 @@ void loop()
         humi = scd30.getHumidity();
         if(features & FEATURE_LPS22HB)
         {
-          pres = lps22.readPressure()*1000; //kPa
+          pres = lps22.readPressure()*10; //kPa -> hPa
           temp = lps22.readTemperature();
         }
         if(features & FEATURE_BMP280)
         {
-          pres = bmp280.readPressure(); //Pa
+          pres = bmp280.readPressure()/100; //Pa -> hPa
           temp = bmp280.readTemperature();
         }
         show_data();
@@ -1773,13 +1784,13 @@ void loop()
         humi = v_humi;
         if(features & FEATURE_LPS22HB)
         {
-          pres = lps22.readPressure()*1000; //kPa
-          //temp = lps22.readTemperature();
+          pres = lps22.readPressure()*10; //kPa -> hPa
+          temp = lps22.readTemperature();
         }
         if(features & FEATURE_BMP280)
         {
-          pres = bmp280.readPressure(); //Pa
-          //temp = bmp280.readTemperature();
+          pres = bmp280.readPressure()/100; //Pa -> hPa
+          temp = bmp280.readTemperature();
         }
         show_data();
       }
