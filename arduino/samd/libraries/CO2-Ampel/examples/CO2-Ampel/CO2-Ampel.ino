@@ -22,7 +22,7 @@
     5=X      - Range/Bereich 5 Start (400-10000) - rot + Buzzer
 */
 
-#define VERSION "13"
+#define VERSION "14"
 
 //--- CO2-Werte ---
 //Covid Praevention: https://www.umwelt-campus.de/forschung/projekte/iot-werkstatt/ideen-zur-corona-krise
@@ -58,10 +58,11 @@
 #define WIFI_CODE          "" //WiFi Passwort
 
 //--- Allgemein ---
-#define TEMP_OFFSET        4 //Temperaturoffset in °C (0-20)
-#define TEMP_OFFSET_WIFI   8 //Temperaturoffset in °C (0-20)
 #define AMPEL_DURCHSCHNITT 1 //1 = CO2 Durchschnitt fuer Ampel verwenden
 #define AUTO_KALIBRIERUNG  0 //1 = automatische Kalibrierung (ASC) an (erfordert 7 Tage Dauerbetrieb mit 1h Frischluft pro Tag)
+#define TEMP_OFFSET        4 //Temperaturoffset in °C (0-20)
+#define TEMP_OFFSET_WIFI   8 //Temperaturoffset in °C (0-20)
+#define DRUCK_DIFF         5 //Druckunterschied in hPa (5-20)
 #define BAUDRATE           9600 //9600 Baud
 
 #define STARTWERT          500 //500ppm, CO2-Startwert
@@ -133,9 +134,8 @@ Adafruit_SSD1306 display(128, 64); //128x64 Pixel
 WiFiServer server(80); //Webserver Port 80
 
 unsigned int features=0, remote_on=0;
-unsigned int co2=STARTWERT, co2_average=STARTWERT;
-unsigned int light=1024;
-float temp=20, humi=50, pres=1000;
+unsigned int co2_value=STARTWERT, co2_average=STARTWERT, light_value=1024;
+float temp_value=20, humi_value=50, pres_value=1013, pres_last=1013;
 
 
 void leds(uint32_t color)
@@ -213,22 +213,106 @@ unsigned int light_sensor(void) //Auslesen des Lichtsensors
 }
 
 
+float co2_sensor(void)
+{
+  return co2_value;
+}
+
+
+float temp_sensor(void)
+{
+  return temp_value;
+}
+
+
+float humi_sensor(void)
+{
+  return humi_value;
+}
+
+
+float pres_sensor(void)
+{
+  return pres_value;
+}
+
+
+unsigned int check_sensors(void) //Sensoren auslesen
+{
+  if(features & FEATURE_SCD30)
+  {
+    if(scd30.dataAvailable())
+    {
+      co2_value  = scd30.getCO2();
+      temp_value = scd30.getTemperature();
+      humi_value = scd30.getHumidity();
+      if(features & FEATURE_LPS22HB)
+      {
+        pres_value = lps22.readPressure()*10; //kPa -> hPa
+        temp_value = lps22.readTemperature();
+      }
+      if(features & FEATURE_BMP280)
+      {
+        pres_value = bmp280.readPressure()/100; //Pa -> hPa
+        temp_value = bmp280.readTemperature();
+      }
+      if((pres_value < (pres_last-DRUCK_DIFF)) || (pres_value > (pres_last+DRUCK_DIFF)))
+      {
+        pres_last = pres_value;
+        scd30.setAmbientPressure(pres_value); //hPa=mBar
+      }
+      return 1;
+    }
+  }
+  else if(features & FEATURE_SCD4X)
+  {
+    uint16_t v_co2;
+    float v_temp;
+    float v_humi;
+    if(scd4x.readMeasurement(v_co2, v_temp, v_humi) == 0)
+    {
+      co2_value  = v_co2;
+      temp_value = v_temp;
+      humi_value = v_humi;
+      if(features & FEATURE_LPS22HB)
+      {
+        pres_value = lps22.readPressure()*10; //kPa -> hPa
+        temp_value = lps22.readTemperature();
+      }
+      if(features & FEATURE_BMP280)
+      {
+        pres_value = bmp280.readPressure()/100; //Pa -> hPa
+        temp_value = bmp280.readTemperature();
+      }
+      if((pres_value < (pres_last-DRUCK_DIFF)) || (pres_value > (pres_last+DRUCK_DIFF)))
+      {
+        pres_last = pres_value;
+        scd4x.setAmbientPressure(pres_value); //hPa=mBar
+      }
+      return 1;
+    }
+  }
+
+  return 0;
+}
+
+
 void show_data(void) //Daten anzeigen
 {
   if(features & FEATURE_USB)
   {
-    Serial.print("c: ");     //CO2
-    Serial.println(co2);     //Wert in ppm
-    Serial.print("t: ");     //Temperatur
-    Serial.println(temp, 1); //Wert in °C
-    Serial.print("h: ");     //Humidity/Luftfeuchte
-    Serial.println(humi, 1); //Wert in %
-    Serial.print("l: ");     //Licht
-    Serial.println(light);
+    Serial.print("c: ");           //CO2
+    Serial.println(co2_value);     //Wert in ppm
+    Serial.print("t: ");           //Temperatur
+    Serial.println(temp_value, 1); //Wert in °C
+    Serial.print("h: ");           //Humidity/Luftfeuchte
+    Serial.println(humi_value, 1); //Wert in %
+    Serial.print("l: ");           //Licht
+    Serial.println(light_value);
     if(features & (FEATURE_LPS22HB|FEATURE_BMP280))
     {
-      Serial.print("p: ");     //Druck
-      Serial.println(pres);    //Wert in hPa
+      Serial.print("p: ");         //Druck
+      Serial.println(pres_value);  //Wert in hPa
     }
     Serial.println();
   }
@@ -238,7 +322,7 @@ void show_data(void) //Daten anzeigen
     display.clearDisplay();
     display.setTextSize(5);
     display.setCursor(5,5);
-    display.println(co2);
+    display.println(co2_value);
     display.setTextSize(1);
     display.setCursor(5,56);
     display.println("CO2 Level in ppm");
@@ -621,15 +705,15 @@ void webserver_service(void)
           client.println("<body>");
           client.println("<br><span style='font-size:3em'>");
           client.print("CO2 (ppm): ");
-          client.println(co2);
+          client.println(co2_value);
           client.print("<br>Temperatur (C): ");
-          client.println(temp, 1);
+          client.println(temp_value, 1);
           client.print("<br>Luftfeuchte (%): ");
-          client.println(humi, 1);
+          client.println(humi_value, 1);
           if(features & (FEATURE_LPS22HB|FEATURE_BMP280))
           {
             client.print("<br>Druck (hPa): ");
-            client.println(pres, 1);
+            client.println(pres_value, 1);
           }
           client.println("<br></span><br><hr><br>");
           client.print("<br><b>WiFi Login</b>");
@@ -696,7 +780,9 @@ int check_i2c(Sercom *sercom, byte addr)
 
 void self_test(void) //Testprogramm
 {
-  unsigned int atecc, atwinc, new_data;
+  unsigned int atecc, atwinc;
+  unsigned int co2, light;
+  float temp, humi, pres;
 
   //Buzzer-Test
   buzzer(1000); //1s Buzzer an
@@ -749,7 +835,6 @@ void self_test(void) //Testprogramm
 
   //Sensor-Test
   ws2812.fill(FARBE_AUS, 0, 4); //LEDs aus
-  new_data = 0;
   for(unsigned int okay=0; okay < 15;)
   {
     if(digitalRead(PIN_SWITCH) == 0) //Taster gedrueckt?
@@ -773,44 +858,13 @@ void self_test(void) //Testprogramm
       ws2812.setPixelColor(0, FARBE_AUS);
     }
 
-    if(features & FEATURE_SCD30)
+    if(check_sensors())
     {
-      if(scd30.dataAvailable())
-      {
-        co2  = scd30.getCO2();
-        temp = scd30.getTemperature();
-        humi = scd30.getHumidity();
-        new_data = 1;
-      }
-    }
-    if(features & FEATURE_SCD4X)
-    {
-      uint16_t v_co2;
-      float v_temp;
-      float v_humi;
-      if(scd4x.readMeasurement(v_co2, v_temp, v_humi) == 0)
-      {
-        co2  = v_co2;
-        temp = v_temp;
-        humi = v_humi;
-        new_data = 1;
-      }
-    }
-    if(features & FEATURE_LPS22HB)
-    {
-      pres = lps22.readPressure()*10; //kPa -> hPa
-      temp = lps22.readTemperature();
-    }
-    if(features & FEATURE_BMP280)
-    {
-      pres = bmp280.readPressure()/100; //Pa -> hPa
-      temp = bmp280.readTemperature();
-    }
-
-    if(new_data)
-    {
-      new_data = 0;
-
+      co2  = co2_sensor();
+      temp = temp_sensor();
+      humi = humi_sensor();
+      pres = pres_sensor();
+        
       if((co2 >= 100) && (co2 <= 1500)) //100-1500ppm
       {
         okay |= (1<<1);
@@ -859,7 +913,7 @@ void self_test(void) //Testprogramm
 
 void air_test(void) //Frischluft-Test
 {
-  unsigned int new_data=0;
+  unsigned int co2;
 
   ws2812.fill(FARBE_WEISS, 0, 4); //LEDs weiss
   ws2812.show();
@@ -870,36 +924,12 @@ void air_test(void) //Frischluft-Test
     {
       break; //Abbruch
     }
-    
+
     status_led(200); //Status-LED
 
-    if(features & FEATURE_SCD30)
+    if(check_sensors())
     {
-      if(scd30.dataAvailable())
-      {
-        co2  = scd30.getCO2();
-        temp = scd30.getTemperature();
-        humi = scd30.getHumidity();
-        new_data = 1;
-      }
-    }
-    else if(features & FEATURE_SCD4X)
-    {
-      uint16_t v_co2;
-      float v_temp;
-      float v_humi;
-      if(scd4x.readMeasurement(v_co2, v_temp, v_humi) == 0)
-      {
-        co2  = v_co2;
-        temp = v_temp;
-        humi = v_humi;
-        new_data = 1;
-      }
-    }
-
-    if(new_data)
-    {
-      new_data = 0;
+      co2 = co2_sensor();
 
       if(co2 < 300)
       {
@@ -1089,7 +1119,7 @@ void altitude_toffset(void) //Altitude und Temperaturoffset
 
 void calibration(void) //Kalibrierung
 {
-  unsigned int abort=0, okay, interval=INTERVALL, co2_last, new_data;
+  unsigned int abort=0, okay, interval=INTERVALL, co2, co2_last;
 
   //Der Messintervall während der Kalibrierung und im Betrieb sollte gleich sein.
   //Unterschiedliche Intervalle können zu Abweichungen und schwankenden Messwerten führen.
@@ -1104,8 +1134,7 @@ void calibration(void) //Kalibrierung
   }
 
   //Kalibrierung
-  co2_last = co2;
-  new_data = 0;
+  co2 = co2_last = co2_sensor();
   for(okay=0; okay < (180/interval);) //mindestens 3 Minuten
   {
     if(digitalRead(PIN_SWITCH) == 0) //Taster gedrueckt?
@@ -1115,35 +1144,10 @@ void calibration(void) //Kalibrierung
     }
     
     status_led(200); //Status-LED
-
-    if(features & FEATURE_SCD30)
+    
+    if(check_sensors())
     {
-      if(scd30.dataAvailable())
-      {
-        co2  = scd30.getCO2();
-        temp = scd30.getTemperature();
-        humi = scd30.getHumidity();
-        new_data = 1;
-      }
-    }
-    else if(features & FEATURE_SCD4X)
-    {
-      uint16_t v_co2;
-      float v_temp;
-      float v_humi;
-      if(scd4x.readMeasurement(v_co2, v_temp, v_humi) == 0)
-      {
-        co2  = v_co2;
-        temp = v_temp;
-        humi = v_humi;
-        new_data = 1;
-      }
-    }
-
-    if(new_data)
-    {
-      new_data = 0;
-
+      co2 = co2_sensor();
       if(co2 < 300) //Sensor falsch kalibriert
       {
         okay++;
@@ -1276,9 +1280,6 @@ void menu(void)
 
   ws2812.setBrightness(settings.brightness); //0...255
   leds(ws2812.Color(20,20,20));//LEDs weiss
-  co2 = STARTWERT;
-  co2_average = STARTWERT;
-  light = 1024;
 
   return;
 }
@@ -1618,6 +1619,7 @@ void setup()
   }
 
   //Messung starten
+  co2_value = co2_average = STARTWERT;
   if(features & FEATURE_SCD30)
   {
     scd30.setMeasurementInterval(INTERVALL); //setze Messintervall
@@ -1694,7 +1696,7 @@ void ampel(unsigned int co2)
 
 void loop()
 {
-  static unsigned int dunkel=0, sw=0;
+  static unsigned int dark=0, sw=0;
   static unsigned long t_ampel=0, t_light=0, t_switch=0;
   unsigned int overwrite=0;
 
@@ -1752,51 +1754,12 @@ void loop()
     //}
 
     //Sensordaten auslesen
-    if(features & FEATURE_SCD30)
+    if(check_sensors())
     {
-      if(scd30.dataAvailable())
-      {
-        co2  = scd30.getCO2();
-        temp = scd30.getTemperature();
-        humi = scd30.getHumidity();
-        if(features & FEATURE_LPS22HB)
-        {
-          pres = lps22.readPressure()*10; //kPa -> hPa
-          temp = lps22.readTemperature();
-        }
-        if(features & FEATURE_BMP280)
-        {
-          pres = bmp280.readPressure()/100; //Pa -> hPa
-          temp = bmp280.readTemperature();
-        }
-        show_data();
-      }
-    }
-    else if(features & FEATURE_SCD4X)
-    {
-      uint16_t v_co2;
-      float v_temp;
-      float v_humi;
-      if(scd4x.readMeasurement(v_co2, v_temp, v_humi) == 0)
-      {
-        co2  = v_co2;
-        temp = v_temp;
-        humi = v_humi;
-        if(features & FEATURE_LPS22HB)
-        {
-          pres = lps22.readPressure()*10; //kPa -> hPa
-          temp = lps22.readTemperature();
-        }
-        if(features & FEATURE_BMP280)
-        {
-          pres = bmp280.readPressure()/100; //Pa -> hPa
-          temp = bmp280.readTemperature();
-        }
-        show_data();
-      }
+      show_data();
     }
 
-    co2_average = (co2_average + co2) / 2; //Berechnung jede Sekunde
+    co2_average = (co2_average + co2_sensor()) / 2; //Berechnung jede Sekunde
 
     status_led(2); //Status-LED
   }
@@ -1811,7 +1774,7 @@ void loop()
     #if AMPEL_DURCHSCHNITT > 0
       ampel(co2_average);
     #else
-      ampel(co2);
+      ampel(co2_value);
     #endif
   }
 
@@ -1822,20 +1785,20 @@ void loop()
     {
       t_light = millis(); //Zeit speichern
 
-      light = light_sensor();
-      if(light < LICHT_DUNKEL)
+      light_value = light_sensor();
+      if(light_value < LICHT_DUNKEL)
       {
-        if(dunkel == 0)
+        if(dark == 0)
         {
-          dunkel = 1;
+          dark = 1;
           ws2812.setBrightness(HELLIGKEIT_DUNKEL); //0...255
         }
       }
       else
       {
-        if(dunkel == 1)
+        if(dark == 1)
         {
-          dunkel = 0;
+          dark = 0;
           ws2812.setBrightness(settings.brightness); //0...255
         }
       }
