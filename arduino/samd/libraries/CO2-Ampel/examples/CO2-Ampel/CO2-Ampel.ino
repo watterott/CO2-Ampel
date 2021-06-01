@@ -1788,7 +1788,10 @@ void loop()
     if(check_sensors())
     {
       show_data();
-      status_led(2); //Status-LED
+      if(dark == 0)
+      {
+        status_led(2); //Status-LED
+      }
     }
 
     co2_average = (co2_average + co2_sensor()) / 2; //Berechnung jede Sekunde
