@@ -80,7 +80,7 @@
 #define ADDR_SCD30         0x61 //0x61, Wire=SERCOM0
 #define ADDR_SCD4X         0x62 //0x62, Wire=SERCOM0
 #define ADDR_LPS22HB       0x5C //0x5C, Wire1=SERCOM2
-#define ADDR_BMP280        0x77 //0x77 or 0x76, Wire1=SERCOM2
+#define ADDR_BMP280        0x76 //0x76 or 0x77, Wire1=SERCOM2
 #define ADDR_ATECC608      0x60 //0x60, Wire1=SERCOM2
 
 //--- Features ---
@@ -755,6 +755,8 @@ int check_i2c(Sercom *sercom, byte addr)
   for(int t=3; (t!=0) && (res==0); t--) //try 3 times
   {
     t_start = millis();
+    sercom->I2CM.CTRLA.bit.ENABLE = 1; //enable master mode
+    delay(2); //wait 2ms
     sercom->I2CM.ADDR.bit.ADDR = (addr<<1) | 0x00; //start transfer
     while(1)
     {
@@ -773,6 +775,28 @@ int check_i2c(Sercom *sercom, byte addr)
       }
     }
   }
+
+  /*
+  if(res == 0)
+  {
+    if(sercom == SERCOM1)
+    {
+      Wire.beginTransmission(addr);
+      if(Wire.endTransmission() == 0)
+      {
+        res = 1; //ok
+      }
+    }
+    else if(sercom == SERCOM2)
+    {
+      Wire1.beginTransmission(addr);
+      if(Wire1.endTransmission() == 0)
+      {
+        res = 1; //ok
+      }
+    }
+  }
+  */
 
   return res;
 }
@@ -1430,6 +1454,13 @@ void setup()
       features |= FEATURE_BMP280;
     }
   }
+  else if(check_i2c(SERCOM2, ADDR_BMP280+1)) //BMP280 gefunden
+  {
+    if(bmp280.begin(ADDR_BMP280+1))
+    {
+      features |= FEATURE_BMP280;
+    }
+  }
 
   //SSD1306
   if(check_i2c(SERCOM0, ADDR_SSD1306)) //SSD1306 gefunden
@@ -1757,11 +1788,10 @@ void loop()
     if(check_sensors())
     {
       show_data();
+      status_led(2); //Status-LED
     }
 
     co2_average = (co2_average + co2_sensor()) / 2; //Berechnung jede Sekunde
-
-    status_led(2); //Status-LED
   }
   else if(overwrite == 0)
   {
