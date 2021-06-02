@@ -820,13 +820,13 @@ void self_test(void) //Testprogramm
   delay(1000); //1s warten
   leds(FARBE_AUS); //LEDs aus
 
-  //ATECC608+ATWINC1500 Test
+  //ATECC608+ATWINC1500-Test
   atecc  = check_i2c(SERCOM2, ADDR_ATECC608);
   atwinc = WiFi.status(); //ATWINC1500
   if(atecc || (atwinc != WL_NO_SHIELD))
   {
     leds(FARBE_WEISS); //LEDs weiss
-    delay(1000); //1s warten
+    buzzer(1000); //1s Buzzer an
     if(atecc != 0) //ATECC608 Fehler
     {
       if(features & FEATURE_USB)
@@ -855,6 +855,21 @@ void self_test(void) //Testprogramm
         delay(500); //500ms warten
       }
     }
+  }
+
+  //RFM9X-Test
+  SPI.begin();
+  SPI.setDataMode(SPI_MODE0);
+  SPI.setBitOrder(MSBFIRST);
+  SPI.setClockDivider(SPI_CLOCK_DIV128);
+  digitalWrite(20, LOW); //RFM9X CS low/active
+  SPI.transfer(0x42); //0x42 = version
+  byte i = SPI.transfer(0x00);
+  digitalWrite(20, HIGH); //RFM9X CS high
+  if(i == 0x12) //check version
+  {
+    leds(FARBE_WEISS); //LEDs weiss
+    buzzer(1000); //1s Buzzer an
   }
 
   //Sensor-Test
@@ -1396,6 +1411,10 @@ void setup()
   digitalWrite(PIN_LSENSOR_PWR, LOW); //Lichtsensor aus
   pinMode(PIN_LSENSOR, INPUT);
   pinMode(PIN_SWITCH, INPUT_PULLUP);
+  pinMode(14, OUTPUT); //PA18 WINC1500 CS-Pin
+  digitalWrite(14, HIGH); //WINC1500 CS high
+  pinMode(20, OUTPUT); //PA21 RFM9X CS-Pin
+  digitalWrite(20, HIGH); //RFM9X CS high
 
   if(digitalRead(PIN_SWITCH) == LOW) //Taster gedrueckt
   {
