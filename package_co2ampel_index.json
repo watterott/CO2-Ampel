@@ -11,10 +11,23 @@
         {
           "name": "CO2-Ampel Board (dependency: Arduino SAMD Boards)",
           "architecture": "samd",
-          "version": "1.0.6",
+          "version": "1.0.7",
           "category": "contributed",
           "help": {"online": "https://learn.watterott.com/breakouts/co2-ampel/"},
           "url": "https://github.com/watterott/CO2-Ampel/raw/master/arduino/samd.zip",
+          "archiveFileName": "co2ampel-samd-1.0.7.zip",
+          "size": "1549609",
+          "boards": [
+            {"name": "CO2-Ampel (SAMD21)"}
+          ]
+        },
+        {
+          "name": "CO2-Ampel Board (dependency: Arduino SAMD Boards)",
+          "architecture": "samd",
+          "version": "1.0.6",
+          "category": "contributed",
+          "help": {"online": "https://learn.watterott.com/breakouts/co2-ampel/"},
+          "url": "https://github.com/watterott/CO2-Ampel/raw/b287572b64652b2c4e88adc04664612fd4a3a1f2/arduino/samd.zip",
           "archiveFileName": "co2ampel-samd-1.0.6.zip",
           "size": "1367792",
           "boards": [
@@ -27,7 +40,7 @@
           "version": "1.0.5",
           "category": "contributed",
           "help": {"online": "https://learn.watterott.com/breakouts/co2-ampel/"},
-          "url": "https://github.com/watterott/CO2-Ampel/74215fac9ab803c18cb50fdabb00686a69cc8e3e/master/arduino/samd.zip",
+          "url": "https://github.com/watterott/CO2-Ampel/raw/74215fac9ab803c18cb50fdabb00686a69cc8e3e/arduino/samd.zip",
           "archiveFileName": "co2ampel-samd-1.0.5.zip",
           "size": "1274027",
           "boards": [
@@ -40,7 +53,7 @@
           "version": "1.0.4",
           "category": "contributed",
           "help": {"online": "https://learn.watterott.com/breakouts/co2-ampel/"},
-          "url": "https://github.com/watterott/CO2-Ampel/70e030107821b5fd4c76499d7835d8b2f148d6a2/master/arduino/samd.zip",
+          "url": "https://github.com/watterott/CO2-Ampel/raw/70e030107821b5fd4c76499d7835d8b2f148d6a2/arduino/samd.zip",
           "archiveFileName": "co2ampel-samd-1.0.4.zip",
           "size": "1273632",
           "boards": [
@@ -53,7 +66,7 @@
           "version": "1.0.3",
           "category": "contributed",
           "help": {"online": "https://learn.watterott.com/breakouts/co2-ampel/"},
-          "url": "https://github.com/watterott/CO2-Ampel/91a6d7c0965d75b3e3b72537646959d7ef15833c/master/arduino/samd.zip",
+          "url": "https://github.com/watterott/CO2-Ampel/raw/91a6d7c0965d75b3e3b72537646959d7ef15833c/arduino/samd.zip",
           "archiveFileName": "co2ampel-samd-1.0.3.zip",
           "size": "1273308",
           "boards": [
@@ -66,7 +79,7 @@
           "version": "1.0.2",
           "category": "contributed",
           "help": {"online": "https://learn.watterott.com/breakouts/co2-ampel/"},
-          "url": "https://github.com/watterott/CO2-Ampel/32262b27a63262f696bf6a7ec913f9843aa932dc/master/arduino/samd.zip",
+          "url": "https://github.com/watterott/CO2-Ampel/raw/32262b27a63262f696bf6a7ec913f9843aa932dc/arduino/samd.zip",
           "archiveFileName": "co2ampel-samd-1.0.2.zip",
           "size": "1231084",
           "boards": [
@@ -79,7 +92,7 @@
           "version": "1.0.1",
           "category": "contributed",
           "help": {"online": "https://learn.watterott.com/breakouts/co2-ampel/"},
-          "url": "https://github.com/watterott/CO2-Ampel/81e59bcf0d11beffe19ecb5a9d9b1a6a15e23ba1/master/arduino/samd.zip",
+          "url": "https://github.com/watterott/CO2-Ampel/raw/81e59bcf0d11beffe19ecb5a9d9b1a6a15e23ba1/arduino/samd.zip",
           "archiveFileName": "co2ampel-samd-1.0.1.zip",
           "size": "1208939",
           "boards": [
@@ -92,7 +105,7 @@
           "version": "1.0.0",
           "category": "contributed",
           "help": {"online": "https://learn.watterott.com/breakouts/co2-ampel/"},
-          "url": "https://github.com/watterott/CO2-Ampel/c79464c0c19dfe404e315026b9be127f0a1a0315/master/arduino/samd.zip",
+          "url": "https://github.com/watterott/CO2-Ampel/raw/c79464c0c19dfe404e315026b9be127f0a1a0315/arduino/samd.zip",
           "archiveFileName": "co2ampel-samd-1.0.0.zip",
           "size": "1208829",
           "boards": [
