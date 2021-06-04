@@ -22,7 +22,7 @@
     5=X      - Range/Bereich 5 Start (400-10000) - rot + Buzzer
 */
 
-#define VERSION "14"
+#define VERSION "15"
 
 //--- CO2-Werte ---
 //Covid Praevention: https://www.umwelt-campus.de/forschung/projekte/iot-werkstatt/ideen-zur-corona-krise
@@ -1446,14 +1446,11 @@ void setup()
   {
     ECCX08.begin();
     ECCX08.end();
-    if(WiFi.status() != WL_NO_SHIELD) //ATWINC1500 gefunden
-    {
-      features |= FEATURE_WINC1500;
-    }
-    else
-    {
-      WiFi.end();
-    }
+    features |= FEATURE_WINC1500;
+  }
+  else if(WiFi.status() != WL_NO_SHIELD)
+  {
+    features |= FEATURE_WINC1500;
   }
 
   //LPS22HB
@@ -1642,29 +1639,40 @@ void setup()
   //Plus-Version
   if(features & FEATURE_WINC1500)
   {
-    if(wifi_start() != 0) //verbinde WiFi Netzwerk
+    if(WiFi.status() != WL_NO_SHIELD) //ATWINC1500 gefunden
     {
-      if(wifi_start_ap() != 0) //starte AP
+      if(wifi_start() != 0) //verbinde WiFi Netzwerk
       {
-        features &= ~FEATURE_WINC1500;
+        if(wifi_start_ap() != 0) //starte AP
+        {
+          features &= ~FEATURE_WINC1500;
+        }
+      }
+      delay(2000); //2s warten
+      if(features & FEATURE_USB)
+      {
+        String fv = WiFi.firmwareVersion();
+        Serial.print("WINC1500 Firmware: ");
+        Serial.println(fv);
+        byte mac[6];
+        WiFi.macAddress(mac);
+        Serial.print("MAC: ");
+        Serial.print(mac[5], HEX); Serial.print(":"); Serial.print(mac[4], HEX); Serial.print(":"); Serial.print(mac[3], HEX); Serial.print(":");
+        Serial.print(mac[2], HEX); Serial.print(":"); Serial.print(mac[1], HEX); Serial.print(":"); Serial.print(mac[0], HEX); Serial.println("");
+        IPAddress ip;
+        ip = WiFi.localIP();
+        Serial.print("IP: "); Serial.println(ip);
+        ip = WiFi.subnetMask();
+        Serial.print("NM: "); Serial.println(ip);
+        ip = WiFi.gatewayIP();
+        Serial.print("GW: "); Serial.println(ip);
+        Serial.println("");
       }
     }
-    delay(2000); //2s warten
-    if(features & FEATURE_USB)
+    else
     {
-      byte mac[6];
-      WiFi.macAddress(mac);
-      Serial.print("MAC: ");
-      Serial.print(mac[5], HEX); Serial.print(":"); Serial.print(mac[4], HEX); Serial.print(":"); Serial.print(mac[3], HEX); Serial.print(":");
-      Serial.print(mac[2], HEX); Serial.print(":"); Serial.print(mac[1], HEX); Serial.print(":"); Serial.print(mac[0], HEX); Serial.println("");
-      IPAddress ip;
-      ip = WiFi.localIP();
-      Serial.print("IP: "); Serial.println(ip);
-      ip = WiFi.subnetMask();
-      Serial.print("NM: "); Serial.println(ip);
-      ip = WiFi.gatewayIP();
-      Serial.print("GW: "); Serial.println(ip);
-      Serial.println("");
+      features &= ~FEATURE_WINC1500;
+      WiFi.end();
     }
   }
 
