@@ -22,7 +22,7 @@
     5=X      - Range/Bereich 5 Start (400-10000) - rot + Buzzer
 */
 
-#define VERSION "15"
+#define VERSION "16"
 
 //--- CO2-Werte ---
 //Covid Praevention: https://www.umwelt-campus.de/forschung/projekte/iot-werkstatt/ideen-zur-corona-krise
@@ -60,11 +60,11 @@
 //--- Allgemein ---
 #define AMPEL_DURCHSCHNITT 1 //1 = CO2 Durchschnitt fuer Ampel verwenden
 #define AUTO_KALIBRIERUNG  0 //1 = automatische Kalibrierung (ASC) an (erfordert 7 Tage Dauerbetrieb mit 1h Frischluft pro Tag)
+#define BUZZER_DELAY     300 //300s, Buzzer Startverzögerung
 #define TEMP_OFFSET        4 //Temperaturoffset in °C (0-20)
 #define TEMP_OFFSET_WIFI   8 //Temperaturoffset in °C (0-20)
 #define DRUCK_DIFF         5 //Druckunterschied in hPa (5-20)
 #define BAUDRATE           9600 //9600 Baud
-
 #define STARTWERT          500 //500ppm, CO2-Startwert
 
 #define FARBE_BLAU         0x007CB0 //0x0000FF, Himmelblau: 0x007CB0
@@ -133,7 +133,7 @@ Adafruit_SSD1306 display(128, 64); //128x64 Pixel
 //ECCX08Class ECCX08(Wire1, 0x60); //in ECCX08.cpp
 WiFiServer server(80); //Webserver Port 80
 
-unsigned int features=0, remote_on=0;
+unsigned int features=0, remote_on=0, buzzer_timer=BUZZER_DELAY;
 unsigned int co2_value=STARTWERT, co2_average=STARTWERT, light_value=1024;
 float temp_value=20, humi_value=50, pres_value=1013, pres_last=1013;
 
@@ -249,12 +249,12 @@ unsigned int check_sensors(void) //Sensoren auslesen
       if(features & FEATURE_LPS22HB)
       {
         pres_value = lps22.readPressure()*10; //kPa -> hPa
-        temp_value = lps22.readTemperature();
+        temp_value = lps22.readTemperature()-TEMP_OFFSET;
       }
       if(features & FEATURE_BMP280)
       {
         pres_value = bmp280.readPressure()/100; //Pa -> hPa
-        temp_value = bmp280.readTemperature();
+        temp_value = bmp280.readTemperature()-TEMP_OFFSET;
       }
       if((pres_value < (pres_last-DRUCK_DIFF)) || (pres_value > (pres_last+DRUCK_DIFF)))
       {
@@ -277,12 +277,12 @@ unsigned int check_sensors(void) //Sensoren auslesen
       if(features & FEATURE_LPS22HB)
       {
         pres_value = lps22.readPressure()*10; //kPa -> hPa
-        temp_value = lps22.readTemperature();
+        temp_value = lps22.readTemperature()-TEMP_OFFSET;
       }
       if(features & FEATURE_BMP280)
       {
         pres_value = bmp280.readPressure()/100; //Pa -> hPa
-        temp_value = bmp280.readTemperature();
+        temp_value = bmp280.readTemperature()-TEMP_OFFSET;
       }
       if((pres_value < (pres_last-DRUCK_DIFF)) || (pres_value > (pres_last+DRUCK_DIFF)))
       {
@@ -1738,7 +1738,7 @@ void ampel(unsigned int co2)
   }
   else
   {
-    if(blinken == 0)
+    if((blinken == 0) && (buzzer_timer == 0))
     {
       buzzer(1); //Buzzer an
     }
@@ -1776,6 +1776,8 @@ void loop()
   else if(sw != 0) //Taster losgelassen
   {
     sw = 0;
+    buzzer(0); //Buzzer aus
+    buzzer_timer = BUZZER_DELAY; //Buzzer Startverzögerung
     if((millis()-t_switch) > 3000) //3s Tastendruck
     {
       if(features & FEATURE_WINC1500)
@@ -1800,6 +1802,11 @@ void loop()
   if((millis()-t_ampel) > 1000) //Ampelfunktion nur jede Sekunde ausfuehren
   {
     t_ampel = millis(); //Zeit speichern
+
+    if(buzzer_timer > 0)
+    {
+      buzzer_timer--;
+    }
 
     //USB-Verbindung
     if(USBDevice.connected()) //(Serial) nutzt Flow-Control zur Erkennung
