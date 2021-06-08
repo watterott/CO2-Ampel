@@ -62,7 +62,8 @@
 #define AUTO_KALIBRIERUNG  0 //1 = automatische Kalibrierung (ASC) an (erfordert 7 Tage Dauerbetrieb mit 1h Frischluft pro Tag)
 #define BUZZER_DELAY     300 //300s, Buzzer Startverzögerung
 #define TEMP_OFFSET        4 //Temperaturoffset in °C (0-20)
-#define TEMP_OFFSET_WIFI   8 //Temperaturoffset in °C (0-20)
+#define TEMP_OFFSET_WIFI   8 //WiFi, Temperaturoffset in °C (0-20)
+#define TEMP_OFFSET_PRO    6 //Pro WiFi, Temperaturoffset in °C (0-20)
 #define DRUCK_DIFF         5 //Druckunterschied in hPa (5-20)
 #define BAUDRATE           9600 //9600 Baud
 #define STARTWERT          500 //500ppm, CO2-Startwert
@@ -135,7 +136,7 @@ WiFiServer server(80); //Webserver Port 80
 
 unsigned int features=0, remote_on=0, buzzer_timer=BUZZER_DELAY;
 unsigned int co2_value=STARTWERT, co2_average=STARTWERT, light_value=1024;
-float temp_value=20, humi_value=50, pres_value=1013, pres_last=1013;
+float temp_value=20, temp_offset=TEMP_OFFSET, humi_value=50, pres_value=1013, pres_last=1013;
 
 
 void leds(uint32_t color)
@@ -249,12 +250,12 @@ unsigned int check_sensors(void) //Sensoren auslesen
       if(features & FEATURE_LPS22HB)
       {
         pres_value = lps22.readPressure()*10; //kPa -> hPa
-        temp_value = lps22.readTemperature()-TEMP_OFFSET;
+        temp_value = lps22.readTemperature()-temp_offset;
       }
       if(features & FEATURE_BMP280)
       {
         pres_value = bmp280.readPressure()/100; //Pa -> hPa
-        temp_value = bmp280.readTemperature()-TEMP_OFFSET;
+        temp_value = bmp280.readTemperature()-temp_offset;
       }
       if((pres_value < (pres_last-DRUCK_DIFF)) || (pres_value > (pres_last+DRUCK_DIFF)))
       {
@@ -277,12 +278,12 @@ unsigned int check_sensors(void) //Sensoren auslesen
       if(features & FEATURE_LPS22HB)
       {
         pres_value = lps22.readPressure()*10; //kPa -> hPa
-        temp_value = lps22.readTemperature()-TEMP_OFFSET;
+        temp_value = lps22.readTemperature()-temp_offset;
       }
       if(features & FEATURE_BMP280)
       {
         pres_value = bmp280.readPressure()/100; //Pa -> hPa
-        temp_value = bmp280.readTemperature()-TEMP_OFFSET;
+        temp_value = bmp280.readTemperature()-temp_offset;
       }
       if((pres_value < (pres_last-DRUCK_DIFF)) || (pres_value > (pres_last+DRUCK_DIFF)))
       {
@@ -1565,6 +1566,23 @@ void setup()
     }
   }
 
+  //Temperaturoffset
+  if(features & FEATURE_WINC1500)
+  {
+    if(features & (FEATURE_LPS22HB|FEATURE_BMP280))
+    {
+      temp_offset = TEMP_OFFSET_PRO;
+    }
+    else
+    {
+      temp_offset = TEMP_OFFSET_WIFI;
+    }
+  }
+  else
+  {
+    temp_offset = TEMP_OFFSET;
+  }
+
   //Einstellungen
   settings = flash_settings.read(); //Einstellungen lesen
   if((settings.valid == false) || (settings.brightness > 255) || (settings.range[0] < 100))
@@ -1585,14 +1603,7 @@ void setup()
     {
       if(scd30.getTemperatureOffset() == 0)
       {
-        if(features & FEATURE_WINC1500)
-        {
-          scd30.setTemperatureOffset(TEMP_OFFSET_WIFI); //Temperaturoffset
-        }
-        else
-        {
-          scd30.setTemperatureOffset(TEMP_OFFSET); //Temperaturoffset
-        }
+        scd30.setTemperatureOffset(temp_offset); //Temperaturoffset
       }
     }
     else if(features & FEATURE_SCD4X)
@@ -1601,14 +1612,7 @@ void setup()
       scd4x.getTemperatureOffset(offset);
       if(offset == 0)
       {
-        if(features & FEATURE_WINC1500)
-        {
-          scd4x.setTemperatureOffset(TEMP_OFFSET_WIFI); //Temperaturoffset
-        }
-        else
-        {
-          scd4x.setTemperatureOffset(TEMP_OFFSET); //Temperaturoffset
-        }
+        scd4x.setTemperatureOffset(temp_offset); //Temperaturoffset
       }
     }
   }
