@@ -22,7 +22,7 @@
     5=X      - Range/Bereich 5 Start (400-10000) - rot + Buzzer
 */
 
-#define VERSION "16"
+#define VERSION "17"
 
 //--- CO2-Werte ---
 //Covid Praevention: https://www.umwelt-campus.de/forschung/projekte/iot-werkstatt/ideen-zur-corona-krise
@@ -58,6 +58,7 @@
 #define WIFI_CODE          "" //WiFi Passwort
 
 //--- Allgemein ---
+#define PRO_AMPEL          0 //1 = Pro Version mit Drucksensor
 #define AMPEL_DURCHSCHNITT 1 //1 = CO2 Durchschnitt fuer Ampel verwenden
 #define AUTO_KALIBRIERUNG  0 //1 = automatische Kalibrierung (ASC) an (erfordert 7 Tage Dauerbetrieb mit 1h Frischluft pro Tag)
 #define BUZZER_DELAY     300 //300s, Buzzer Startverzögerung
@@ -874,6 +875,12 @@ void self_test(void) //Testprogramm
   }
 
   //Sensor-Test
+  co2_value  = 0;
+  temp_value = 0;
+  humi_value = 0;
+  #if PRO_AMPEL
+    pres_value = 0;
+  #endif
   ws2812.fill(FARBE_AUS, 0, 4); //LEDs aus
   for(unsigned int okay=0; okay < 15;)
   {
