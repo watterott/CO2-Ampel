@@ -749,7 +749,7 @@ void webserver_service(void)
 }
 
 
-int check_i2c(Sercom *sercom, byte addr)
+int check_i2c(Sercom *sercom, byte addr) //1=okay
 {
   int res = 0;
   unsigned long t_start;
@@ -829,7 +829,7 @@ void self_test(void) //Testprogramm
   {
     leds(FARBE_WEISS); //LEDs weiss
     buzzer(1000); //1s Buzzer an
-    if(atecc != 0) //ATECC608 Fehler
+    if(atecc == 0) //ATECC608 Fehler
     {
       if(features & FEATURE_USB)
       {
