@@ -403,7 +403,7 @@ void serial_service(void)
 
       case 'H': //LED Helligkeit
         i = Serial.readBytesUntil('\n', tmp, sizeof(tmp));
-        if(i > 0)
+        if(i >= 0)
         {
           tmp[i] = 0;
           sscanf(tmp, "%X", &val);
@@ -1711,36 +1711,35 @@ void ampel(unsigned int co2)
   if(co2 < settings.range[0]) //blau
   {
     blinken = 0;
-    ws2812.fill(FARBE_BLAU, 0, NUM_LEDS);
+    leds(FARBE_BLAU);
   }
   else if(co2 < settings.range[1]) //gruen
   {
     blinken = 0;
-    ws2812.fill(FARBE_GRUEN, 0, NUM_LEDS);
+    leds(FARBE_GRUEN);
   }
   else if(co2 < settings.range[2]) //gelb
   {
     blinken = 0;
-    ws2812.fill(FARBE_GELB, 0, NUM_LEDS);
+    leds(FARBE_GELB);
   }
   else if(co2 < settings.range[3]) //rot
   {
     blinken = 0;
-    ws2812.fill(FARBE_ROT, 0, NUM_LEDS);
+    leds(FARBE_ROT);
   }
   else //rot blinken
   {
     if(blinken == 0)
     {
-      ws2812.fill(ws2812.Color(10,0,0), 0, NUM_LEDS);  //rot schwache Helligkeit
+      leds(ws2812.Color(10,0,0)); //rot schwache Helligkeit
     }
     else
     {
-      ws2812.fill(FARBE_ROT, 0, NUM_LEDS); //rot
+      leds(FARBE_ROT); //rot
     }
     blinken = 1-blinken; //invertieren
   }
-  ws2812.show(); //zeige Farbe
 
   //Buzzer
   if(co2 < settings.range[4])
@@ -1793,8 +1792,7 @@ void loop()
     {
       if(features & FEATURE_WINC1500)
       {
-        ws2812.fill(FARBE_VIOLETT, 0, 4); //LEDs violett
-        ws2812.show();
+        leds(FARBE_VIOLETT); //LEDs violett
         wifi_start_ap();
       }
     }
@@ -1869,7 +1867,10 @@ void loop()
         if(dark == 0)
         {
           dark = 1;
-          ws2812.setBrightness(HELLIGKEIT_DUNKEL); //0...255
+          if(settings.brightness > HELLIGKEIT_DUNKEL)
+          {
+            ws2812.setBrightness(HELLIGKEIT_DUNKEL); //dunkel
+          }
         }
       }
       else
@@ -1877,7 +1878,7 @@ void loop()
         if(dark == 1)
         {
           dark = 0;
-          ws2812.setBrightness(settings.brightness); //0...255
+          ws2812.setBrightness(settings.brightness); //hell
         }
       }
     }
