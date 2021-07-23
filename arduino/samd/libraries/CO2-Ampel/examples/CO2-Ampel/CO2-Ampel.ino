@@ -59,6 +59,7 @@
 
 //--- Allgemein ---
 #define PRO_AMPEL          0 //1 = Pro Version mit Drucksensor
+#define WIFI_AMPEL         0 //1 = Version mit WiFi/WLAN
 #define AMPEL_DURCHSCHNITT 1 //1 = CO2 Durchschnitt fuer Ampel verwenden
 #define AUTO_KALIBRIERUNG  0 //1 = automatische Kalibrierung (ASC) an (erfordert 7 Tage Dauerbetrieb mit 1h Frischluft pro Tag)
 #define BUZZER_DELAY     300 //300s, Buzzer Startverzögerung
@@ -799,10 +800,6 @@ int check_i2c(Sercom *sercom, byte addr) //1=okay
 
 void self_test(void) //Testprogramm
 {
-  unsigned int atecc, atwinc;
-  unsigned int co2, light;
-  float temp, humi, pres;
-
   //Buzzer-Test
   buzzer(1000); //1s Buzzer an
 
@@ -815,42 +812,45 @@ void self_test(void) //Testprogramm
   delay(1000); //1s warten
   leds(FARBE_AUS); //LEDs aus
 
-  //ATECC608+ATWINC1500-Test
-  atecc  = check_i2c(SERCOM2, ADDR_ATECC608);
-  atwinc = WiFi.status(); //ATWINC1500
-  if(atecc || (atwinc != WL_NO_SHIELD))
-  {
-    leds(FARBE_WEISS); //LEDs weiss
-    buzzer(1000); //1s Buzzer an
-    if(atecc == 0) //ATECC608 Fehler
+  #if WIFI_AMPEL
+    //ATECC608+ATWINC1500-Test
+    unsigned int atecc, atwinc;
+    atecc  = check_i2c(SERCOM2, ADDR_ATECC608);
+    atwinc = WiFi.status(); //ATWINC1500
+    if(atecc || (atwinc != WL_NO_SHIELD))
     {
-      if(features & FEATURE_USB)
+      leds(FARBE_WEISS); //LEDs weiss
+      buzzer(1000); //1s Buzzer an
+      if(atecc == 0) //ATECC608 Fehler
       {
-        Serial.println("Error: ATECC608");
+        if(features & FEATURE_USB)
+        {
+          Serial.println("Error: ATECC608");
+        }
+        while(1)
+        {
+          leds(FARBE_ROT); //LEDs rot
+          delay(500); //500ms warten
+          leds(FARBE_AUS); //LEDs aus
+          delay(500); //500ms warten
+        }
       }
-      while(1)
+      if(atwinc == WL_NO_SHIELD) //ATWINC1500 Fehler
       {
-        leds(FARBE_ROT); //LEDs rot
-        delay(500); //500ms warten
-        leds(FARBE_AUS); //LEDs aus
-        delay(500); //500ms warten
+        if(features & FEATURE_USB)
+        {
+          Serial.println("Error: ATWINC1500");
+        }
+        while(1)
+        {
+          leds(FARBE_ROT); //LEDs rot
+          delay(500); //500ms warten
+          leds(FARBE_GELB); //LEDs gelb
+          delay(500); //500ms warten
+        }
       }
     }
-    if(atwinc == WL_NO_SHIELD) //ATWINC1500 Fehler
-    {
-      if(features & FEATURE_USB)
-      {
-        Serial.println("Error: ATWINC1500");
-      }
-      while(1)
-      {
-        leds(FARBE_ROT); //LEDs rot
-        delay(500); //500ms warten
-        leds(FARBE_GELB); //LEDs gelb
-        delay(500); //500ms warten
-      }
-    }
-  }
+  #endif
 
   //RFM9X-Test
   SPI.begin();
@@ -868,6 +868,8 @@ void self_test(void) //Testprogramm
   }
 
   //Sensor-Test
+  unsigned int co2, light;
+  float temp, humi, pres;
   co2_value  = 0;
   temp_value = 0;
   humi_value = 0;
@@ -1442,20 +1444,20 @@ void setup()
 
   delay(250); //250ms warten
 
-  //ATECC608+ATWINC1500
-  if(check_i2c(SERCOM2, ADDR_ATECC608)) //ATECC608 gefunden
-  {
-    if(check_i2c(SERCOM2, ADDR_ATECC608))
+  #if WIFI_AMPEL
+    //ATECC608+ATWINC1500
+    if(check_i2c(SERCOM2, ADDR_ATECC608)) //ATECC608 gefunden
     {
-      ECCX08.begin();
-      ECCX08.end();
+      if(check_i2c(SERCOM2, ADDR_ATECC608))
+      {
+        features |= FEATURE_WINC1500;
+      }
+    }
+    else if(WiFi.status() != WL_NO_SHIELD) //ATWINC1500 gefunden
+    {
       features |= FEATURE_WINC1500;
     }
-  }
-  else if(WiFi.status() != WL_NO_SHIELD)
-  {
-    features |= FEATURE_WINC1500;
-  }
+  #endif
 
   //LPS22HB
   if(check_i2c(SERCOM2, ADDR_LPS22HB)) //LPS22HB gefunden
