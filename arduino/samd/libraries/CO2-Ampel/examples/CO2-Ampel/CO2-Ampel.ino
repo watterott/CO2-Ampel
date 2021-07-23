@@ -22,7 +22,7 @@
     5=X      - Range/Bereich 5 Start (400-10000) - rot + Buzzer
 */
 
-#define VERSION "17"
+#define VERSION "18"
 
 //--- CO2-Werte ---
 //Covid Praevention: https://www.umwelt-campus.de/forschung/projekte/iot-werkstatt/ideen-zur-corona-krise
@@ -758,21 +758,14 @@ int check_i2c(Sercom *sercom, byte addr) //1=okay
   {
     t_start = millis();
     sercom->I2CM.CTRLA.bit.ENABLE = 1; //enable master mode
-    delay(2); //wait 2ms
+    delay(10); //wait 10ms
     sercom->I2CM.ADDR.bit.ADDR = (addr<<1) | 0x00; //start transfer
-    while(1)
+    delay(10); //wait 10ms
+    if(sercom->I2CM.INTFLAG.bit.MB || sercom->I2CM.INTFLAG.bit.SB) //data transmitted
     {
-      delay(2); //wait 2ms
-      if(sercom->I2CM.INTFLAG.bit.MB || sercom->I2CM.INTFLAG.bit.SB) //data transmitted
+      if(!sercom->I2CM.STATUS.bit.RXNACK) //ack received
       {
-        if(!sercom->I2CM.STATUS.bit.RXNACK) //ack received
-        {
-          res = 1; //ok
-        }
-        break;
-      }
-      else if((millis()-t_start) > 20) //timeout after 20ms
-      {
+        res = 1; //ok
         break;
       }
     }
@@ -1452,9 +1445,12 @@ void setup()
   //ATECC608+ATWINC1500
   if(check_i2c(SERCOM2, ADDR_ATECC608)) //ATECC608 gefunden
   {
-    ECCX08.begin();
-    ECCX08.end();
-    features |= FEATURE_WINC1500;
+    if(check_i2c(SERCOM2, ADDR_ATECC608))
+    {
+      ECCX08.begin();
+      ECCX08.end();
+      features |= FEATURE_WINC1500;
+    }
   }
   else if(WiFi.status() != WL_NO_SHIELD)
   {
