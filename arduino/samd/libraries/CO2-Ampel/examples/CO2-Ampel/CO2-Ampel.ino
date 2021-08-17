@@ -22,7 +22,7 @@
     5=X      - Range/Bereich 5 Start (400-10000) - rot + Buzzer
 */
 
-#define VERSION "18"
+#define VERSION "19"
 
 //--- CO2-Werte ---
 //Covid Praevention: https://www.umwelt-campus.de/forschung/projekte/iot-werkstatt/ideen-zur-corona-krise
@@ -84,7 +84,7 @@
 #define ADDR_SCD4X         0x62 //0x62, Wire=SERCOM0
 #define ADDR_LPS22HB       0x5C //0x5C, Wire1=SERCOM2
 #define ADDR_BMP280        0x76 //0x76 or 0x77, Wire1=SERCOM2
-#define ADDR_ATECC608      0x60 //0x60, Wire1=SERCOM2
+#define ADDR_ATECC608      0x60 //0x60, Wire1=SERCOM2 (optional)
 
 //--- Features ---
 enum Features
@@ -107,7 +107,6 @@ enum Features
 #include <Adafruit_BMP280.h>
 #include <Arduino_LPS22HB.h>
 #include <Adafruit_NeoPixel.h>
-#include <ArduinoECCX08.h>
 #include <WiFi101.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
@@ -133,7 +132,6 @@ Adafruit_BMP280 bmp280(&Wire1);
 LPS22HBClass lps22(Wire1);
 Adafruit_NeoPixel ws2812 = Adafruit_NeoPixel(NUM_LEDS, PIN_WS2812, NEO_GRB + NEO_KHZ800);
 Adafruit_SSD1306 display(128, 64); //128x64 Pixel
-//ECCX08Class ECCX08(Wire1, 0x60); //in ECCX08.cpp
 WiFiServer server(80); //Webserver Port 80
 
 unsigned int features=0, remote_on=0, buzzer_timer=BUZZER_DELAY;
@@ -729,6 +727,14 @@ void webserver_service(void)
           client.println("'><br>");
           client.println("<input type=submit value=Speichern> (Neustart erforderlich)");
           client.println("</form>");
+          client.print("<br><br><small>Firmware: v"VERSION"");
+          if(features & FEATURE_WINC1500)
+          {
+            String fv = WiFi.firmwareVersion();
+            client.print(", WINC1500: ");
+            client.print(fv);
+          }
+          client.println("</small>");
           client.println("</body></html>");
           break;
         }
@@ -813,59 +819,44 @@ void self_test(void) //Testprogramm
   leds(FARBE_AUS); //LEDs aus
 
   #if WIFI_AMPEL
-    //ATECC608+ATWINC1500-Test
-    unsigned int atecc, atwinc;
-    atecc  = check_i2c(SERCOM2, ADDR_ATECC608);
-    atwinc = WiFi.status(); //ATWINC1500
-    if(atecc || (atwinc != WL_NO_SHIELD))
+    //ATWINC1500-Test
+    if(WiFi.status() == WL_NO_SHIELD) //ATWINC1500 Fehler
+    {
+      if(features & FEATURE_USB)
+      {
+        Serial.println("Error: ATWINC1500");
+      }
+      while(1)
+      {
+        leds(FARBE_ROT); //LEDs rot
+        delay(500); //500ms warten
+        leds(FARBE_GELB); //LEDs gelb
+        delay(500); //500ms warten
+      }
+    }
+    else
     {
       leds(FARBE_WEISS); //LEDs weiss
       buzzer(1000); //1s Buzzer an
-      if(atecc == 0) //ATECC608 Fehler
-      {
-        if(features & FEATURE_USB)
-        {
-          Serial.println("Error: ATECC608");
-        }
-        while(1)
-        {
-          leds(FARBE_ROT); //LEDs rot
-          delay(500); //500ms warten
-          leds(FARBE_AUS); //LEDs aus
-          delay(500); //500ms warten
-        }
-      }
-      if(atwinc == WL_NO_SHIELD) //ATWINC1500 Fehler
-      {
-        if(features & FEATURE_USB)
-        {
-          Serial.println("Error: ATWINC1500");
-        }
-        while(1)
-        {
-          leds(FARBE_ROT); //LEDs rot
-          delay(500); //500ms warten
-          leds(FARBE_GELB); //LEDs gelb
-          delay(500); //500ms warten
-        }
-      }
     }
   #endif
 
   //RFM9X-Test
-  SPI.begin();
-  SPI.setDataMode(SPI_MODE0);
-  SPI.setBitOrder(MSBFIRST);
-  SPI.setClockDivider(SPI_CLOCK_DIV128);
-  digitalWrite(20, LOW); //RFM9X CS low/active
-  SPI.transfer(0x42); //0x42 = version
-  byte i = SPI.transfer(0x00);
-  digitalWrite(20, HIGH); //RFM9X CS high
-  if(i == 0x12) //check version
-  {
-    leds(FARBE_WEISS); //LEDs weiss
-    buzzer(1000); //1s Buzzer an
-  }
+  #if PRO_AMPEL
+    SPI.begin();
+    SPI.setDataMode(SPI_MODE0);
+    SPI.setBitOrder(MSBFIRST);
+    SPI.setClockDivider(SPI_CLOCK_DIV128);
+    digitalWrite(20, LOW); //RFM9X CS low/active
+    SPI.transfer(0x42); //0x42 = version
+    byte i = SPI.transfer(0x00);
+    digitalWrite(20, HIGH); //RFM9X CS high
+    if(i == 0x12) //check version
+    {
+      leds(FARBE_WEISS); //LEDs weiss
+      buzzer(1000); //1s Buzzer an
+    }
+  #endif
 
   //Sensor-Test
   unsigned int co2, light;
@@ -1445,15 +1436,8 @@ void setup()
   delay(250); //250ms warten
 
   #if WIFI_AMPEL
-    //ATECC608+ATWINC1500
-    if(check_i2c(SERCOM2, ADDR_ATECC608)) //ATECC608 gefunden
-    {
-      if(check_i2c(SERCOM2, ADDR_ATECC608))
-      {
-        features |= FEATURE_WINC1500;
-      }
-    }
-    else if(WiFi.status() != WL_NO_SHIELD) //ATWINC1500 gefunden
+    //ATWINC1500
+    if(WiFi.status() != WL_NO_SHIELD) //ATWINC1500 gefunden
     {
       features |= FEATURE_WINC1500;
     }
