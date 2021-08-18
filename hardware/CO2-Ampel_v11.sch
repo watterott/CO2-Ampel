@@ -9563,12 +9563,13 @@ Designed by Watterott electronic</text>
 </sheet>
 <sheet>
 <plain>
-<text x="52.07" y="73.66" size="1.778" layer="97">I2C Address: 0x60</text>
+<text x="52.07" y="71.12" size="1.778" layer="97">I2C Address: 0x60</text>
 <text x="162.56" y="22.86" size="1.27" layer="95" align="top-left">Released under the Creative Commons Attribution Share-Alike
 License. http://creativecommons.org/licenses/by-sa/4.0/
 
 Designed by Watterott electronic</text>
-<text x="25.4" y="107.95" size="1.778" layer="94" font="vector" ratio="13">This components are only mounted on the Plus Version</text>
+<text x="66.04" y="110.49" size="1.778" layer="94" font="vector" ratio="13" align="top-center">This components are only mounted on the Plus Version.
+As of August 2021 the ATECC is not mounted, because it is unused.</text>
 <wire x1="5.08" y1="5.08" x2="132.08" y2="5.08" width="0.1524" layer="97"/>
 <wire x1="132.08" y1="5.08" x2="132.08" y2="111.76" width="0.1524" layer="97"/>
 <wire x1="132.08" y1="111.76" x2="5.08" y2="111.76" width="0.1524" layer="97"/>
@@ -9688,19 +9689,19 @@ Designed by Watterott electronic</text>
 <attribute name="NAME" x="138.43" y="139.7" size="1.778" layer="95" align="bottom-center"/>
 <attribute name="VALUE" x="138.43" y="137.16" size="1.778" layer="96" align="top-center"/>
 </instance>
-<instance part="+3V315" gate="G$1" x="43.18" y="95.25" smashed="yes">
-<attribute name="VALUE" x="46.355" y="97.79" size="1.778" layer="96" rot="R180"/>
+<instance part="+3V315" gate="G$1" x="43.18" y="92.71" smashed="yes">
+<attribute name="VALUE" x="46.355" y="95.25" size="1.778" layer="96" rot="R180"/>
 </instance>
-<instance part="C18" gate="C" x="43.18" y="85.09" smashed="yes" rot="R90">
-<attribute name="NAME" x="39.37" y="86.36" size="1.778" layer="95" rot="R180" align="bottom-center"/>
-<attribute name="VALUE" x="39.37" y="83.185" size="1.778" layer="96" align="top-center"/>
+<instance part="C18" gate="C" x="43.18" y="82.55" smashed="yes" rot="R90">
+<attribute name="NAME" x="39.37" y="83.82" size="1.778" layer="95" rot="R180" align="bottom-center"/>
+<attribute name="VALUE" x="39.37" y="80.645" size="1.778" layer="96" align="top-center"/>
 </instance>
-<instance part="GND34" gate="1" x="43.18" y="77.47" smashed="yes">
-<attribute name="VALUE" x="40.64" y="74.93" size="1.778" layer="96"/>
+<instance part="GND34" gate="1" x="43.18" y="74.93" smashed="yes">
+<attribute name="VALUE" x="40.64" y="72.39" size="1.778" layer="96"/>
 </instance>
-<instance part="IC4" gate="IC" x="62.23" y="85.09" smashed="yes">
-<attribute name="NAME" x="52.07" y="92.71" size="1.778" layer="95" align="top-left"/>
-<attribute name="VALUE" x="52.07" y="77.47" size="1.778" layer="95"/>
+<instance part="IC4" gate="IC" x="62.23" y="82.55" smashed="yes">
+<attribute name="NAME" x="52.07" y="90.17" size="1.778" layer="95" align="top-left"/>
+<attribute name="VALUE" x="52.07" y="74.93" size="1.778" layer="95"/>
 </instance>
 <instance part="J5" gate="J" x="203.2" y="64.77" smashed="yes">
 <attribute name="VALUE" x="201.93" y="54.61" size="1.778" layer="96"/>
@@ -9746,16 +9747,16 @@ Designed by Watterott electronic</text>
 <instance part="GND2" gate="1" x="140.97" y="146.05" smashed="yes">
 <attribute name="VALUE" x="138.43" y="143.51" size="1.778" layer="96"/>
 </instance>
-<instance part="R13" gate="R" x="81.28" y="93.98" smashed="yes" rot="R90">
-<attribute name="NAME" x="80.01" y="93.98" size="1.778" layer="95" rot="R90" align="bottom-center"/>
-<attribute name="VALUE" x="82.55" y="93.98" size="1.778" layer="96" rot="R90" align="top-center"/>
+<instance part="R13" gate="R" x="81.28" y="91.44" smashed="yes" rot="R90">
+<attribute name="NAME" x="80.01" y="91.44" size="1.778" layer="95" rot="R90" align="bottom-center"/>
+<attribute name="VALUE" x="82.55" y="91.44" size="1.778" layer="96" rot="R90" align="top-center"/>
 </instance>
-<instance part="R14" gate="R" x="88.9" y="93.98" smashed="yes" rot="R90">
-<attribute name="NAME" x="87.63" y="93.98" size="1.778" layer="95" rot="R90" align="bottom-center"/>
-<attribute name="VALUE" x="90.17" y="93.98" size="1.778" layer="96" rot="R90" align="top-center"/>
+<instance part="R14" gate="R" x="88.9" y="91.44" smashed="yes" rot="R90">
+<attribute name="NAME" x="87.63" y="91.44" size="1.778" layer="95" rot="R90" align="bottom-center"/>
+<attribute name="VALUE" x="90.17" y="91.44" size="1.778" layer="96" rot="R90" align="top-center"/>
 </instance>
-<instance part="+3V1" gate="G$1" x="85.09" y="102.87" smashed="yes">
-<attribute name="VALUE" x="88.265" y="105.41" size="1.778" layer="96" rot="R180"/>
+<instance part="+3V1" gate="G$1" x="85.09" y="100.33" smashed="yes">
+<attribute name="VALUE" x="88.265" y="102.87" size="1.778" layer="96" rot="R180"/>
 </instance>
 <instance part="R8" gate="R" x="224.79" y="149.86" smashed="yes" rot="R90">
 <attribute name="NAME" x="223.52" y="149.86" size="1.778" layer="95" rot="R90" align="bottom-center"/>
@@ -9851,10 +9852,10 @@ Designed by Watterott electronic</text>
 </segment>
 <segment>
 <pinref part="C18" gate="C" pin="1"/>
-<wire x1="46.99" y1="82.55" x2="43.18" y2="82.55" width="0.1524" layer="91"/>
+<wire x1="46.99" y1="80.01" x2="43.18" y2="80.01" width="0.1524" layer="91"/>
 <pinref part="GND34" gate="1" pin="GND"/>
-<wire x1="43.18" y1="82.55" x2="43.18" y2="80.01" width="0.1524" layer="91"/>
-<junction x="43.18" y="82.55"/>
+<wire x1="43.18" y1="80.01" x2="43.18" y2="77.47" width="0.1524" layer="91"/>
+<junction x="43.18" y="80.01"/>
 <pinref part="IC4" gate="IC" pin="GND"/>
 </segment>
 <segment>
@@ -9967,10 +9968,10 @@ Designed by Watterott electronic</text>
 </segment>
 <segment>
 <pinref part="C18" gate="C" pin="2"/>
-<wire x1="46.99" y1="87.63" x2="43.18" y2="87.63" width="0.1524" layer="91"/>
+<wire x1="46.99" y1="85.09" x2="43.18" y2="85.09" width="0.1524" layer="91"/>
 <pinref part="+3V315" gate="G$1" pin="+3V3"/>
-<wire x1="43.18" y1="87.63" x2="43.18" y2="92.71" width="0.1524" layer="91"/>
-<junction x="43.18" y="87.63"/>
+<wire x1="43.18" y1="85.09" x2="43.18" y2="90.17" width="0.1524" layer="91"/>
+<junction x="43.18" y="85.09"/>
 <pinref part="IC4" gate="IC" pin="VCC"/>
 </segment>
 <segment>
@@ -9985,11 +9986,11 @@ Designed by Watterott electronic</text>
 <segment>
 <pinref part="R13" gate="R" pin="2"/>
 <pinref part="R14" gate="R" pin="2"/>
-<wire x1="81.28" y1="99.06" x2="85.09" y2="99.06" width="0.1524" layer="91"/>
+<wire x1="81.28" y1="96.52" x2="85.09" y2="96.52" width="0.1524" layer="91"/>
 <pinref part="+3V1" gate="G$1" pin="+3V3"/>
-<wire x1="85.09" y1="99.06" x2="88.9" y2="99.06" width="0.1524" layer="91"/>
-<wire x1="85.09" y1="100.33" x2="85.09" y2="99.06" width="0.1524" layer="91"/>
-<junction x="85.09" y="99.06"/>
+<wire x1="85.09" y1="96.52" x2="88.9" y2="96.52" width="0.1524" layer="91"/>
+<wire x1="85.09" y1="97.79" x2="85.09" y2="96.52" width="0.1524" layer="91"/>
+<junction x="85.09" y="96.52"/>
 </segment>
 <segment>
 <pinref part="R8" gate="R" pin="2"/>
@@ -10121,24 +10122,24 @@ Designed by Watterott electronic</text>
 </net>
 <net name="D8_SDA" class="0">
 <segment>
-<wire x1="77.47" y1="87.63" x2="81.28" y2="87.63" width="0.1524" layer="91"/>
-<label x="95.25" y="87.63" size="1.27" layer="95" xref="yes"/>
+<wire x1="77.47" y1="85.09" x2="81.28" y2="85.09" width="0.1524" layer="91"/>
+<label x="95.25" y="85.09" size="1.27" layer="95" xref="yes"/>
 <pinref part="IC4" gate="IC" pin="SDA"/>
 <pinref part="R13" gate="R" pin="1"/>
-<wire x1="81.28" y1="87.63" x2="95.25" y2="87.63" width="0.1524" layer="91"/>
-<wire x1="81.28" y1="87.63" x2="81.28" y2="88.9" width="0.1524" layer="91"/>
-<junction x="81.28" y="87.63"/>
+<wire x1="81.28" y1="85.09" x2="95.25" y2="85.09" width="0.1524" layer="91"/>
+<wire x1="81.28" y1="85.09" x2="81.28" y2="86.36" width="0.1524" layer="91"/>
+<junction x="81.28" y="85.09"/>
 </segment>
 </net>
 <net name="D9_SCL" class="0">
 <segment>
-<wire x1="77.47" y1="82.55" x2="88.9" y2="82.55" width="0.1524" layer="91"/>
-<label x="95.25" y="82.55" size="1.27" layer="95" xref="yes"/>
+<wire x1="77.47" y1="80.01" x2="88.9" y2="80.01" width="0.1524" layer="91"/>
+<label x="95.25" y="80.01" size="1.27" layer="95" xref="yes"/>
 <pinref part="IC4" gate="IC" pin="SCL"/>
 <pinref part="R14" gate="R" pin="1"/>
-<wire x1="88.9" y1="82.55" x2="95.25" y2="82.55" width="0.1524" layer="91"/>
-<wire x1="88.9" y1="82.55" x2="88.9" y2="88.9" width="0.1524" layer="91"/>
-<junction x="88.9" y="82.55"/>
+<wire x1="88.9" y1="80.01" x2="95.25" y2="80.01" width="0.1524" layer="91"/>
+<wire x1="88.9" y1="80.01" x2="88.9" y2="86.36" width="0.1524" layer="91"/>
+<junction x="88.9" y="80.01"/>
 </segment>
 </net>
 <net name="W4OUT" class="0">
