@@ -1,11 +1,10 @@
 # CO2-Ampel
 The CO2-Ampel is a traffic light to show the carbon dioxide concentration in a room.
 
-![CO2-Ampel](https://github.com/watterott/CO2-Ampel/raw/master/hardware/CO2-Ampel_v10.jpg)
-![CO2-Ampel](https://github.com/watterott/CO2-Ampel/raw/master/hardware/CO2-Ampel-Diffusor.png)
+![CO2-Ampel](https://github.com/watterott/CO2-Ampel/raw/master/hardware/CO2-Ampel-Diffusor.jpg)
 
 * [Microchip ATSAMD21](https://www.microchip.com/wwwproducts/en/ATSAMD21G18) ARM Cortex-M0+ Microcontroller
-* [Sensirion SCD30](https://www.sensirion.com/en/environmental-sensors/carbon-dioxide-sensors/carbon-dioxide-sensors-co2/) CO2 Sensor
+* Sensirion [SCD30](https://www.sensirion.com/en/environmental-sensors/carbon-dioxide-sensors/carbon-dioxide-sensors-scd30/) or [SCD40/SCD41](https://www.sensirion.com/en/environmental-sensors/carbon-dioxide-sensors/carbon-dioxide-sensor-scd4x/) CO2 Sensor
 * Intelligent WS2812 RGB-LEDs
 * Acoustic Buzzer
 * Plus Version:
