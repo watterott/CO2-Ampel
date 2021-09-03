@@ -45,6 +45,7 @@ private:
 
 private:
   TwoWire* _wire;
+  bool _initialized;
 };
 
 extern LPS22HBClass BARO;

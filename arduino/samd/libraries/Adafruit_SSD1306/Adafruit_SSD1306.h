@@ -128,7 +128,7 @@ public:
   // NEW CONSTRUCTORS -- recommended for new projects
   Adafruit_SSD1306(uint8_t w, uint8_t h, TwoWire *twi = &Wire,
                    int8_t rst_pin = -1, uint32_t clkDuring = 100000UL,
-                   uint32_t clkAfter = 50000UL);
+                   uint32_t clkAfter = 100000UL);
   Adafruit_SSD1306(uint8_t w, uint8_t h, int8_t mosi_pin, int8_t sclk_pin,
                    int8_t dc_pin, int8_t rst_pin, int8_t cs_pin);
   Adafruit_SSD1306(uint8_t w, uint8_t h, SPIClass *spi, int8_t dc_pin,

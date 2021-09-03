@@ -1,6 +1,11 @@
-= LPS22HB Library for Arduino =
+:repository-owner: arduino-libraries
+:repository-name: Arduino_LPS22HB
 
-image:https://github.com/arduino-libraries/Arduino_LPS22HB/workflows/Compile%20Examples/badge.svg["Compile Examples Status", link="https://github.com/arduino-libraries/Arduino_LPS22HB/actions?workflow=Compile+Examples"] image:https://github.com/arduino-libraries/Arduino_LPS22HB/workflows/Spell%20Check/badge.svg["Spell Check Status", link="https://github.com/arduino-libraries/Arduino_LPS22HB/actions?workflow=Spell+Check"]
+= {repository-name} Library for Arduino =
+
+image:https://github.com/{repository-owner}/{repository-name}/actions/workflows/check-arduino.yml/badge.svg["Check Arduino status", link="https://github.com/{repository-owner}/{repository-name}/actions/workflows/check-arduino.yml"]
+image:https://github.com/{repository-owner}/{repository-name}/actions/workflows/compile-examples.yml/badge.svg["Compile Examples status", link="https://github.com/{repository-owner}/{repository-name}/actions/workflows/compile-examples.yml"]
+image:https://github.com/{repository-owner}/{repository-name}/actions/workflows/spell-check.yml/badge.svg["Spell Check status", link="https://github.com/{repository-owner}/{repository-name}/actions/workflows/spell-check.yml"]
 
 Allows you to read the pressure sensor of your Nano 33 BLE Sense.
 

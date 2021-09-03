@@ -48,10 +48,36 @@ class SensirionI2CTxFrame {
 
   public:
     /**
+     * Factory to create a SensirionI2CTxFrame using a UInt8 command.
+     *
+     * @param command    Command to add to the send frame.
+     * @param buffer     Buffer in which the send frame will be stored.
+     * @param bufferSize Number of bytes in the buffer for the send frame.
+     * @return the constructed SensirionI2CTxFrame.
+     */
+    static SensirionI2CTxFrame createWithUInt8Command(uint8_t command,
+                                                      uint8_t buffer[],
+                                                      size_t bufferSize);
+
+    /**
+     * Factory to create a SensirionI2CTxFrame using a UInt16 command.
+     *
+     * @param command    Command to add to the send frame.
+     * @param buffer     Buffer in which the send frame will be stored.
+     * @param bufferSize Number of bytes in the buffer for the send frame.
+     * @return the constructed SensirionI2CTxFrame.
+     */
+    static SensirionI2CTxFrame createWithUInt16Command(uint16_t command,
+                                                       uint8_t buffer[],
+                                                       size_t bufferSize);
+
+    /**
      * Constructor
      *
      * @param buffer     Buffer in which the send frame will be stored.
      * @param bufferSize Number of bytes in the buffer for the send frame.
+     *
+     * @deprecated Use createWithUInt16Command() instead
      */
     SensirionI2CTxFrame(uint8_t buffer[], size_t bufferSize);
 
@@ -61,6 +87,8 @@ class SensirionI2CTxFrame {
      * @param command Command to add to the send frame.
      *
      * @return        NoError on success, an error code otherwise
+     *
+     * @deprecated Use createWithUInt16Command() instead
      */
     uint16_t addCommand(uint16_t command);
 
@@ -147,11 +175,17 @@ class SensirionI2CTxFrame {
     uint16_t addBytes(const uint8_t data[], size_t dataLength);
 
   private:
+    SensirionI2CTxFrame(uint8_t buffer[], size_t bufferSize,
+                        size_t numCommandBytes);
+
     static uint8_t _generateCRC(const uint8_t* data, size_t count);
+
     uint16_t _addByte(uint8_t data);
+
     uint8_t* _buffer;
     size_t _bufferSize;
     size_t _index;
+    size_t _numCommandBytes;
 };
 
 #endif /* SENSIRION_I2C_TX_FRAME_H_ */
