@@ -22,7 +22,7 @@
     5=X      - Range/Bereich 5 Start (400-10000) - rot + Buzzer
 */
 
-#define VERSION "19"
+#define VERSION "20"
 
 //--- CO2-Werte ---
 //Covid Praevention: https://www.umwelt-campus.de/forschung/projekte/iot-werkstatt/ideen-zur-corona-krise
@@ -1166,6 +1166,46 @@ void calibration(void) //Kalibrierung
     interval = 5; //5s
   }
 
+  //ASC
+  if(features & FEATURE_SCD30)
+  {
+    if(AUTO_KALIBRIERUNG) //ASC on
+    {
+      if(scd30.getAutoSelfCalibration() == 0)
+      {
+        scd30.setAutoSelfCalibration(1);
+      }
+    }
+    else //ASC off
+    {
+      if(scd30.getAutoSelfCalibration() != 0)
+      {
+        scd30.setAutoSelfCalibration(0);
+      }
+    }
+  }
+  else if(features & FEATURE_SCD4X)
+  {
+    if(AUTO_KALIBRIERUNG) //ASC on
+    {
+      uint16_t asc;
+      scd4x.getAutomaticSelfCalibration(asc);
+      if(asc == 0)
+      {
+        scd4x.setAutomaticSelfCalibration(1);
+      }
+    }
+    else //ASC off
+    {
+      uint16_t asc;
+      scd4x.getAutomaticSelfCalibration(asc);
+      if(asc != 0)
+      {
+        scd4x.setAutomaticSelfCalibration(0);
+      }
+    }
+  }
+
   //Kalibrierung
   co2 = co2_last = co2_sensor();
   for(okay=0; okay < (180/interval);) //mindestens 3 Minuten
@@ -1502,22 +1542,6 @@ void setup()
       }
       status_led(1000); //Status-LED
     }
-    /*
-    if(AUTO_KALIBRIERUNG) //ASC on
-    {
-      if(scd30.getAutoSelfCalibration() == 0)
-      {
-        scd30.setAutoSelfCalibration(1);
-      }
-    }
-    else //ASC off
-    {
-      if(scd30.getAutoSelfCalibration() != 0)
-      {
-        scd30.setAutoSelfCalibration(0);
-      }
-    }
-    */
     scd30.setMeasurementInterval(INTERVALL); //setze Messintervall
     //scd30.setAmbientPressure(1000); //0 oder 700-1400, Luftdruck in hPa
   }
@@ -1534,24 +1558,6 @@ void setup()
         break;
       }
       status_led(1000); //Status-LED
-    }
-    if(AUTO_KALIBRIERUNG) //ASC on
-    {
-      uint16_t asc;
-      scd4x.getAutomaticSelfCalibration(asc);
-      if(asc == 0)
-      {
-        scd4x.setAutomaticSelfCalibration(1);
-      }
-    }
-    else //ASC off
-    {
-      uint16_t asc;
-      scd4x.getAutomaticSelfCalibration(asc);
-      if(asc != 0)
-      {
-        scd4x.setAutomaticSelfCalibration(0);
-      }
     }
   }
 
@@ -1679,6 +1685,17 @@ void setup()
   else if(features & FEATURE_SCD4X)
   {
     //Intervall 5s
+  }
+  else
+  {
+    if(features & FEATURE_USB)
+    {
+      Serial.println("Error: CO2 sensor not found");
+    }
+    leds(FARBE_ROT);
+    status_led(1000); //Status-LED
+    leds(FARBE_AUS);
+    co2_value = co2_average = START_ROT;
   }
 
   return;
