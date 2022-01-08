@@ -22,7 +22,7 @@
     5=X      - Range/Bereich 5 Start (400-10000) - rot + Buzzer
 */
 
-#define VERSION "20"
+#define VERSION "21"
 
 //--- CO2-Werte ---
 //Covid Praevention: https://www.umwelt-campus.de/forschung/projekte/iot-werkstatt/ideen-zur-corona-krise
@@ -499,6 +499,7 @@ void serial_service(void)
             if(features & FEATURE_SCD30)
             {
               scd30.setForcedRecalibrationFactor(val);
+              delay(500);
             }
             else if(features & FEATURE_SCD4X)
             {
@@ -727,7 +728,7 @@ void webserver_service(void)
           client.println("'><br>");
           client.println("<input type=submit value=Speichern> (Neustart erforderlich)");
           client.println("</form>");
-          client.print("<br><br><small>Firmware: v"VERSION"");
+          client.print("<br><br><small>Firmware: v" VERSION);
           if(features & FEATURE_WINC1500)
           {
             String fv = WiFi.firmwareVersion();
@@ -759,11 +760,9 @@ void webserver_service(void)
 int check_i2c(Sercom *sercom, byte addr) //1=okay
 {
   int res = 0;
-  unsigned long t_start;
 
   for(int t=3; (t!=0) && (res==0); t--) //try 3 times
   {
-    t_start = millis();
     sercom->I2CM.CTRLA.bit.ENABLE = 1; //enable master mode
     delay(10); //wait 10ms
     sercom->I2CM.ADDR.bit.ADDR = (addr<<1) | 0x00; //start transfer
@@ -996,7 +995,7 @@ void air_test(void) //Frischluft-Test
 
 void altitude_toffset(void) //Altitude und Temperaturoffset
 {
-  unsigned int timeout, sw, value;
+  unsigned int timeout, sw, value=0;
 
   //Altitude
   if(features & FEATURE_SCD30)
@@ -1152,7 +1151,7 @@ void altitude_toffset(void) //Altitude und Temperaturoffset
 
 void calibration(void) //Kalibrierung
 {
-  unsigned int abort=0, okay, interval=INTERVALL, co2, co2_last;
+  unsigned int abort=0, cycle, again, interval=INTERVALL, co2, co2_last;
 
   //Der Messintervall während der Kalibrierung und im Betrieb sollte gleich sein.
   //Unterschiedliche Intervalle können zu Abweichungen und schwankenden Messwerten führen.
@@ -1206,9 +1205,11 @@ void calibration(void) //Kalibrierung
     }
   }
 
+  calibration_start:
+
   //Kalibrierung
   co2 = co2_last = co2_sensor();
-  for(okay=0; okay < (180/interval);) //mindestens 3 Minuten
+  for(again=0, cycle=0; cycle < (180/interval);) //mindestens 3 Minuten
   {
     if(digitalRead(PIN_SWITCH) == 0) //Taster gedrueckt?
     {
@@ -1221,19 +1222,21 @@ void calibration(void) //Kalibrierung
     if(check_sensors())
     {
       co2 = co2_sensor();
-      if(co2 < 300) //Sensor falsch kalibriert
+      if((co2 >= 200) && (co2 <= 800) && 
+         (co2 >= (co2_last-30)) &&
+         (co2 <= (co2_last+30))) //+/-30ppm Toleranz zum vorherigen Wert
       {
-        okay++;
+        cycle++;
+        again = 0;
       }
-      else if((co2 >= 300) && (co2 <= 2000) && 
-              (co2 >= (co2_last-30)) &&
-              (co2 <= (co2_last+30))) //+/-30ppm Toleranz zum vorherigen Wert
+      else //Sensor falsch kalibriert
       {
-        okay++;
-      }
-      else
-      {
-        okay = 0;
+        again++;
+        if(again > 3)
+        {
+          again = 1;
+          cycle++;
+        }
       }
       co2_last = co2;
 
@@ -1257,18 +1260,19 @@ void calibration(void) //Kalibrierung
 
       if(features & FEATURE_USB)
       {
-        Serial.print("ok: ");
-        Serial.println(okay);
+        Serial.print("loop: ");
+        Serial.println(cycle);
       }
 
       show_data();
     }
   }
-  if((abort == 0) && (okay >= (180/interval)))
+  if(abort == 0)
   {
     if(features & FEATURE_SCD30)
     {
       scd30.setForcedRecalibrationFactor(400); //400ppm = Frischluft
+      delay(500);
     }
     else if(features & FEATURE_SCD4X)
     {
@@ -1278,6 +1282,11 @@ void calibration(void) //Kalibrierung
       scd4x.performForcedRecalibration(400, corr); //400ppm = Frischluft
       delay(500);
       scd4x.startPeriodicMeasurement();
+    }
+    if(again != 0)
+    {
+      Serial.println("Restart calibration");
+      goto calibration_start;
     }
     leds(FARBE_BLAU);//LEDs blau
     buzzer(500); //500ms Buzzer an
