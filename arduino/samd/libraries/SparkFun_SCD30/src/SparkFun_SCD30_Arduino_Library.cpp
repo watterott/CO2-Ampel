@@ -151,19 +151,29 @@ bool SCD30::setForcedRecalibrationFactor(uint16_t concentration)
 float SCD30::getTemperatureOffset(void)
 {
   uint16_t response = readRegister(COMMAND_SET_TEMPERATURE_OFFSET);
-  return (((float)response) / 100.0);
-}
 
-//Set the temperature offset. See 1.3.8.
-bool SCD30::setTemperatureOffset(float tempOffset)
-{
   union
   {
     int16_t signed16;
     uint16_t unsigned16;
   } signedUnsigned; // Avoid any ambiguity casting int16_t to uint16_t
-  signedUnsigned.signed16 = tempOffset * 100;
-  return sendCommand(COMMAND_SET_TEMPERATURE_OFFSET, signedUnsigned.unsigned16);
+  signedUnsigned.signed16 = response;
+
+  return (((float)signedUnsigned.signed16) / 100.0);
+}
+
+//Set the temperature offset to remove module heating from temp reading
+bool SCD30::setTemperatureOffset(float tempOffset)
+{
+  //Temp offset is only positive. See: https://github.com/sparkfun/SparkFun_SCD30_Arduino_Library/issues/27#issuecomment-971986826
+  //"The SCD30 offset temperature is obtained by subtracting the reference temperature from the SCD30 output temperature"
+  //https://www.sensirion.com/fileadmin/user_upload/customers/sensirion/Dokumente/9.5_CO2/Sensirion_CO2_Sensors_SCD30_Low_Power_Mode.pdf
+
+  if(tempOffset < 0.0) return(false);
+
+  uint16_t value = tempOffset * 100;
+
+  return sendCommand(COMMAND_SET_TEMPERATURE_OFFSET, value);
 }
 
 //Get the altitude compenstation. See 1.3.9.

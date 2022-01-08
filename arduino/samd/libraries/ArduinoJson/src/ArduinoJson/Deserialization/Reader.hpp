@@ -1,5 +1,5 @@
 // ArduinoJson - https://arduinojson.org
-// Copyright Benoit Blanchon 2014-2021
+// Copyright © 2014-2022, Benoit BLANCHON
 // MIT License
 
 #pragma once
@@ -17,7 +17,7 @@ struct Reader {
   Reader(TSource& source) : _source(&source) {}
 
   int read() {
-    return _source->read();
+    return _source->read();  // Error here? You passed an unsupported input type
   }
 
   size_t readBytes(char* buffer, size_t length) {

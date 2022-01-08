@@ -1,5 +1,4 @@
-#include <Adafruit_I2CDevice.h>
-#include <Arduino.h>
+#include "Adafruit_I2CDevice.h"
 
 //#define DEBUG_SERIAL Serial
 
@@ -34,6 +33,23 @@ bool Adafruit_I2CDevice::begin(bool addr_detect) {
     return detected();
   }
   return true;
+}
+
+/*!
+ *    @brief  De-initialize device, turn off the Wire interface
+ */
+void Adafruit_I2CDevice::end(void) {
+  // Not all port implement Wire::end(), such as
+  // - ESP8266
+  // - AVR core without WIRE_HAS_END
+  // - ESP32: end() is implemented since 2.0.1 which is latest at the moment.
+  // Temporarily disable for now to give time for user to update.
+#if !(defined(ESP8266) ||                                                      \
+      (defined(ARDUINO_ARCH_AVR) && !defined(WIRE_HAS_END)) ||                 \
+      defined(ARDUINO_ARCH_ESP32))
+  _wire->end();
+  _begun = false;
+#endif
 }
 
 /*!
@@ -77,10 +93,19 @@ bool Adafruit_I2CDevice::detected(void) {
 bool Adafruit_I2CDevice::write(const uint8_t *buffer, size_t len, bool stop,
                                const uint8_t *prefix_buffer,
                                size_t prefix_len) {
+  if ((len + prefix_len) > maxBufferSize()) {
+    // currently not guaranteed to work if more than 32 bytes!
+    // we will need to find out if some platforms have larger
+    // I2C buffer sizes :/
+#ifdef DEBUG_SERIAL
+    DEBUG_SERIAL.println(F("\tI2CDevice could not write such a large buffer"));
+#endif
+    return false;
+  }
+
   _wire->beginTransmission(_addr);
 
   // Write the prefix data (usually an address)
-  // This is required to be less than _maxBufferSize, so no need to chunkify
   if ((prefix_len != 0) && (prefix_buffer != NULL)) {
     if (_wire->write(prefix_buffer, prefix_len) != prefix_len) {
 #ifdef DEBUG_SERIAL
@@ -90,32 +115,14 @@ bool Adafruit_I2CDevice::write(const uint8_t *buffer, size_t len, bool stop,
     }
   }
 
-  // Write the data itself, chunkify if needed
-  size_t bufferSize = maxBufferSize();
-  if (bufferSize >= len) {
-    // can just write
-    if (_wire->write(buffer, len) != len) {
+  // Write the data itself
+  if (_wire->write(buffer, len) != len) {
 #ifdef DEBUG_SERIAL
-      DEBUG_SERIAL.println(F("\tI2CDevice failed to write"));
+    DEBUG_SERIAL.println(F("\tI2CDevice failed to write"));
 #endif
-      return false;
-    }
-  } else {
-    // must chunkify
-    size_t pos = 0;
-    uint8_t write_buffer[bufferSize];
-    while (pos < len) {
-      size_t write_len = len - pos > bufferSize ? bufferSize : len - pos;
-      for (size_t i = 0; i < write_len; i++)
-        write_buffer[i] = buffer[pos++];
-      if (_wire->write(write_buffer, write_len) != write_len) {
-#ifdef DEBUG_SERIAL
-        DEBUG_SERIAL.println(F("\tI2CDevice failed to write"));
-#endif
-        return false;
-      }
-    }
+    return false;
   }
+
 #ifdef DEBUG_SERIAL
 
   DEBUG_SERIAL.print(F("\tI2CWRITE @ 0x"));
@@ -136,22 +143,21 @@ bool Adafruit_I2CDevice::write(const uint8_t *buffer, size_t len, bool stop,
       DEBUG_SERIAL.println();
     }
   }
-  DEBUG_SERIAL.println();
-#endif
 
-#ifdef DEBUG_SERIAL
-  DEBUG_SERIAL.print("Stop: ");
-  DEBUG_SERIAL.println(stop);
+  if (stop) {
+    DEBUG_SERIAL.print("\tSTOP");
+  }
 #endif
 
   if (_wire->endTransmission(stop) == 0) {
 #ifdef DEBUG_SERIAL
-    DEBUG_SERIAL.println("Sent!");
+    DEBUG_SERIAL.println();
+    // DEBUG_SERIAL.println("Sent!");
 #endif
     return true;
   } else {
 #ifdef DEBUG_SERIAL
-    DEBUG_SERIAL.println("Failed to send!");
+    DEBUG_SERIAL.println("\tFailed to send!");
 #endif
     return false;
   }
@@ -166,24 +172,16 @@ bool Adafruit_I2CDevice::write(const uint8_t *buffer, size_t len, bool stop,
  *    @return True if read was successful, otherwise false.
  */
 bool Adafruit_I2CDevice::read(uint8_t *buffer, size_t len, bool stop) {
-  size_t bufferSize = maxBufferSize();
-  if (bufferSize >= len) {
-    // can just read
-    return _read(buffer, len, stop);
-  } else {
-    // must chunkify
-    size_t pos = 0;
-    uint8_t read_buffer[bufferSize];
-    while (pos < len) {
-      size_t read_len = len - pos > bufferSize ? bufferSize : len - pos;
-      if (!_read(read_buffer, read_len, false)) {
-        return false;
-      }
-      for (size_t i = 0; i < read_len; i++)
-        buffer[pos++] = read_buffer[i];
-    }
-    return true;
+  size_t pos = 0;
+  while (pos < len) {
+    size_t read_len =
+        ((len - pos) > maxBufferSize()) ? maxBufferSize() : (len - pos);
+    bool read_stop = (pos < (len - read_len)) ? false : stop;
+    if (!_read(buffer + pos, read_len, read_stop))
+      return false;
+    pos += read_len;
   }
+  return true;
 }
 
 bool Adafruit_I2CDevice::_read(uint8_t *buffer, size_t len, bool stop) {

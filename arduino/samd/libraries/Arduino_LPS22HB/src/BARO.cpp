@@ -53,7 +53,9 @@ int LPS22HBClass::begin()
 
 void LPS22HBClass::end()
 {
+  #if defined(WIRE_HAS_END) && WIRE_HAS_END
   _wire->end();
+  #endif
   _initialized = false;
 }
 

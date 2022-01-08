@@ -1,5 +1,5 @@
 // ArduinoJson - https://arduinojson.org
-// Copyright Benoit Blanchon 2014-2021
+// Copyright © 2014-2022, Benoit BLANCHON
 // MIT License
 
 #pragma once
@@ -32,8 +32,8 @@ class Filter {
   Filter operator[](const TKey& key) const {
     if (_variant == true)  // "true" means "allow recursively"
       return *this;
-    else
-      return Filter(_variant[key] | _variant["*"]);
+    VariantConstRef member = _variant[key];
+    return Filter(member.isNull() ? _variant["*"] : member);
   }
 
  private:
