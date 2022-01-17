@@ -22,7 +22,7 @@
     5=X      - Range/Bereich 5 Start (400-10000) - rot + Buzzer
 */
 
-#define VERSION "21"
+#define VERSION "22"
 
 //--- CO2-Werte ---
 //Covid Praevention: https://www.umwelt-campus.de/forschung/projekte/iot-werkstatt/ideen-zur-corona-krise
@@ -262,6 +262,14 @@ unsigned int check_sensors(void) //Sensoren auslesen
         pres_last = pres_value;
         scd30.setAmbientPressure(pres_value); //hPa=mBar
       }
+      if(humi_value < 0)
+      {
+        humi_value = 0;
+      }
+      else if(humi_value > 100)
+      {
+        humi_value = 100;
+      }
       return 1;
     }
   }
@@ -289,6 +297,14 @@ unsigned int check_sensors(void) //Sensoren auslesen
       {
         pres_last = pres_value;
         scd4x.setAmbientPressure(pres_value); //hPa=mBar
+      }
+      if(humi_value < 0)
+      {
+        humi_value = 0;
+      }
+      else if(humi_value > 100)
+      {
+        humi_value = 100;
       }
       return 1;
     }
