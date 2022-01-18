@@ -465,6 +465,7 @@ void serial_service(void)
           sscanf(tmp, "%d", &val);
           if((val >= 0) && (val <= 20))
           {
+            temp_offset = val;
             if(features & FEATURE_SCD30)
             {
               scd30.setTemperatureOffset(val); //Temperaturoffset
@@ -1587,20 +1588,15 @@ void setup()
   }
 
   //Temperaturoffset
-  if(features & FEATURE_WINC1500)
+  if(features & FEATURE_SCD30)
   {
-    if(features & (FEATURE_LPS22HB|FEATURE_BMP280))
-    {
-      temp_offset = TEMP_OFFSET_PRO;
-    }
-    else
-    {
-      temp_offset = TEMP_OFFSET_WIFI;
-    }
+    temp_offset = scd30.getTemperatureOffset();
   }
-  else
+  else if(features & FEATURE_SCD4X)
   {
-    temp_offset = TEMP_OFFSET;
+    float offset;
+    scd4x.getTemperatureOffset(offset);
+    temp_offset = offset;
   }
 
   //Einstellungen
@@ -1619,6 +1615,22 @@ void setup()
     strcpy(settings.wifi_code, WIFI_CODE);
     settings.valid        = true;
     flash_settings.write(settings);
+    //Standard Temperaturoffset
+    if(features & FEATURE_WINC1500)
+    {
+      if(features & (FEATURE_LPS22HB|FEATURE_BMP280))
+      {
+        temp_offset = TEMP_OFFSET_PRO;
+      }
+      else
+      {
+        temp_offset = TEMP_OFFSET_WIFI;
+      }
+    }
+    else
+    {
+      temp_offset = TEMP_OFFSET;
+    }
     if(features & FEATURE_SCD30)
     {
       if(scd30.getTemperatureOffset() == 0)
