@@ -1633,7 +1633,9 @@ void setup()
     }
     if(features & FEATURE_SCD30)
     {
-      if(scd30.getTemperatureOffset() == 0)
+      float offset;
+      offset = scd30.getTemperatureOffset();
+      if((offset == 0) || (offset > 12))
       {
         scd30.setTemperatureOffset(temp_offset); //Temperaturoffset
       }
@@ -1642,7 +1644,7 @@ void setup()
     {
       float offset;
       scd4x.getTemperatureOffset(offset);
-      if(offset == 0)
+      if((offset == 0) || (offset > 12))
       {
         scd4x.setTemperatureOffset(temp_offset); //Temperaturoffset
       }
