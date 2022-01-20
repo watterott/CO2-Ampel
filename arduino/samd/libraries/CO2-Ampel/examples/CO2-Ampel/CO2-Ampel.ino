@@ -296,7 +296,11 @@ unsigned int check_sensors(void) //Sensoren auslesen
       if((pres_value < (pres_last-DRUCK_DIFF)) || (pres_value > (pres_last+DRUCK_DIFF)))
       {
         pres_last = pres_value;
+        scd4x.stopPeriodicMeasurement();
+        delay(1000);
         scd4x.setAmbientPressure(pres_value); //hPa=mBar
+        delay(500);
+        scd4x.startPeriodicMeasurement();
       }
       if(humi_value < 0)
       {
@@ -471,12 +475,23 @@ void serial_service(void)
             if(features & FEATURE_SCD30)
             {
               scd30.setTemperatureOffset(val); //Temperaturoffset
+              Serial.println("OK");
             }
             else if(features & FEATURE_SCD4X)
             {
-              scd4x.setTemperatureOffset(val); //Temperaturoffset
+              scd4x.stopPeriodicMeasurement();
+              delay(1000);
+              if(scd4x.setTemperatureOffset(val) == 0) //Temperaturoffset
+              {
+                Serial.println("OK");
+              }
+              else
+              {
+                Serial.println("ERROR");
+              }
+              delay(500);
+              scd4x.startPeriodicMeasurement();
             }
-            Serial.println("OK");
           }
         }
         break;
@@ -492,12 +507,23 @@ void serial_service(void)
             if(features & FEATURE_SCD30)
             {
               scd30.setAltitudeCompensation(val); //Meter ueber dem Meeresspiegel
+              Serial.println("OK");
             }
             else if(features & FEATURE_SCD4X)
             {
-              scd4x.setSensorAltitude(val); //Meter ueber dem Meeresspiegel
+              scd4x.stopPeriodicMeasurement();
+              delay(1000);
+              if(scd4x.setSensorAltitude(val) == 0) //Meter ueber dem Meeresspiegel
+              {
+                Serial.println("OK");
+              }
+              else
+              {
+                Serial.println("ERROR");
+              }
+              delay(500);
+              scd4x.startPeriodicMeasurement();
             }
-            Serial.println("OK");
           }
         }
         break;
@@ -524,9 +550,9 @@ void serial_service(void)
             {
               uint16_t corr;
               scd4x.stopPeriodicMeasurement();
-              delay(500);
+              delay(1000);
               scd4x.performForcedRecalibration(val, corr);
-              delay(500);
+              delay(1000);
               scd4x.startPeriodicMeasurement();
             }
             Serial.println("OK");
@@ -571,7 +597,11 @@ void serial_service(void)
         else if(features & FEATURE_SCD4X)
         {
           float offset;
+          scd4x.stopPeriodicMeasurement();
+          delay(500);
           scd4x.getTemperatureOffset(offset);
+          delay(500);
+          scd4x.startPeriodicMeasurement();
           val = offset;
         }
         Serial.println(val, DEC);
@@ -584,7 +614,11 @@ void serial_service(void)
         else if(features & FEATURE_SCD4X)
         {
           uint16_t alt;
+          scd4x.stopPeriodicMeasurement();
+          delay(500);
           scd4x.getSensorAltitude(alt);
+          delay(500);
+          scd4x.startPeriodicMeasurement();
           val = alt;
         }
         Serial.println(val, DEC);
@@ -1026,7 +1060,11 @@ void altitude_toffset(void) //Altitude und Temperaturoffset
   else if(features & FEATURE_SCD4X)
   {
     uint16_t altitude;
+    scd4x.stopPeriodicMeasurement();
+    delay(500);
     scd4x.getSensorAltitude(altitude); //Meter ueber dem Meeresspiegel
+    delay(500);
+    scd4x.startPeriodicMeasurement();
     value = altitude/250;
   }
 
@@ -1082,7 +1120,11 @@ void altitude_toffset(void) //Altitude und Temperaturoffset
   }
   else if(features & FEATURE_SCD4X)
   {
+    scd4x.stopPeriodicMeasurement();
+    delay(1000);
     scd4x.setSensorAltitude(value); //Meter ueber dem Meeresspiegel
+    delay(500);
+    scd4x.startPeriodicMeasurement();
   }
 
   if(features & FEATURE_USB)
@@ -1102,7 +1144,11 @@ void altitude_toffset(void) //Altitude und Temperaturoffset
   else if(features & FEATURE_SCD4X)
   {
     float offset;
+    scd4x.stopPeriodicMeasurement();
+    delay(500);
     scd4x.getTemperatureOffset(offset); //Meter ueber dem Meeresspiegel
+    delay(500);
+    scd4x.startPeriodicMeasurement();
     value = offset / 2;
   }
   ws2812.fill(FARBE_BLAU, 0, 4); //LEDs blau
@@ -1157,7 +1203,11 @@ void altitude_toffset(void) //Altitude und Temperaturoffset
   }
   else if(features & FEATURE_SCD4X)
   {
+    scd4x.stopPeriodicMeasurement();
+    delay(1000);
     scd4x.setTemperatureOffset(value); //Temperaturoffset
+    delay(500);
+    scd4x.startPeriodicMeasurement();
   }
   flash_settings.write(settings); //Einstellungen speichern
   if(features & FEATURE_USB)
@@ -1206,6 +1256,8 @@ void calibration(void) //Kalibrierung
   }
   else if(features & FEATURE_SCD4X)
   {
+    scd4x.stopPeriodicMeasurement();
+    delay(1000);
     if(AUTO_KALIBRIERUNG) //ASC on
     {
       uint16_t asc;
@@ -1224,6 +1276,8 @@ void calibration(void) //Kalibrierung
         scd4x.setAutomaticSelfCalibration(0);
       }
     }
+    delay(500);
+    scd4x.startPeriodicMeasurement();
   }
 
   calibration_start:
@@ -1299,9 +1353,9 @@ void calibration(void) //Kalibrierung
     {
       uint16_t corr;
       scd4x.stopPeriodicMeasurement();
-      delay(500);
+      delay(1000);
       scd4x.performForcedRecalibration(400, corr); //400ppm = Frischluft
-      delay(500);
+      delay(1000);
       scd4x.startPeriodicMeasurement();
     }
     if(again != 0)
@@ -1582,6 +1636,7 @@ void setup()
       Wire.begin();
       scd4x.begin(Wire);
       scd4x.stopPeriodicMeasurement();
+      delay(100);
       if(scd4x.startPeriodicMeasurement() == 0)
       {
         features |= FEATURE_SCD4X;
@@ -1599,8 +1654,18 @@ void setup()
   else if(features & FEATURE_SCD4X)
   {
     float offset;
-    scd4x.getTemperatureOffset(offset);
-    temp_offset = offset;
+    scd4x.stopPeriodicMeasurement();
+    delay(500);
+    if(scd4x.getTemperatureOffset(offset) == 0)
+    {
+      temp_offset = offset;
+    }
+    delay(500);
+    scd4x.startPeriodicMeasurement();
+  }
+  if(temp_offset >= 20)
+  {
+    temp_offset = TEMP_OFFSET;
   }
 
   //Einstellungen
