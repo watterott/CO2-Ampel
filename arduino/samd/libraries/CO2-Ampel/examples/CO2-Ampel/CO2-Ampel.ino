@@ -136,7 +136,7 @@ WiFiServer server(80); //Webserver Port 80
 
 unsigned int features=0, remote_on=0, buzzer_timer=BUZZER_DELAY;
 unsigned int co2_value=STARTWERT, co2_average=STARTWERT, light_value=1024;
-float temp_value=20, temp_offset=TEMP_OFFSET, humi_value=50, pres_value=1013, pres_last=1013;
+float temp_value=20, temp_offset=TEMP_OFFSET, humi_value=50, pres_value=1013, pres_last=1013, temp2_value=20;
 
 
 void leds(uint32_t color)
@@ -249,13 +249,13 @@ unsigned int check_sensors(void) //Sensoren auslesen
       humi_value = scd30.getHumidity();
       if(features & FEATURE_LPS22HB)
       {
-        pres_value = lps22.readPressure()*10; //kPa -> hPa
-        temp_value = lps22.readTemperature()-temp_offset;
+        pres_value  = lps22.readPressure()*10; //kPa -> hPa
+        temp2_value = lps22.readTemperature()-temp_offset;
       }
       if(features & FEATURE_BMP280)
       {
-        pres_value = bmp280.readPressure()/100; //Pa -> hPa
-        temp_value = bmp280.readTemperature()-temp_offset;
+        pres_value  = bmp280.readPressure()/100; //Pa -> hPa
+        temp2_value = bmp280.readTemperature()-temp_offset;
       }
       if((pres_value < (pres_last-DRUCK_DIFF)) || (pres_value > (pres_last+DRUCK_DIFF)))
       {
@@ -285,13 +285,13 @@ unsigned int check_sensors(void) //Sensoren auslesen
       humi_value = v_humi;
       if(features & FEATURE_LPS22HB)
       {
-        pres_value = lps22.readPressure()*10; //kPa -> hPa
-        temp_value = lps22.readTemperature()-temp_offset;
+        pres_value  = lps22.readPressure()*10; //kPa -> hPa
+        temp2_value = lps22.readTemperature()-temp_offset;
       }
       if(features & FEATURE_BMP280)
       {
-        pres_value = bmp280.readPressure()/100; //Pa -> hPa
-        temp_value = bmp280.readTemperature()-temp_offset;
+        pres_value  = bmp280.readPressure()/100; //Pa -> hPa
+        temp2_value = bmp280.readTemperature()-temp_offset;
       }
       if((pres_value < (pres_last-DRUCK_DIFF)) || (pres_value > (pres_last+DRUCK_DIFF)))
       {
@@ -330,6 +330,8 @@ void show_data(void) //Daten anzeigen
     {
       Serial.print("p: ");         //Druck
       Serial.println(pres_value);  //Wert in hPa
+      Serial.print("u: ");         //Temperatur
+      Serial.println(temp2_value); //Wert in °C
     }
     Serial.println();
   }
@@ -733,6 +735,8 @@ void webserver_service(void)
           {
             client.print("<br>Druck (hPa): ");
             client.println(pres_value, 1);
+            client.print("<br>Temperatur (C): ");
+            client.println(temp2_value, 1);
           }
           client.println("<br></span><br><hr><br>");
           client.print("<br><b>WiFi Login</b>");
