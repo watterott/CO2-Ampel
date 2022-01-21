@@ -8,12 +8,16 @@
   Serielle Befehle
     R=0      - Remote/Fernsteuerung aus
     R=1      - Remote/Fernsteuerung an
+    V?       - Firmwareversion abfragen
     S=1      - Save/Speichern
     L=RRGGBB - LED-Farbe (000000-FFFFFF)
     H=X      - LED-Helligkeit (0-FF)
-    B=1      - Buzzer an 500ms
+    B=0      - Buzzer deaktiviert
+    B=1      - Buzzer aktiviert und an für 500ms
     T=X      - Temperaturoffset in °C (0-20)
+    T?       - Temperaturoffset abfragen
     A=X      - Altitude/Hoehe ueber dem Meeresspiegel (0-3000)
+    A?       - Altitude abfragen
     C=1      - Calibration/Kalibrierung auf 400ppm (mind. 2min Betrieb an Frischluft vor Befehl)
     1=X      - Range/Bereich 1 Start (400-10000) - gruen
     2=X      - Range/Bereich 2 Start (400-10000) - gelb
@@ -23,23 +27,24 @@
 */
 
 #define VERSION "22"
+#define COVID 0 //1=COVID CO2-Werte
 
 //--- CO2-Werte ---
+#if COVID
 //Covid Praevention: https://www.umwelt-campus.de/forschung/projekte/iot-werkstatt/ideen-zur-corona-krise
-#define START_GRUEN         600 //>= 600ppm
-#define START_GELB          800 //>= 800ppm
-#define START_ROT          1000 //>=1000ppm
-#define START_ROT_BLINKEN  1200 //>=1200ppm
-#define START_BUZZER       1400 //>=1400ppm
-
+  #define START_GRUEN         600 //>= 600ppm
+  #define START_GELB          800 //>= 800ppm
+  #define START_ROT          1000 //>=1000ppm
+  #define START_ROT_BLINKEN  1200 //>=1200ppm
+  #define START_BUZZER       1400 //>=1400ppm
+#else
 //Ermuedung
-/*
-#define START_GRUEN         600 //>= 600ppm
-#define START_GELB         1000 //>=1000ppm
-#define START_ROT          1200 //>=1200ppm
-#define START_ROT_BLINKEN  1400 //>=1400ppm
-#define START_BUZZER       1600 //>=1600ppm
-*/
+  #define START_GRUEN         600 //>= 600ppm
+  #define START_GELB         1000 //>=1000ppm
+  #define START_ROT          1200 //>=1200ppm
+  #define START_ROT_BLINKEN  1400 //>=1400ppm
+  #define START_BUZZER       1600 //>=1600ppm
+#endif
 
 //--- Messintervall ---
 #define INTERVALL          2 //2-1800s (nur SCD30, SCD4X immer 5s)
