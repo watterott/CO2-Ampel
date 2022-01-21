@@ -62,6 +62,7 @@
 #define WIFI_AMPEL         0 //1 = Version mit WiFi/WLAN
 #define AMPEL_DURCHSCHNITT 1 //1 = CO2 Durchschnitt fuer Ampel verwenden
 #define AUTO_KALIBRIERUNG  0 //1 = automatische Kalibrierung (ASC) an (erfordert 7 Tage Dauerbetrieb mit 1h Frischluft pro Tag)
+#define BUZZER             1 //Buzzer aktivieren
 #define BUZZER_DELAY     300 //300s, Buzzer Startverzögerung
 #define TEMP_OFFSET        4 //Temperaturoffset in °C (0-20)
 #define TEMP_OFFSET_WIFI   8 //WiFi, Temperaturoffset in °C (0-20)
@@ -120,6 +121,7 @@ typedef struct
   boolean valid;
   unsigned int brightness;
   unsigned int range[5];
+  unsigned int buzzer;
   char wifi_ssid[64+1];
   char wifi_code[64+1];
 } SETTINGS;
@@ -459,6 +461,12 @@ void serial_service(void)
         if(cmd == '1')
         {
           buzzer(500); //500ms Buzzer an
+          settings.buzzer = 1;
+          Serial.println("OK");
+        }
+        else if(cmd == '0')
+        {
+          settings.buzzer = 0;
           Serial.println("OK");
         }
         break;
@@ -589,6 +597,9 @@ void serial_service(void)
       case 'H': //LED Helligkeit
         Serial.println(settings.brightness, HEX);
         break;
+      case 'B': //Buzzer
+        Serial.println(settings.buzzer, DEC);
+        break;
       case 'T': //Temperaturoffset
         if(features & FEATURE_SCD30)
         {
@@ -686,7 +697,7 @@ void webserver_service(void)
   {
     return;
   }
-  
+
   if(WiFi.status() == WL_IDLE_STATUS)
   {
     return;
@@ -703,6 +714,10 @@ void webserver_service(void)
   WiFiClient client = server.available();
   if(client) //Client verbunden
   {
+    //if(features & FEATURE_USB)
+    //{
+    //  Serial.println("WiFi client connected");
+    //}
     boolean currentLineIsBlank = true;
     while(client.connected())
     {
@@ -861,7 +876,7 @@ int check_i2c(Sercom *sercom, byte addr) //1=okay
 void self_test(void) //Testprogramm
 {
   //Buzzer-Test
-  buzzer(1000); //1s Buzzer an
+  buzzer(500); //500ms Buzzer an
 
   //LED-Test
   leds(0xFF0000); //LEDs rot
@@ -1044,7 +1059,76 @@ void air_test(void) //Frischluft-Test
     }
   }
 
+  //Ende
+  leds(FARBE_AUS);//LEDs aus
+  buzzer(250); //250ms Buzzer an
+
   return;
+}
+
+
+unsigned int select_value(unsigned int value, unsigned int min, unsigned int max, unsigned int fill, uint32_t color, uint32_t color_off)
+{
+  unsigned int timeout, sw;
+
+  ws2812.fill(color_off, 0, 4);
+  if(fill == 0)
+  {
+    ws2812.setPixelColor(value, FARBE_VIOLETT);
+  }
+  else if(value > 0)
+  {
+    ws2812.fill(color, 0, value);
+  }
+  ws2812.show();
+
+  for(sw=0, timeout=0; timeout<1000; timeout++) //10s Timeout
+  {
+    delay(10); //10ms warten
+
+    if(digitalRead(PIN_SWITCH) == LOW) //Taster gedrueckt
+    {
+      status_led(1); //Status-LED an
+      sw++;
+      if(sw > 200)
+      {
+        leds(FARBE_AUS); //LEDs aus
+      }
+      timeout = 0;
+    }
+    else //Taster losgelassen
+    {
+      status_led(0); //Status-LED aus
+      if(sw > 200) //2s Tastendruck
+      {
+        break;
+      }
+      else if(sw > 10) //100ms Tastendruck
+      {
+        value++;
+        if(value > max)
+        {
+          value = min;
+        }
+        ws2812.fill(color_off, 0, 4);
+        if(fill == 0)
+        {
+          ws2812.setPixelColor(value, color);
+        }
+        else if(value > 0)
+        {
+          ws2812.fill(color, 0, value);
+        }
+        ws2812.show();
+      }
+      sw = 0;
+    }
+  }
+  
+  leds(FARBE_AUS); //LEDs aus
+  delay(500); //500ms warten
+
+  return value;
 }
 
 
@@ -1063,68 +1147,18 @@ void altitude_toffset(void) //Altitude und Temperaturoffset
     scd4x.stopPeriodicMeasurement();
     delay(500);
     scd4x.getSensorAltitude(altitude); //Meter ueber dem Meeresspiegel
-    delay(500);
-    scd4x.startPeriodicMeasurement();
     value = altitude/250;
   }
 
-  ws2812.fill(FARBE_WEISS, 0, 4); //LEDs weiss
-  if(value > 0)
-  {
-    ws2812.fill(FARBE_ROT, 0, value); //LEDs rot
-  }
-  ws2812.show();
-  for(sw=0, timeout=0; timeout<1000; timeout++) //10s Timeout
-  {
-    delay(10); //10ms warten
+  value = select_value(value, 0, 4, 1, FARBE_ROT, FARBE_WEISS) * 250;
 
-    if(digitalRead(PIN_SWITCH) == LOW) //Taster gedrueckt
-    {
-      status_led(1); //Status-LED an
-      sw++;
-      if(sw > 200)
-      {
-        leds(FARBE_AUS); //LEDs aus
-      }
-      timeout = 0;
-    }
-    else //Taster losgelassen
-    {
-      status_led(0); //Status-LED aus
-      if(sw > 200) //2s Tastendruck
-      {
-        break;
-      }
-      else if(sw > 10) //100ms Tastendruck
-      {
-        value++;
-        if(value > 4)
-        {
-          value = 0;
-        }
-        ws2812.fill(FARBE_WEISS, 0, 4); //LEDs weiss
-        if(value > 0)
-        {
-          ws2812.fill(FARBE_ROT, 0, value); //LEDs rot
-        }
-        ws2812.show();
-      }
-      sw = 0;
-    }
-  }
-  leds(FARBE_AUS); //LEDs aus
-  value = value * 250;
   if(features & FEATURE_SCD30)
   {
     scd30.setAltitudeCompensation(value); //Meter ueber dem Meeresspiegel
   }
   else if(features & FEATURE_SCD4X)
   {
-    scd4x.stopPeriodicMeasurement();
-    delay(1000);
     scd4x.setSensorAltitude(value); //Meter ueber dem Meeresspiegel
-    delay(500);
-    scd4x.startPeriodicMeasurement();
   }
 
   if(features & FEATURE_USB)
@@ -1132,9 +1166,6 @@ void altitude_toffset(void) //Altitude und Temperaturoffset
     Serial.print("Altitude: ");
     Serial.println(value, DEC);
   }
-
-  //Taster noch gedrueckt?
-  while(digitalRead(PIN_SWITCH) == LOW);
 
   //Temperaturoffset
   if(features & FEATURE_SCD30)
@@ -1144,77 +1175,42 @@ void altitude_toffset(void) //Altitude und Temperaturoffset
   else if(features & FEATURE_SCD4X)
   {
     float offset;
-    scd4x.stopPeriodicMeasurement();
-    delay(500);
     scd4x.getTemperatureOffset(offset); //Meter ueber dem Meeresspiegel
-    delay(500);
-    scd4x.startPeriodicMeasurement();
     value = offset / 2;
   }
-  ws2812.fill(FARBE_BLAU, 0, 4); //LEDs blau
-  if(value > 0)
-  {
-    ws2812.fill(FARBE_GELB, 0, value); //LEDs gelb
-  }
-  ws2812.show();
-  for(sw=0, timeout=0; timeout<1000; timeout++) //10s Timeout
-  {
-    delay(10); //10ms warten
 
-    if(digitalRead(PIN_SWITCH) == LOW) //Taster gedrueckt
-    {
-      status_led(1); //Status-LED an
-      sw++;
-      if(sw > 200)
-      {
-        leds(FARBE_AUS); //LEDs aus
-      }
-      timeout = 0;
-    }
-    else //Taster losgelassen
-    {
-      status_led(0); //Status-LED aus
-      if(sw > 200) //2s Tastendruck
-      {
-        break;
-      }
-      else if(sw > 10) //100ms Tastendruck
-      {
-        value++;
-        if(value > 4)
-        {
-          value = 0;
-        }
-        ws2812.fill(FARBE_BLAU, 0, 4); //LEDs blau
-        if(value > 0)
-        {
-          ws2812.fill(FARBE_GELB, 0, value); //LEDs gelb
-        }
-        ws2812.show();
-      }
-      sw = 0;
-    }
-  }
-  leds(FARBE_AUS); //LEDs aus
-  value = value * 2;
+  value = select_value(value, 0, 4, 1, FARBE_GELB, FARBE_BLAU) * 2;
+
   if(features & FEATURE_SCD30)
   {
     scd30.setTemperatureOffset(value); //Temperaturoffset
   }
   else if(features & FEATURE_SCD4X)
   {
-    scd4x.stopPeriodicMeasurement();
-    delay(1000);
     scd4x.setTemperatureOffset(value); //Temperaturoffset
     delay(500);
     scd4x.startPeriodicMeasurement();
   }
-  flash_settings.write(settings); //Einstellungen speichern
+
   if(features & FEATURE_USB)
   {
     Serial.print("Temperature: ");
     Serial.println(value, DEC);
   }
+
+  //Buzzer
+  settings.buzzer = select_value(settings.buzzer, 0, 1, 1, FARBE_GRUEN, FARBE_WEISS);
+
+  if(features & FEATURE_USB)
+  {
+    Serial.print("Buzzer: ");
+    Serial.println(settings.buzzer, DEC);
+  }
+
+  //Ende
+  flash_settings.write(settings); //Einstellungen speichern
+  leds(FARBE_BLAU);//LEDs blau
+  buzzer(250); //250ms Buzzer an
 
   return;
 }
@@ -1383,56 +1379,17 @@ void menu(void)
   ws2812.setBrightness(30); //0...255
   leds(FARBE_VIOLETT); //LEDs violett
   delay(500); //500ms warten
-
   leds(FARBE_AUS); //LEDs aus
-  ws2812.fill(ws2812.Color(20,20,20), 0, 4); //LEDs weiss
-  ws2812.setPixelColor(0, FARBE_VIOLETT);
-  ws2812.show();
+  buzzer(250); //250ms Buzzer an
 
-  for(value=0, sw=0, timeout=0; timeout<1000; timeout++) //10s Timeout
-  {
-    delay(10); //10ms warten
-
-    if(digitalRead(PIN_SWITCH) == LOW) //Taster gedrueckt
-    {
-      status_led(1); //Status-LED an
-      sw++;
-      if(sw > 200)
-      {
-        leds(FARBE_AUS); //LEDs aus
-      }
-      timeout=0;
-    }
-    else //Taster losgelassen
-    {
-      status_led(0); //Status-LED aus
-      if(sw > 200) //2s Tastendruck
-      {
-        break;
-      }
-      else if(sw > 10) //100ms Tastendruck
-      {
-        value++;
-        if(value > 3)
-        {
-          value = 0;
-        }
-        ws2812.fill(ws2812.Color(20,20,20), 0, 4); //LEDs weiss
-        ws2812.setPixelColor(value, FARBE_VIOLETT);
-        ws2812.show();
-      }
-      sw = 0;
-    }
-  }
-
-  leds(FARBE_AUS); //LEDs aus
+  value = select_value(1, 1, 4, 1, FARBE_VIOLETT, ws2812.Color(20,20,20));
 
   switch(value)
   {
-    case 0: self_test();        break;
-    case 1: air_test();         break;
-    case 2: altitude_toffset(); break;
-    case 3: calibration();      break;
+    case 1: self_test();        break;
+    case 2: air_test();         break;
+    case 3: altitude_toffset(); break;
+    case 4: calibration();      break;
   }
 
   ws2812.setBrightness(settings.brightness); //0...255
@@ -1678,6 +1635,7 @@ void setup()
     settings.range[2]     = START_ROT;
     settings.range[3]     = START_ROT_BLINKEN;
     settings.range[4]     = START_BUZZER;
+    settings.buzzer       = BUZZER;
     settings.wifi_ssid[0] = 0;
     strcpy(settings.wifi_ssid, WIFI_SSID);
     settings.wifi_code[0] = 0;
@@ -1855,7 +1813,7 @@ void ampel(unsigned int co2)
   }
   else
   {
-    if((blinken == 0) && (buzzer_timer == 0))
+    if((blinken == 0) && (buzzer_timer == 0) && settings.buzzer)
     {
       buzzer(1); //Buzzer an
     }
