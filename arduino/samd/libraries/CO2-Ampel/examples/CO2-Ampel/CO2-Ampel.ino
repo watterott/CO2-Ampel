@@ -664,6 +664,10 @@ void webserver_service(void)
             char req[2][64+1];
             req[0][0] = 0; //SSID
             req[1][0] = 0; //Code
+
+            unsigned int threshold_req=0;
+            char threshold_value[11]; //10 digit number
+
             for(unsigned int r=0, i=0, last_c=0; client.available();)
             {
               c = client.read();
@@ -682,6 +686,12 @@ void webserver_service(void)
                 req[r-1][i] = 0;
                 req_data = 1;
               }
+              else if((r == 5) && (i < 10)) //5 (buzzer threshold)
+              {
+                threshold_value[i++] = c;
+                threshold_value[i] = 0;
+                threshold_req = 1;
+              }
               last_c = c;
             }
             if(req_data)
@@ -692,6 +702,14 @@ void webserver_service(void)
               urldecode(req[1]);
               //Serial.println(req[1]);
               strcpy(settings.wifi_code, req[1]);
+              flash_settings.write(settings); //Einstellungen speichern
+            }
+            if(threshold_req)
+            {
+              urldecode(threshold_value);
+              Serial.print("setting threshold_value, input is: ");
+              Serial.println((unsigned int) atoi(threshold_value));
+              settings.range[4] = (unsigned int) min(40000, atoi(threshold_value));
               flash_settings.write(settings); //Einstellungen speichern
             }
           }
@@ -716,6 +734,21 @@ void webserver_service(void)
             client.print("<br>Druck (hPa): ");
             client.println(pres_value, 1);
           }
+          client.println("<br></span><br><hr><br>");
+          client.println("<br><b>Buzzer Schwelle</b>");
+          client.print("<br>Aktuell: ");
+          client.print(settings.range[4]);
+          client.println(" ppm");
+          client.println("<form method=post>");
+          client.print("Neu: <input name=5 size=20 maxlength=64 placeholder=Buzzer threshold value='");
+          client.print(START_BUZZER); //Buzzer-Schwelle
+          client.println("'><br>");
+          client.println("<input type=submit value=Speichern>");
+          client.println("</form>");
+          client.print("<br>Hinweis: Buzzer Verzögerung nach Start der Ampel ist konfiguriert auf ");
+          client.print(BUZZER_DELAY);
+          client.println(" s.");
+
           client.println("<br></span><br><hr><br>");
           client.print("<br><b>WiFi Login</b>");
           client.println("<form method=post>");
