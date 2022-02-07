@@ -61,6 +61,10 @@
 //--- WiFi/WLAN ---
 #define WIFI_SSID          "" //WiFi SSID
 #define WIFI_CODE          "" //WiFi Passwort
+#define WIFI_NM            255,255,255,  0 //Netzmaske
+#define WIFI_IP              0,  0,  0,  0 //Lokale IP-Adresse, 0=DHCP
+#define WIFI_GW            192,168,  1,100 //Gateway IP-Adresse
+#define WIFI_DNS           192,168,  1,100 //DNS IP-Adresse
 
 //--- Allgemein ---
 #define PRO_AMPEL          0 //1 = Pro Version mit Drucksensor
@@ -129,6 +133,10 @@ typedef struct
   unsigned int buzzer;
   char wifi_ssid[64+1];
   char wifi_code[64+1];
+  IPAddress netmask;
+  IPAddress ip_local;
+  IPAddress ip_gw;
+  IPAddress ip_dns;
 } SETTINGS;
 
 SETTINGS settings;
@@ -1453,8 +1461,18 @@ unsigned int wifi_start(void)
   }
 
   WiFi.hostname(name); //Hostname setzen
-  //WiFi.config(ip, dns, gateway, subnet);  //IP setzen
-  WiFi.begin(settings.wifi_ssid, settings.wifi_code); //verbinde WiFi Netzwerk
+  if(settings.ip_local[0] != 0)
+  {
+    WiFi.config(settings.ip_local, settings.ip_dns, settings.ip_gw, settings.netmask);  //IP setzen
+  }
+  if(strlen(settings.wifi_code) > 0)
+  {
+    WiFi.begin(settings.wifi_ssid, settings.wifi_code); //verbinde WiFi Netzwerk mit Passwort
+  }
+  else
+  {
+    WiFi.begin(settings.wifi_ssid); //verbinde WiFi Netzwerk ohne Passwort
+  }
 
   //auf Verbindung warten
   for(unsigned int t=0; WiFi.status() == WL_IDLE_STATUS; t++)
@@ -1645,6 +1663,10 @@ void setup()
     strcpy(settings.wifi_ssid, WIFI_SSID);
     settings.wifi_code[0] = 0;
     strcpy(settings.wifi_code, WIFI_CODE);
+    settings.netmask      = IPAddress(WIFI_NM);
+    settings.ip_local     = IPAddress(WIFI_IP);
+    settings.ip_gw        = IPAddress(WIFI_GW);
+    settings.ip_dns       = IPAddress(WIFI_DNS);
     settings.valid        = true;
     flash_settings.write(settings);
     //Standard Temperaturoffset
