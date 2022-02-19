@@ -8,6 +8,7 @@
   Serielle Befehle
     R=0      - Remote/Fernsteuerung aus
     R=1      - Remote/Fernsteuerung an
+    R=R      - Reset
     V?       - Firmwareversion abfragen
     S=1      - Save/Speichern
     L=RRGGBB - LED-Farbe (000000-FFFFFF)
@@ -706,44 +707,90 @@ void urldecode(char *src) //URL Parameter dekodieren
 
 void webserver_service(void)
 {
+  static unsigned long t_check=0;
+  unsigned int status;
+
   if((features & FEATURE_WINC1500) == 0)
   {
     return;
   }
 
-  if(WiFi.status() == WL_IDLE_STATUS)
+  status = WiFi.status();
+
+  if(status == WL_IDLE_STATUS) //Verbindungsaufbau
   {
+    return;
+  }
+  else if((status == WL_CONNECT_FAILED) ||
+          (status == WL_CONNECTION_LOST) || 
+          (status == WL_DISCONNECTED)) //Verbindungsabbruch
+  {
+    if((millis()-t_check) > (1*60000UL)) //1min
+    {
+      t_check = millis();
+      wifi_start();
+    }
     return;
   }
 
-  if((WiFi.status() == WL_CONNECT_FAILED) ||
-     (WiFi.status() == WL_CONNECTION_LOST) || 
-     (WiFi.status() == WL_DISCONNECTED))
-  {
-    wifi_start();
-    return;
-  }
+  t_check = millis(); //Zeit speichern fuer Neuverbindung nach 1min
 
   WiFiClient client = server.available();
-  if(client) //Client verbunden
+  if(!client) //Client nicht verbunden
   {
-    //if(features & FEATURE_USB)
-    //{
-    //  Serial.println("WiFi client connected");
-    //}
-    boolean currentLineIsBlank = true;
-    while(client.connected())
+    return;
+  }
+  //if(features & FEATURE_USB)
+  //{
+  //  Serial.println("WiFi client connected");
+  //}
+  boolean currentLineIsBlank=true;
+  unsigned int pos=0;
+  char req[2][64+1]; //HTTP request
+  req[0][0] = 0;
+  while(client.connected())
+  {
+    if(client.available())
     {
-      if(client.available())
+      char c = client.read();
+      if(c == '\n' && currentLineIsBlank) //Header zu Ende
       {
-        char c = client.read();
-        if(c == '\n' && currentLineIsBlank)
+        if(strncmp(req[0], "GET ", 4) && strncmp(req[0], "POST ", 5)) //kein GET oder POST
+        {
+          //HTTP Header
+          client.println("HTTP/1.1 400 Bad Request");
+          client.println("Content-Type: text/plain");
+          client.println("Connection: close");
+          client.println();
+          //HTML Daten
+          client.println("400 Bad Request");
+        }
+        else if(strncmp(req[0], "GET /json", 9) == 0) //json
+        {
+          //HTTP Header
+          client.println("HTTP/1.1 200 OK");
+          client.println("Content-Type: application/json");
+          client.println("Connection: close");
+          client.println();
+          //JSON Daten
+          client.println("{");
+          client.print("  \"c\": "); client.print(co2_value); client.println(",");
+          client.print("  \"t\": "); client.print(temp_value, 1); client.println(",");
+          client.print("  \"h\": "); client.print(humi_value, 1); client.println(",");
+          if(features & (FEATURE_LPS22HB|FEATURE_BMP280))
+          {
+            client.print("  \"p\": "); client.print(pres_value, 1); client.println(",");
+            client.print("  \"u\": "); client.print(temp2_value, 1); client.println(",");
+          }
+          client.print("  \"l\": "); client.print(light_value); client.println("");
+          client.println("}");
+        }
+        else
         {
           //HTTP Post Daten verarbeiten
-          if(client.available())
+          if((strncmp(req[0], "POST ", 5) == 0) && client.available())
           {
             unsigned int req_data=0;
-            char req[2][64+1];
             req[0][0] = 0; //SSID
             req[1][0] = 0; //Code
             for(unsigned int r=0, i=0, last_c=0; client.available();)
@@ -820,21 +867,30 @@ void webserver_service(void)
           }
           client.println("</small>");
           client.println("</body></html>");
-          break;
         }
-        if(c == '\n')
+        break;
+      }
+      else //save request
+      {
+        if(pos < sizeof(req[0]))
         {
-          currentLineIsBlank = true;
-        }
-        else if(c != '\r')
-        {
-          currentLineIsBlank = false;
+          req[0][pos++] = c;
+          req[0][pos] = 0;
         }
       }
+      if(c == '\n')
+      {
+        currentLineIsBlank = true;
+      }
+      else if(c != '\r')
+      {
+        currentLineIsBlank = false;
+      }
     }
-    delay(2); //2ms warten zum Senden
-    client.stop();
   }
+ 
+  delay(20); //20ms warten zum Senden
+  client.stop();
 
   return;
 }
@@ -1417,6 +1473,11 @@ unsigned int wifi_start_ap(void)
   byte mac[6];
   char ssid[32];
 
+  if(features & FEATURE_USB)
+  {
+    Serial.println("WiFi AP start...");
+  }
+
   WiFi.macAddress(mac); //MAC-Adresse abfragen
   sprintf(ssid, "CO2AMPEL-%X-%X", mac[1], mac[0]);
 
@@ -1451,6 +1512,11 @@ unsigned int wifi_start(void)
     return 1;
   }
 
+  if(features & FEATURE_USB)
+  {
+    Serial.println("WiFi connect...");
+  }
+
   WiFi.macAddress(mac); //MAC-Adresse abfragen
   sprintf(name, "CO2AMPEL-%X-%X", mac[1], mac[0]);
 
@@ -1461,11 +1527,11 @@ unsigned int wifi_start(void)
   }
 
   WiFi.hostname(name); //Hostname setzen
-  if(settings.ip_local[0] != 0)
+  if(settings.ip_local[0] != 0) //statische IP
   {
     WiFi.config(settings.ip_local, settings.ip_dns, settings.ip_gw, settings.netmask);  //IP setzen
   }
-  if(strlen(settings.wifi_code) > 0)
+  if(strlen(settings.wifi_code) > 0) //Passwort
   {
     WiFi.begin(settings.wifi_ssid, settings.wifi_code); //verbinde WiFi Netzwerk mit Passwort
   }
@@ -1477,7 +1543,7 @@ unsigned int wifi_start(void)
   //auf Verbindung warten
   for(unsigned int t=0; WiFi.status() == WL_IDLE_STATUS; t++)
   {
-    if(t >= 5) //5s
+    if(t >= 6) //6s
     {
       break;
     }
