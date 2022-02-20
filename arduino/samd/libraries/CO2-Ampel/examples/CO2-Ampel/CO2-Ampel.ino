@@ -790,7 +790,6 @@ void webserver_service(void)
           //HTTP Post Daten verarbeiten
           if((strncmp(req[0], "POST ", 5) == 0) && client.available())
           {
-            unsigned int req_data=0;
             req[0][0] = 0; //SSID
             req[1][0] = 0; //Code
             for(unsigned int r=0, i=0, last_c=0; client.available();)
@@ -809,17 +808,14 @@ void webserver_service(void)
               {
                 req[r-1][i++] = c;
                 req[r-1][i] = 0;
-                req_data = 1;
               }
               last_c = c;
             }
-            if(req_data)
+            urldecode(req[0]); //Serial.println(req[0]);
+            urldecode(req[1]); //Serial.println(req[1]);
+            if(strcmp(req[0], settings.wifi_ssid) || strcmp(req[1], settings.wifi_code))
             {
-              urldecode(req[0]);
-              //Serial.println(req[0]);
               strcpy(settings.wifi_ssid, req[0]);
-              urldecode(req[1]);
-              //Serial.println(req[1]);
               strcpy(settings.wifi_code, req[1]);
               flash_settings.write(settings); //Einstellungen speichern
             }
@@ -831,7 +827,7 @@ void webserver_service(void)
           client.println();
           //HTML Daten
           client.println("<!DOCTYPE html>");
-          client.println("<html><head><meta charset=utf-8><title>CO2-Ampel</title>");
+          client.println("<html><head><meta charset=utf-8><meta http-equiv=refresh content=120><title>CO2-Ampel</title>");
           client.println("<style>");
           client.println("body { font-size:1.0em; font-family:Lato,sans-serif; padding:10px; }");
           client.println("#data { font-size:3.0em; }");
