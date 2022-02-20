@@ -831,48 +831,64 @@ void webserver_service(void)
           client.println();
           //HTML Daten
           client.println("<!DOCTYPE html>");
-          client.println("<html><head><title>CO2-Ampel</title></head>");
-          client.println("<body>");
-          client.println("<br><span style='font-size:3em'>");
+          client.println("<html><head><meta charset=utf-8><title>CO2-Ampel</title>");
+          client.println("<style>");
+          client.println("body { font-size:1.0em; font-family:Lato,sans-serif; padding:10px; }");
+          client.println("#data { font-size:3.0em; }");
+          client.println("#wifi { font-size:1.0em; display:none; }");
+          client.println("#info { font-size:0.9em; }");
+          client.println("</style>");
+          client.println("<script>");
+          client.println("function wifi() {");
+          client.println("var box = document.getElementById('wifi');");
+          client.println("if(box.style.display != 'block') { box.style.display = 'block'; }");
+          client.println("else { box.style.display = 'none'; }");
+          client.println("}");
+          client.println("</script>");
+          client.println("</head><body>");
+          client.println("<div id=data>");
           client.print("CO2 (ppm): ");
           client.println(co2_value);
-          client.print("<br>Temperatur (C): ");
+          client.print("<br/>Temperatur (&deg;C): ");
           client.println(temp_value, 1);
-          client.print("<br>Luftfeuchte (%): ");
+          client.print("<br/>Luftfeuchte (% rel): ");
           client.println(humi_value, 1);
           if(features & (FEATURE_LPS22HB|FEATURE_BMP280))
           {
-            client.print("<br>Druck (hPa): ");
+            client.print("<br/>Druck (hPa): ");
             client.println(pres_value, 1);
-            client.print("<br>Temperatur (C): ");
+            client.print("<br/>Temperatur (&deg;C): ");
             client.println(temp2_value, 1);
           }
-          client.println("<br></span><br><hr><br>");
-          client.print("<br><b>WiFi Login</b>");
-          client.println("<form method=post>");
-          client.print("SSID <input name=1 size=20 maxlength=64 placeholder=SSID value='");
+          client.println("</div><br/><br/>");
+          client.println("<a href='/json'>JSON</a> - <a href='#' onclick='wifi();'>WiFi Login</a><br/><br/><div id=wifi><form method=post>");
+          client.print("SSID <input name=1 size=30 maxlength=64 placeholder=SSID value='");
           client.print(settings.wifi_ssid); //SSID
-          client.println("'><br>");
-          client.print("Code <input name=2 size=20 maxlength=64 placeholder=Password value='");
+          client.println("'><br/>");
+          client.print("Code <input name=2 size=30 maxlength=64 placeholder=Password value='");
           //client.print(settings.wifi_code); //Passwort
-          client.println("'><br>");
-          client.println("<input type=submit value=Speichern> (Neustart erforderlich)");
-          client.println("</form>");
-          client.print("<br><br><small>Firmware: v" VERSION);
+          client.println("'><br/>");
+          client.println("<input type=submit> (Neustart erforderlich, requires reboot)<br/></form><br/>");
+          client.print("<div id=info>Firmware: v" VERSION);
           if(features & FEATURE_WINC1500)
           {
             String fv = WiFi.firmwareVersion();
             client.print(", WINC1500: ");
             client.print(fv);
+            //byte mac[6];
+            //WiFi.macAddress(mac);
+            //client.print(", MAC: ");
+            //client.print(mac[5], HEX); client.print(":"); client.print(mac[4], HEX); client.print(":"); client.print(mac[3], HEX); client.print(":");
+            //client.print(mac[2], HEX); client.print(":"); client.print(mac[1], HEX); client.print(":"); client.print(mac[0], HEX);
           }
-          client.println("</small>");
+          client.println("</div></div>");
           client.println("</body></html>");
         }
         break;
       }
       else //save request
       {
-        if(pos < sizeof(req[0]))
+        if(pos < (sizeof(req[0])-1))
         {
           req[0][pos++] = c;
           req[0][pos] = 0;
