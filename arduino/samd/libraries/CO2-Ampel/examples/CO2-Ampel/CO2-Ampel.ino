@@ -27,7 +27,7 @@
     5=X      - Range/Bereich 5 Start (400-10000) - rot + Buzzer
 */
 
-#define VERSION "23"
+#define VERSION "24"
 #define COVID 0 //1=COVID CO2-Werte
 
 //--- CO2-Werte ---
@@ -784,6 +784,41 @@ void webserver_service(void)
           }
           client.print("  \"l\": "); client.print(light_value); client.println("");
           client.println("}");
+        }
+        else if(strncmp(req[0], "GET /cmk-agent", 14) == 0) // Checkmk Agent
+        {
+          // CO2-Ampeln koennen so direkt ins Monitoring von checkmk.com 
+          // aufgenommen werden. Plugins sind nicht zwingend erforderlich.
+          // Da HTTP als Uebertragungsweg genutzt wird, "Data Source" 
+          // verwenden: wget -O - http://ip_address/cmk-agent
+          // Siehe: https://docs.checkmk.com/latest/de/datasource_programs.html
+          // HTTP Header
+          client.println("HTTP/1.1 200 OK");
+          client.println("Content-Type: text/plain");
+          client.println("Connection: close");
+          client.println();
+          // Plaintext im von Checkmk erwarteten Format
+          // Siehe: https://docs.checkmk.com/latest/en/devel_check_plugins.html
+          client.println("<<<check_mk>>>");
+          client.println("AgentOS: arduino");
+          // Check-Plugin fuer den Server erforderlich, um die Metriken auszuwerten 
+          client.println("<<<watterott_co2ampel_plugin>>>");
+          client.print("co2 "); client.println(co2_value);
+          client.print("temp "); client.println(temp_value);
+          client.print("humidity "); client.println(humi_value);
+          client.print("lighting "); client.println(light_value);
+          if(features & (FEATURE_LPS22HB|FEATURE_BMP280))
+          {
+            client.print("temp2 "); client.println(temp2_value);
+            client.print("pressure "); client.println(pres_value);
+          }
+          // Ad-hoc Check, der kein Server-Plugin benoetigt, nutzt Schwellwerte der Ampel.
+          // Achtung: Nur eine Zeile - der Checkmk-Server nimmt die Bewertung selbst an
+          // Hand der uebergebenen Schwellwerte vor. Die lesen wir hier aus der Ampel aus:
+          client.println("<<<local:sep(0)>>>");
+          client.print("P \"CO2 level (ppm)\" co2ppm="); client.print(co2_value); client.print(";");
+          client.print(settings.range[1]); client.print(";"); client.print(settings.range[2]);
+          client.println(" CO2/ventilation control with Watterott CO2 Ampel, thresholds taken from sensor board.");
         }
         else
         {
