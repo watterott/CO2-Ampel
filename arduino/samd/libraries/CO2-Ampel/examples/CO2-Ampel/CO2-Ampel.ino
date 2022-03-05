@@ -671,30 +671,30 @@ void urldecode(char *src) //URL Parameter dekodieren
     if((*src == '%') && ((a = src[1]) && (b = src[2])) && (isxdigit((uint8_t)a) && isxdigit((uint8_t)b))) 
     {
       if (a >= 'a')
-        a -= 'a'-'A';
+        a -= 'a' - 'A';
 
       if (a >= 'A')
-        a -= ('A' - 10);
+        a -= 'A' - 10;
       else
         a -= '0';
 
       if (b >= 'a')
-        b -= 'a'-'A';
+        b -= 'a' - 'A';
 
       if (b >= 'A')
-        b -= ('A' - 10);
+        b -= 'A' - 10;
       else
         b -= '0';
 
       *dst++ = 16 * a + b;
       src += 3;
-    } 
-    else if (*src == '+') 
+    }
+    else if (*src == '+')
     {
       *dst++ = ' ';
       src++;
-    } 
-    else 
+    }
+    else
     {
       *dst++ = *src++;
     }
@@ -746,6 +746,7 @@ void webserver_service(void)
   //}
   boolean currentLineIsBlank=true;
   unsigned int pos=0;
+  char buf[1024];
   char req[2][64+1]; //HTTP request
   req[0][0] = 0;
   while(client.connected())
@@ -757,68 +758,115 @@ void webserver_service(void)
       {
         if(strncmp(req[0], "GET ", 4) && strncmp(req[0], "POST ", 5)) //kein GET oder POST
         {
-          //HTTP Header
-          client.println("HTTP/1.1 400 Bad Request");
-          client.println("Content-Type: text/plain");
-          client.println("Connection: close");
-          client.println();
-          //HTML Daten
-          client.println("400 Bad Request");
+          sprintf(buf, 
+              "HTTP/1.1 400 Bad Request\r\n" \
+              "Content-Type: text/plain\r\n" \
+              "Connection: close\r\n" \
+              "\r\n" \
+              "400 Bad Request\r\n"
+          );
+          client.print(buf);
         }
-        else if(strncmp(req[0], "GET /json", 9) == 0) //json
+        else if(strncmp(req[0], "GET /json", 9) == 0) //JSON
         {
-          //HTTP Header
-          client.println("HTTP/1.1 200 OK");
-          client.println("Content-Type: application/json");
-          client.println("Connection: close");
-          client.println();
-          //JSON Daten
-          client.println("{");
-          client.print("  \"c\": "); client.print(co2_value); client.println(",");
-          client.print("  \"t\": "); client.print(temp_value, 1); client.println(",");
-          client.print("  \"h\": "); client.print(humi_value, 1); client.println(",");
           if(features & (FEATURE_LPS22HB|FEATURE_BMP280))
           {
-            client.print("  \"p\": "); client.print(pres_value, 1); client.println(",");
-            client.print("  \"u\": "); client.print(temp2_value, 1); client.println(",");
+            sprintf(buf,
+                "HTTP/1.1 200 OK\r\n" \
+                "Content-Type: application/json\r\n" \
+                "Connection: close\r\n" \
+                "\r\n" \
+                "{\r\n" \
+                " \"c\": %i,\r\n" \
+                " \"t\": %.1f,\r\n" \
+                " \"h\": %.1f,\r\n" \
+                " \"p\": %.1f,\r\n" \
+                " \"u\": %.1f,\r\n" \
+                " \"l\": %i\r\n" \
+                "}\r\n",
+                co2_value, temp_value, humi_value, pres_value, temp2_value, light_value
+            );
           }
-          client.print("  \"l\": "); client.print(light_value); client.println("");
-          client.println("}");
+          else
+          {
+            sprintf(buf,
+                "HTTP/1.1 200 OK\r\n" \
+                "Content-Type: application/json\r\n" \
+                "Connection: close\r\n" \
+                "\r\n" \
+                "{\r\n" \
+                " \"c\": %i,\r\n" \
+                " \"t\": %.1f,\r\n" \
+                " \"h\": %.1f,\r\n" \
+                " \"l\": %i\r\n" \
+                "}\r\n",
+                co2_value, temp_value, humi_value, light_value
+            );
+          }
+          client.print(buf);
         }
-        else if(strncmp(req[0], "GET /cmk-agent", 14) == 0) // Checkmk Agent
+        else if(strncmp(req[0], "GET /cmk-agent", 14) == 0) //Checkmk Agent
         {
-          // CO2-Ampeln koennen so direkt ins Monitoring von checkmk.com 
-          // aufgenommen werden. Plugins sind nicht zwingend erforderlich.
-          // Da HTTP als Uebertragungsweg genutzt wird, "Data Source" 
-          // verwenden: wget -O - http://ip_address/cmk-agent
-          // Siehe: https://docs.checkmk.com/latest/de/datasource_programs.html
-          // HTTP Header
-          client.println("HTTP/1.1 200 OK");
-          client.println("Content-Type: text/plain");
-          client.println("Connection: close");
-          client.println();
-          // Plaintext im von Checkmk erwarteten Format
-          // Siehe: https://docs.checkmk.com/latest/en/devel_check_plugins.html
-          client.println("<<<check_mk>>>");
-          client.println("AgentOS: arduino");
-          // Check-Plugin fuer den Server erforderlich, um die Metriken auszuwerten 
-          client.println("<<<watterott_co2ampel_plugin>>>");
-          client.print("co2 "); client.println(co2_value);
-          client.print("temp "); client.println(temp_value);
-          client.print("humidity "); client.println(humi_value);
-          client.print("lighting "); client.println(light_value);
+          //CO2-Ampeln koennen so direkt ins Monitoring von checkmk.com 
+          //aufgenommen werden. Plugins sind nicht zwingend erforderlich.
+          //Da HTTP als Uebertragungsweg genutzt wird, "Data Source" 
+          //verwenden: wget -O - http://ip_address/cmk-agent
+          //Siehe: https://docs.checkmk.com/latest/de/datasource_programs.html
           if(features & (FEATURE_LPS22HB|FEATURE_BMP280))
           {
-            client.print("temp2 "); client.println(temp2_value);
-            client.print("pressure "); client.println(pres_value);
+            sprintf(buf,
+                "HTTP/1.1 200 OK\r\n" \
+                "Content-Type: text/plain\r\n" \
+                "Connection: close\r\n" \
+                "\r\n" \
+                //Plaintext im von Checkmk erwarteten Format
+                //Siehe: https://docs.checkmk.com/latest/en/devel_check_plugins.html
+                "<<<check_mk>>>\r\n" \
+                "AgentOS: arduino\r\n" \
+                //Check-Plugin fuer den Server erforderlich, um die Metriken auszuwerten 
+                "<<<watterott_co2ampel_plugin>>>\r\n" \
+                "co2 %i\r\n" \
+                "temp %.1f\r\n" \
+                "humidity %.1f\r\n" \
+                "lighting %i\r\n" \
+                "pressure %.1f\r\n" \
+                "temp2 %.1f\r\n" \
+                //Ad-hoc Check, der kein Server-Plugin benoetigt, nutzt Schwellwerte der Ampel.
+                //Achtung: Nur eine Zeile - der Checkmk-Server nimmt die Bewertung selbst an
+                //Hand der uebergebenen Schwellwerte vor. Die lesen wir hier aus der Ampel aus:
+                "<<<local:sep(0)>>>\r\n" \
+                "P \"CO2 level (ppm)\" co2ppm=%i;%i;%i CO2/ventilation control with Watterott CO2-Ampel, thresholds taken from sensor board.\r\n",
+                co2_value, temp_value, humi_value, light_value, pres_value, temp2_value,
+                co2_value, settings.range[1], settings.range[2]
+            );
           }
-          // Ad-hoc Check, der kein Server-Plugin benoetigt, nutzt Schwellwerte der Ampel.
-          // Achtung: Nur eine Zeile - der Checkmk-Server nimmt die Bewertung selbst an
-          // Hand der uebergebenen Schwellwerte vor. Die lesen wir hier aus der Ampel aus:
-          client.println("<<<local:sep(0)>>>");
-          client.print("P \"CO2 level (ppm)\" co2ppm="); client.print(co2_value); client.print(";");
-          client.print(settings.range[1]); client.print(";"); client.print(settings.range[2]);
-          client.println(" CO2/ventilation control with Watterott CO2 Ampel, thresholds taken from sensor board.");
+          else
+          {
+            sprintf(buf,
+                "HTTP/1.1 200 OK\r\n" \
+                "Content-Type: text/plain\r\n" \
+                "Connection: close\r\n" \
+                "\r\n" \
+                //Plaintext im von Checkmk erwarteten Format
+                //Siehe: https://docs.checkmk.com/latest/en/devel_check_plugins.html
+                "<<<check_mk>>>\r\n" \
+                "AgentOS: arduino\r\n" \
+                //Check-Plugin fuer den Server erforderlich, um die Metriken auszuwerten 
+                "<<<watterott_co2ampel_plugin>>>\r\n" \
+                "co2 %i\r\n" \
+                "temp %.1f\r\n" \
+                "humidity %.1f\r\n" \
+                "lighting %i\r\n" \
+                //Ad-hoc Check, der kein Server-Plugin benoetigt, nutzt Schwellwerte der Ampel.
+                //Achtung: Nur eine Zeile - der Checkmk-Server nimmt die Bewertung selbst an
+                //Hand der uebergebenen Schwellwerte vor. Die lesen wir hier aus der Ampel aus:
+                "<<<local:sep(0)>>>\r\n" \
+                "P \"CO2 level (ppm)\" co2ppm=%i;%i;%i CO2/ventilation control with Watterott CO2-Ampel, thresholds taken from sensor board.\r\n",
+                co2_value, temp_value, humi_value, light_value,
+                co2_value, settings.range[1], settings.range[2]
+            );
+          }
+          client.print(buf);
         }
         else
         {
@@ -855,65 +903,87 @@ void webserver_service(void)
               flash_settings.write(settings); //Einstellungen speichern
             }
           }
-          //HTTP Header
-          client.println("HTTP/1.1 200 OK");
-          client.println("Content-Type: text/html");
-          client.println("Connection: close");
-          client.println();
-          //HTML Daten
-          client.println("<!DOCTYPE html>");
-          client.println("<html><head><meta charset=utf-8><meta http-equiv=refresh content=120><title>CO2-Ampel</title>");
-          client.println("<style>");
-          client.println("body { font-size:1.0em; font-family:Lato,sans-serif; padding:10px; }");
-          client.println("#data { font-size:3.0em; }");
-          client.println("#wifi { font-size:1.0em; display:none; }");
-          client.println("#info { font-size:0.9em; }");
-          client.println("</style>");
-          client.println("<script>");
-          client.println("function wifi() {");
-          client.println("var box = document.getElementById('wifi');");
-          client.println("if(box.style.display != 'block') { box.style.display = 'block'; }");
-          client.println("else { box.style.display = 'none'; }");
-          client.println("}");
-          client.println("</script>");
-          client.println("</head><body>");
-          client.println("<div id=data>");
-          client.print("CO2 (ppm): ");
-          client.println(co2_value);
-          client.print("<br/>Temperatur (&deg;C): ");
-          client.println(temp_value, 1);
-          client.print("<br/>Luftfeuchte (% rel): ");
-          client.println(humi_value, 1);
+          //HTTP Header+Daten
+          sprintf(buf,
+              "HTTP/1.1 200 OK\r\n" \
+              "Content-Type: text/html\r\n" \
+              "Connection: close\r\n" \
+              "\r\n"
+              "<!DOCTYPE html>\r\n" \
+              "<html>\r\n" \
+              "<head>\r\n" \
+              "<meta charset=utf-8>\r\n" \
+              "<meta http-equiv=refresh content=120>\r\n" \
+              "<title>CO2-Ampel</title>\r\n" \
+              "<style>\r\n" \
+              "body { font-size:1.0em; font-family:Lato,sans-serif; padding:10px; }\r\n" \
+              "#data { font-size:3.0em; }\r\n" \
+              "#wifi { font-size:1.0em; display:none; }\r\n" \
+              "#info { font-size:0.9em; }\r\n" \
+              "</style>\r\n" \
+              "<script>\r\n" \
+              "function wifi() {\r\n" \
+              "var box = document.getElementById('wifi');\r\n" \
+              "if(box.style.display != 'block') { box.style.display = 'block'; }\r\n" \
+              "else { box.style.display = 'none'; }\r\n" \
+              "}\r\n" \
+              "</script>\r\n" \
+              "</head>\r\n" \
+              "<body>\r\n"
+          );
+          client.print(buf);
+
           if(features & (FEATURE_LPS22HB|FEATURE_BMP280))
           {
-            client.print("<br/>Druck (hPa): ");
-            client.println(pres_value, 1);
-            client.print("<br/>Temperatur (&deg;C): ");
-            client.println(temp2_value, 1);
+            sprintf(buf,
+                "<div id=data>\r\n" \
+                "CO2 (ppm): %i<br/>\r\n" \
+                "Temperatur (&deg;C): %.1f<br/>\r\n" \
+                "Luftfeuchte (% rel): %.1f<br/>\r\n" \
+                "Druck (hPa): %.1f<br/>\r\n" \
+                "Temperatur (&deg;C): %.1f<br/>\r\n" \
+                "</div>\r\n",
+                co2_value, temp_value, humi_value, pres_value, temp2_value
+            );
           }
-          client.println("</div><br/><br/>");
-          client.println("<a href='/json'>JSON</a> - <a href='#' onclick='wifi();'>WiFi Login</a><br/><br/><div id=wifi><form method=post>");
-          client.print("SSID <input name=1 size=30 maxlength=64 placeholder=SSID value='");
-          client.print(settings.wifi_ssid); //SSID
-          client.println("'><br/>");
-          client.print("Code <input name=2 size=30 maxlength=64 placeholder=Password value='");
-          //client.print(settings.wifi_code); //Passwort
-          client.println("'><br/>");
-          client.println("<input type=submit> (Neustart erforderlich, requires reboot)<br/></form><br/>");
-          client.print("<div id=info>Firmware: v" VERSION);
-          if(features & FEATURE_WINC1500)
+          else
           {
-            String fv = WiFi.firmwareVersion();
-            client.print(", WINC1500: ");
-            client.print(fv);
-            //byte mac[6];
-            //WiFi.macAddress(mac);
-            //client.print(", MAC: ");
-            //client.print(mac[5], HEX); client.print(":"); client.print(mac[4], HEX); client.print(":"); client.print(mac[3], HEX); client.print(":");
-            //client.print(mac[2], HEX); client.print(":"); client.print(mac[1], HEX); client.print(":"); client.print(mac[0], HEX);
+            sprintf(buf,
+                "<div id=data>\r\n" \
+                "CO2 (ppm): %i<br/>\r\n" \
+                "Temperatur (&deg;C): %.1f<br/>\r\n" \
+                "Luftfeuchte (% rel): %.1f<br/>\r\n" \
+                "</div>\r\n",
+                co2_value, temp_value, humi_value
+            );
           }
-          client.println("</div></div>");
-          client.println("</body></html>");
+          client.print(buf);
+
+          String fv = WiFi.firmwareVersion();
+          byte mac[6];
+          WiFi.macAddress(mac);
+          sprintf(buf,
+              "<br/><br/>\r\n" \
+              "<a href='/json'>JSON</a> - <a href='/cmk-agent'>Checkmk</a> - <a href='#' onclick='wifi();'>WiFi Login</a>\r\n" \
+              "<br/><br/>\r\n" \
+              "<div id=wifi>\r\n" \
+              "<form method=post>\r\n" \
+              "SSID <input name=1 size=30 maxlength=64 placeholder=SSID value='%s'><br/>\r\n" \
+              "Code <input name=2 size=30 maxlength=64 placeholder=Password value=''><br/>\r\n" \
+              "<input type=submit> (Neustart erforderlich, requires reboot)<br/>\r\n" \
+              "</form><br/>\r\n" \
+              "<div id=info>\r\n" \
+              "Firmware: v" VERSION ", \r\n" \
+              "WINC1500: %s, \r\n" \
+              "MAC: %02x:%02x:%02x:%02x:%02x:%02x\r\n" \
+              "</div>\r\n" \
+              "</div>\r\n" \
+              "</body>\r\n" \
+              "</html>\r\n",
+              settings.wifi_ssid, /*settings.wifi_code, */ fv.c_str(), 
+              mac[5], mac[4], mac[3], mac[2], mac[1], mac[0]
+          );
+          client.print(buf);
         }
         break;
       }
