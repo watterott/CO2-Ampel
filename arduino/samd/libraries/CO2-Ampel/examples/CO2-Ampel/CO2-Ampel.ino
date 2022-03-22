@@ -27,7 +27,7 @@
     5=X      - Range/Bereich 5 Start (400-10000) - rot + Buzzer
 */
 
-#define VERSION "24"
+#define VERSION "25"
 #define COVID 0 //1=COVID CO2-Werte
 
 //--- CO2-Werte ---
@@ -751,6 +751,10 @@ void webserver_service(void)
   req[0][0] = 0;
   while(client.connected())
   {
+    if((millis()-t_check) > (3*1000UL)) //Stop nach 3s
+    {
+      break;
+    }
     if(client.available())
     {
       char c = client.read();
@@ -915,6 +919,7 @@ void webserver_service(void)
               "<meta charset=utf-8>\r\n" \
               "<meta http-equiv=refresh content=120>\r\n" \
               "<title>CO2-Ampel</title>\r\n" \
+              "<link rel=icon href=\"data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA=\">\r\n" \
               "<style>\r\n" \
               "body { font-size:1.0em; font-family:Lato,sans-serif; padding:10px; }\r\n" \
               "#data { font-size:3.0em; }\r\n" \
