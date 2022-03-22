@@ -872,6 +872,17 @@ void webserver_service(void)
           }
           client.print(buf);
         }
+        else if(strncmp(req[0], "GET /favicon", 12) == 0) //Favicon 
+        {
+          sprintf(buf, 
+              "HTTP/1.1 404 Not Found\r\n" \
+              "Content-Type: text/plain\r\n" \
+              "Connection: close\r\n" \
+              "\r\n" \
+              "404 Not Found\r\n"
+          );
+          client.print(buf);
+        }
         else
         {
           //HTTP Post Daten verarbeiten
