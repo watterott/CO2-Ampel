@@ -751,7 +751,7 @@ void webserver_service(void)
   req[0][0] = 0;
   while(client.connected())
   {
-    if((millis()-t_check) > (3*1000UL)) //Stop nach 3s
+    if((millis()-t_check) > (5*1000UL)) //Stop nach 5s
     {
       break;
     }
@@ -1021,7 +1021,7 @@ void webserver_service(void)
       }
     }
   }
- 
+
   delay(20); //20ms warten zum Senden
   client.stop();
 
