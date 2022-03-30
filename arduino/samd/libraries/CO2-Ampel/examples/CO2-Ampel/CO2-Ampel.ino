@@ -28,7 +28,10 @@
 */
 
 #define VERSION "25"
-#define COVID 0 //1=COVID CO2-Werte
+
+#define COVID      0 //1 = COVID CO2-Werte
+#define WIFI_AMPEL 0 //1 = Version mit WiFi/WLAN
+#define PRO_AMPEL  0 //1 = Pro Version mit Drucksensor
 
 //--- CO2-Werte ---
 #if COVID
@@ -47,8 +50,13 @@
   #define START_BUZZER       1600 //>=1600ppm
 #endif
 
-//--- Messintervall ---
-#define INTERVALL          2 //2-1800s (nur SCD30, SCD4X immer 5s)
+//--- WiFi/WLAN ---
+#define WIFI_SSID          "" //WiFi SSID
+#define WIFI_CODE          "" //WiFi Passwort
+#define WIFI_NM            255,255,255,  0 //Netzmaske
+#define WIFI_IP              0,  0,  0,  0 //Lokale IP-Adresse, 0=DHCP
+#define WIFI_GW            192,168,  1,100 //Gateway IP-Adresse
+#define WIFI_DNS           192,168,  1,100 //DNS IP-Adresse
 
 //--- Ampelhelligkeit (LEDs) ---
 #define HELLIGKEIT         180 //1-255 (255=100%, 179=70%)
@@ -59,17 +67,8 @@
 #define LICHT_DUNKEL       20   //<20 -> dunkel
 #define LICHT_INTERVALL    60 //10-120min (Sensorpruefung)
 
-//--- WiFi/WLAN ---
-#define WIFI_SSID          "" //WiFi SSID
-#define WIFI_CODE          "" //WiFi Passwort
-#define WIFI_NM            255,255,255,  0 //Netzmaske
-#define WIFI_IP              0,  0,  0,  0 //Lokale IP-Adresse, 0=DHCP
-#define WIFI_GW            192,168,  1,100 //Gateway IP-Adresse
-#define WIFI_DNS           192,168,  1,100 //DNS IP-Adresse
-
 //--- Allgemein ---
-#define PRO_AMPEL          0 //1 = Pro Version mit Drucksensor
-#define WIFI_AMPEL         0 //1 = Version mit WiFi/WLAN
+#define INTERVALL          2 //2-1800s Messintervall (nur SCD30, SCD4X immer 5s)
 #define AMPEL_DURCHSCHNITT 1 //1 = CO2 Durchschnitt fuer Ampel verwenden
 #define AUTO_KALIBRIERUNG  0 //1 = automatische Kalibrierung (ASC) an (erfordert 7 Tage Dauerbetrieb mit 1h Frischluft pro Tag)
 #define BUZZER             1 //Buzzer aktivieren
@@ -81,6 +80,7 @@
 #define BAUDRATE           9600 //9600 Baud
 #define STARTWERT          500 //500ppm, CO2-Startwert
 
+//--- Farben ---
 #define FARBE_BLAU         0x007CB0 //0x0000FF, Himmelblau: 0x007CB0
 #define FARBE_GRUEN        0x00FF00 //0x00FF00
 #define FARBE_GELB         0xFF7F00 //0xFF7F00
