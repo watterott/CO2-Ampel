@@ -913,6 +913,7 @@ void webserver_service(void)
             urldecode(req[1]); //Serial.println(req[1]);
             if(strcmp(req[0], settings.wifi_ssid) || strcmp(req[1], settings.wifi_code))
             {
+              //todo: Leerzeichen am Ende entfernen
               strcpy(settings.wifi_ssid, req[0]);
               strcpy(settings.wifi_code, req[1]);
               flash_settings.write(settings); //Einstellungen speichern
@@ -1683,7 +1684,7 @@ unsigned int wifi_start(void)
     status_led(1000); //Status-LED
   }
 
-  if(!(WiFi.status() == WL_CONNECTED))
+  if(!(WiFi.status() == WL_CONNECTED)) //Verbindung fehlgeschlagen
   {
     return 1;
   }
