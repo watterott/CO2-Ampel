@@ -15,9 +15,9 @@
           "category": "contributed",
           "help": {"online": "https://learn.watterott.com/breakouts/co2-ampel/"},
           "url": "https://github.com/watterott/CO2-Ampel/raw/master/arduino/samd.zip",
-          "checksum": "SHA-256:7b2f0b068ad9073d2e4986c7484d569a2e2f924fde57326b6d83680b98192af0",
           "archiveFileName": "co2ampel-samd-1.0.8.zip",
           "size": "1591800",
+          "checksum": "SHA-256:7b2f0b068ad9073d2e4986c7484d569a2e2f924fde57326b6d83680b98192af0",
           "boards": [
             {"name": "CO2-Ampel (SAMD21)"}
           ]
@@ -29,9 +29,9 @@
           "category": "contributed",
           "help": {"online": "https://learn.watterott.com/breakouts/co2-ampel/"},
           "url": "https://github.com/watterott/CO2-Ampel/raw/a9939be9d4c4f9ac707b97615c67884d7adb6611/arduino/samd.zip",
-          "checksum": "SHA-256:02e0e7178ea0c81dd88c74fb1d742bc65c9a8c2c22da1f672f180a29457f08c4",
           "archiveFileName": "co2ampel-samd-1.0.7.zip",
           "size": "1549609",
+          "checksum": "SHA-256:02e0e7178ea0c81dd88c74fb1d742bc65c9a8c2c22da1f672f180a29457f08c4",
           "boards": [
             {"name": "CO2-Ampel (SAMD21)"}
           ]
