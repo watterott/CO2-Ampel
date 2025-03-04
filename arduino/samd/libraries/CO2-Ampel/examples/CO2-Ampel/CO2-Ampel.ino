@@ -27,7 +27,7 @@
     5=X      - Range/Bereich 5 Start (400-10000) - rot + Buzzer
 */
 
-#define VERSION "25"
+#define VERSION "26"
 
 #define COVID      0 //1 = COVID CO2-Werte
 #define WIFI_AMPEL 0 //1 = Version mit WiFi/WLAN
@@ -1615,10 +1615,10 @@ unsigned int wifi_start_ap(void)
   WiFi.macAddress(mac); //MAC-Adresse abfragen
   sprintf(ssid, "CO2AMPEL-%X-%X", mac[1], mac[0]);
 
-  if((WiFi.status() == WL_CONNECTED) ||
-     (WiFi.status() == WL_AP_CONNECTED))
+  if(WiFi.status() != WL_IDLE_STATUS)
   {
     WiFi.end(); //WiFi.disconnect();
+    //reset_mcu();
   }
 
   WiFi.hostname(ssid); //Hostname setzen
@@ -1654,10 +1654,10 @@ unsigned int wifi_start(void)
   WiFi.macAddress(mac); //MAC-Adresse abfragen
   sprintf(name, "CO2AMPEL-%X-%X", mac[1], mac[0]);
 
-  if((WiFi.status() == WL_CONNECTED) ||
-     (WiFi.status() == WL_AP_CONNECTED))
+  if(WiFi.status() != WL_IDLE_STATUS)
   {
     WiFi.end(); //WiFi.disconnect();
+    //reset_mcu();
   }
 
   WiFi.hostname(name); //Hostname setzen
@@ -1692,6 +1692,42 @@ unsigned int wifi_start(void)
   server.begin(); //starte Webserver
 
   return 0;
+}
+
+
+void reset_mcu(void)
+{
+  if(features & FEATURE_USB)
+  {
+    Serial.println("Reset...");
+  }
+
+  status_led(0);
+  buzzer(0);
+  ws2812.setBrightness(HELLIGKEIT_DUNKEL); //dunkel
+  leds(FARBE_WEISS); //LEDs weiss
+
+  if(features & FEATURE_WINC1500)
+  {
+    WiFi.end(); //WiFi.disconnect();
+  }
+  if(features & FEATURE_SCD30)
+  {
+    scd30.StopMeasurement();
+    //scd30.reset; //soft reset
+  }
+  if(features & FEATURE_SCD4X)
+  {
+    scd4x.stopPeriodicMeasurement();
+  }
+
+  Wire.end();
+  Wire1.end();
+  Serial.end();
+
+  __disable_irq(); //disable interrupts
+  NVIC_SystemReset(); //reset
+  while(1);
 }
 
 
