@@ -786,9 +786,10 @@ void webserver_service(void)
                 " \"h\": %.1f,\r\n" \
                 " \"p\": %.1f,\r\n" \
                 " \"u\": %.1f,\r\n" \
-                " \"l\": %i\r\n" \
+                " \"l\": %i,\r\n" \
+                " \"f\": %s\r\n" \
                 "}\r\n",
-                co2_value, temp_value, humi_value, pres_value, temp2_value, light_value
+                co2_value, temp_value, humi_value, pres_value, temp2_value, light_value, VERSION
             );
           }
           else
@@ -802,9 +803,10 @@ void webserver_service(void)
                 " \"c\": %i,\r\n" \
                 " \"t\": %.1f,\r\n" \
                 " \"h\": %.1f,\r\n" \
-                " \"l\": %i\r\n" \
+                " \"l\": %i,\r\n" \
+                " \"f\": %s\r\n" \
                 "}\r\n",
-                co2_value, temp_value, humi_value, light_value
+                co2_value, temp_value, humi_value, light_value, VERSION
             );
           }
           client.print(buf);
@@ -816,6 +818,8 @@ void webserver_service(void)
           //Da HTTP als Uebertragungsweg genutzt wird, "Data Source" 
           //verwenden: wget -O - http://ip_address/cmk-agent
           //Siehe: https://docs.checkmk.com/latest/de/datasource_programs.html
+          byte mac[6];
+          WiFi.macAddress(mac);
           if(features & (FEATURE_LPS22HB|FEATURE_BMP280))
           {
             sprintf(buf,
@@ -827,8 +831,16 @@ void webserver_service(void)
                 //Siehe: https://docs.checkmk.com/latest/en/devel_check_plugins.html
                 "<<<check_mk>>>\r\n" \
                 "AgentOS: arduino\r\n" \
+                //Meta-Informationen, die bei der automatischen Aufnahme ins Monitoring helfen
+                "<<<labels:sep(0)>>>\r\n" \
+                "{\"sensor/co2\":\"true\", \"sensor/pressure\":\"true\"}\r\n" \
+                "<<<arduino_net>>>\r\n" \
+                "HW: WINC1500\r\n" \
+                "MAC: %02x:%02x:%02x:%02x:%02x:%02x\r\n" \
+                "Hostname: CO2AMPEL-%X-%X\r\n" \
                 //Check-Plugin fuer den Server erforderlich, um die Metriken auszuwerten 
                 "<<<watterott_co2ampel_plugin>>>\r\n" \
+                "firmware %s\r\n" \
                 "co2 %i\r\n" \
                 "temp %.1f\r\n" \
                 "humidity %.1f\r\n" \
@@ -840,6 +852,7 @@ void webserver_service(void)
                 //Hand der uebergebenen Schwellwerte vor. Die lesen wir hier aus der Ampel aus:
                 "<<<local:sep(0)>>>\r\n" \
                 "P \"CO2 level (ppm)\" co2ppm=%i;%i;%i CO2/ventilation control with Watterott CO2-Ampel, thresholds taken from sensor board.\r\n",
+                mac[5], mac[4], mac[3], mac[2], mac[1], mac[0], mac[1], mac[0], VERSION,
                 co2_value, temp_value, humi_value, light_value, pres_value, temp2_value,
                 co2_value, settings.range[1], settings.range[2]
             );
@@ -855,8 +868,16 @@ void webserver_service(void)
                 //Siehe: https://docs.checkmk.com/latest/en/devel_check_plugins.html
                 "<<<check_mk>>>\r\n" \
                 "AgentOS: arduino\r\n" \
+                //Meta-Informationen, die bei der automatischen Aufnahme ins Monitoring helfen
+                "<<<labels:sep(0)>>>\r\n" \
+                "{\"sensor/co2\":\"true\"}\r\n" \
+                "<<<arduino_net>>>\r\n" \
+                "HW: WINC1500\r\n" \
+                "MAC: %02x:%02x:%02x:%02x:%02x:%02x\r\n" \
+                "Hostname: CO2AMPEL-%X-%X\r\n" \
                 //Check-Plugin fuer den Server erforderlich, um die Metriken auszuwerten 
                 "<<<watterott_co2ampel_plugin>>>\r\n" \
+                "firmware %s\r\n" \
                 "co2 %i\r\n" \
                 "temp %.1f\r\n" \
                 "humidity %.1f\r\n" \
@@ -866,6 +887,7 @@ void webserver_service(void)
                 //Hand der uebergebenen Schwellwerte vor. Die lesen wir hier aus der Ampel aus:
                 "<<<local:sep(0)>>>\r\n" \
                 "P \"CO2 level (ppm)\" co2ppm=%i;%i;%i CO2/ventilation control with Watterott CO2-Ampel, thresholds taken from sensor board.\r\n",
+                mac[5], mac[4], mac[3], mac[2], mac[1], mac[0], mac[1], mac[0], VERSION,
                 co2_value, temp_value, humi_value, light_value,
                 co2_value, settings.range[1], settings.range[2]
             );
