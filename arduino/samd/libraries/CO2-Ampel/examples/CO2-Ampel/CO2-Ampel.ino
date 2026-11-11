@@ -27,7 +27,7 @@
     5=X      - Range/Bereich 5 Start (400-10000) - rot + Buzzer
 */
 
-#define VERSION "26"
+#define VERSION "27"
 
 #define COVID      0 //1 = COVID CO2-Werte
 #define WIFI_AMPEL 0 //1 = Version mit WiFi/WLAN
@@ -151,6 +151,7 @@ Adafruit_SSD1306 display(128, 64); //128x64 Pixel
 WiFiServer server(80); //Webserver Port 80
 
 unsigned int features=0, remote_on=0, buzzer_timer=BUZZER_DELAY;
+unsigned int ap_fallback=0; //1 = eigener AP, weil WiFi-Netzwerk beim Start nicht erreichbar war
 unsigned int co2_value=STARTWERT, co2_average=STARTWERT, light_value=1024;
 float temp_value=20, temp_offset=TEMP_OFFSET, humi_value=50, pres_value=1013, pres_last=1013, temp2_value=20;
 
@@ -707,7 +708,7 @@ void urldecode(char *src) //URL Parameter dekodieren
 
 void webserver_service(void)
 {
-  static unsigned long t_check=0;
+  static unsigned long t_check=0, t_fallback=0;
   unsigned int status;
 
   if((features & FEATURE_WINC1500) == 0)
@@ -730,6 +731,31 @@ void webserver_service(void)
       wifi_start();
     }
     return;
+  }
+
+  // Nach gemeinsamem Stromausfall startet die Ampel evtl. schneller als der Router.
+  // Daher in den ersten 5min nach dem Start weiter versuchen, das WiFi-Netzwerk zu
+  // erreichen. Der eigene AP ist waehrend jedes Versuchs kurz geschlossen.
+  if(ap_fallback)
+  {
+    if(millis() > (5*60000UL)) //5min nach Start
+    {
+      ap_fallback = 0;
+    }
+    else if((status == WL_AP_LISTENING) && //kein Client mit dem AP verbunden
+            ((millis()-t_fallback) > (1*60000UL))) //1min
+    {
+      if(wifi_start() == 0) //verbunden
+      {
+        ap_fallback = 0;
+      }
+      else
+      {
+        wifi_start_ap(); //AP wieder starten
+      }
+      t_fallback = millis();
+      return;
+    }
   }
 
   t_check = millis(); //Zeit speichern fuer Neuverbindung nach 1min
@@ -1983,6 +2009,10 @@ void setup()
         {
           features &= ~FEATURE_WINC1500;
         }
+        else if(settings.wifi_ssid[0] != 0) //WiFi-Netzwerk konfiguriert, aber nicht erreichbar
+        {
+          ap_fallback = 1;
+        }
       }
       delay(2000); //2s warten
       if(features & FEATURE_USB)
@@ -2129,6 +2159,7 @@ void loop()
       if(features & FEATURE_WINC1500)
       {
         leds(FARBE_VIOLETT); //LEDs violett
+        ap_fallback = 0; //AP manuell gestartet, keine Neuverbindungsversuche
         wifi_start_ap();
       }
     }
